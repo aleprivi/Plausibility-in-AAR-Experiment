@@ -183,6 +183,7 @@ public class SDNEnvConfig : MonoBehaviour
         }
         // triangles
 
+//        Debug.Log("subject" + cipic_subject + "_txt/triangles/triangles");
         TextAsset triang = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/triangles/triangles");
 
         //filePath = subj_i.DataPath + "/subject" + cipic_subject + "_txt/triangles/triangles.txt";

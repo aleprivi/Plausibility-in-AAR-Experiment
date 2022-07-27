@@ -6,9 +6,16 @@ using System.ComponentModel;
 using UnityEngine;
 using System;
 using AForge.Math;
+using System.IO;
 
 public class SDN : MonoBehaviour
 {
+    //ROBA MIA
+    private Complex[][] Jffts_hanningA = new Complex[3][];
+    private Complex[][] Jffts_hanningAB = new Complex[3][];
+    private Complex[][] Jffts_hanningB = new Complex[3][];
+    //FINE ROBA MIA
+
     private SDNEnvConfig subjectInfo;
 
     public GameObject listener;
@@ -109,12 +116,20 @@ public class SDN : MonoBehaviour
                 subjectInfo = tmp[0];
                 break;
         }
-        
+
         //subjectInfo = GameObject.Find("SubjectInfo").GetComponent<SDNEnvConfig>();
     }
 
     void Start()
     {
+        //DA CANCELLARE!!!!!
+        string path = "Assets/Resources/test.txt";
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path, false);
+        writer.Close();
+
+        GetComponent<AudioSource>().Play();
+
         _source = this.gameObject.GetComponent<AudioSource>();
 
         AudioConfiguration AC = AudioSettings.GetConfiguration();
@@ -135,7 +150,7 @@ public class SDN : MonoBehaviour
 
         geoForNetwork = GameObject.FindObjectOfType<RoomBuilder>().getActiveRoom();
         Debug.Assert(geoForNetwork != null, "Error!! Please Insert a RoomBuilder inside the project!");
-//        geoForNetwork = GameObject.Find("Rooms").GetComponent<RoomBuilder>().getActiveRoom();
+        //        geoForNetwork = GameObject.Find("Rooms").GetComponent<RoomBuilder>().getActiveRoom();
 
 
         boundary[] tmp = FindObjectsOfType<boundary>();
@@ -168,7 +183,7 @@ public class SDN : MonoBehaviour
 
         for (int i = 0; i < sampOLA.Length; i++)
         {
-            sampOLA[i] = new float[buffSize];
+            sampOLA[i] = new float[buffSize*2]; //MODIFICATO!!!!
             hrtf[i] = new Complex[200];
             result[i] = new float[buffSize];
             hrtf_C[i] = new Complex[fftLength];
@@ -185,10 +200,45 @@ public class SDN : MonoBehaviour
         {
             Jffts[i] = new Complex[fftLength];
         }
+
+
+        //CREO BUFFER PER VERSIONE Naive
+        createHanning();
+        //poi va fatto come Jffts
+        sampleBuffer = new Complex[buffSize * 2];
+        for (int i = 0; i < sampleBuffer.Length; i++) {
+            sampleBuffer[i] = new Complex();
+        }
+        
+
+        //CREO BUFFER PER VERSIONE 34
+        circularBuffer = new Complex[buffSize * 4];
+        circularBufferOLA = new Complex[buffSize * 4];
+        bufferPivot = buffSize;
+        OLAPivot = 0;
+        for (int i = 0; i < circularBuffer.Length; i++) {
+            circularBuffer[i] = new Complex();
+            circularBufferOLA[i] = new Complex();
+        }
+
+        //HANNING WINDOWS MIE
+        for (int i = 0; i < Jffts_hanningA.Length; i++)
+        {
+            Jffts_hanningA[i] = new Complex[fftLength];
+            Jffts_hanningAB[i] = new Complex[fftLength];
+            Jffts_hanningB[i] = new Complex[fftLength];
+        }
+
+        //ROBA MIA
+        overlapSize = buffSize / 2;
+        windowType = CircularBuffer.WindowType.hamming;
+        circBuffer = new CircularBuffer(buffSize, buffSize, overlapSize, windowType, false);
+
     }
+    int overlapSize;
+    CircularBuffer.WindowType windowType;
 
-
-    void FixedUpdate()
+    void Update()
     {
         RF.doUpdate = update;
 
@@ -273,14 +323,6 @@ public class SDN : MonoBehaviour
         networkMX.ReleaseMutex();
     }
 
-    public void doScatteringForNodeRange(int min, int max)
-    {
-        for (int i = min; i < max; i++)
-        {
-            network[i].doScattering(doLateReflections);
-        }
-    }
-
     public void checkDelayClear()
     {
 
@@ -313,10 +355,10 @@ public class SDN : MonoBehaviour
     }
 
     public void setBoundary(GameObject room)
-        // Function to set new room boundaries. 
-        // See RoomManager script.
+    // Function to set new room boundaries. 
+    // See RoomManager script.
     {
-        
+
 
         geoForNetwork = room;
 
@@ -330,16 +372,14 @@ public class SDN : MonoBehaviour
         Debug.Log(RF);
         RF.setboundary(boundary);
 
-        //doHrtfReflections = true;
-        //doLateReflections = true;
 
-       
+
 
     }
 
     public void updateWallMaterialFilter()
-        // Function to update wall absortption filters and wall absorbption coefficients according to wall properties set in the Unity user GUI for each wall of the room.
-        // See RoomManager and SDNNode.
+    // Function to update wall absortption filters and wall absorbption coefficients according to wall properties set in the Unity user GUI for each wall of the room.
+    // See RoomManager and SDNNode.
     {
         //clearNetwork();
 
@@ -462,7 +502,7 @@ public class SDN : MonoBehaviour
         }
     }
 
-    public static void interleaveSimple(float[][] data_in, float[] data_out, int num_ch)  
+    public static void interleaveSimple(float[][] data_in, float[] data_out, int num_ch)
     {
         for (int i = 0; i < data_in[0].Length; ++i)
         {
@@ -479,6 +519,8 @@ public class SDN : MonoBehaviour
         chanScale = 1.0f / channels;
         int i, c;
 
+        //        Debug.Log(numSamps);
+
         if (scriptInit)
         {
 
@@ -489,38 +531,36 @@ public class SDN : MonoBehaviour
                 AFin = 0.0f;
                 for (c = 0; c < channels; c++)
                 {
-                    AFin += data[(i * channels) + c];
+                    AFin += data[(i * channels) + c]; //MONOIZZA GIA' IL SAMPLE: Prende i due dati (interleaved) e li fa diventare un solo canale, incaso siano doppi
                 }
-                inSamples.Enqueue(AFin * chanScale);
-            }
+                inSamples.Enqueue(AFin * chanScale); //Se fosse, ad es, due canali, divide per due per rendere ok il volume
+            }  //Questa parte carica i valori su una coda che poi li passa al "propagate network" (v. sotto), per l'elaborazione del rimbombo
 
-            if (!(outSamples.Count < numSamps)) // sound output when buffer is full
+            if (!(outSamples.Count < numSamps)) // sound output when buffer is full -- pesca i sample dalla coda dello scattering delay
             {
+                //Se bypassato il resto non ci sono clicks, questa parte è OK
                 if (!enableListen)
                 {
                     for (i = 0; i < numSamps; i++)
                     {
-                        // AFout = outSamples.Dequeue ();
                         for (c = 0; c < channels; c++)
                         {
-                            data[(i * channels) + c] *= directAtt;
+                            data[(i * channels) + c] *= directAtt; //Attenua un base alla distanza (calcolata in una altra void) senza applicare altro
                         }
                     }
                 }
-                else
+                else //Il problema è qui?
                 {
                     idx = 0; // put buffer index to zero
                     for (i = 0; i < numSamps; i++)
                     {
-                        Jffts[0][i] = new Complex(outSamples.Dequeue(), 0);
+                        Jffts[0][i] = new Complex(outSamples.Dequeue(), 0);  //Carico i samples
                     }
 
-                    //if (loaded)
-                    convHRTF(doHrtfReflections);
-
-                    //float[][] test = new float[2][];
-                    //for (i = 0; i < test.Length; i++)
-                    //    test[i] = new float[numSamps];
+                    //MODIFICATO!!!
+                    //convHRTF(doHrtfReflections);
+                    //convHRTF_Naive(doHrtfReflections);
+                    convHRTF_34window(doHrtfReflections);
 
                     if (doHrtfReflections)
                     {
@@ -528,21 +568,8 @@ public class SDN : MonoBehaviour
                     }
                     else
                     {
-                        //if (doLateReflections)
-                           //interleaveDataNoReflection(result, junctionsSamps, data, channels);
-                        //else
-                           interleaveSimple(result, data, channels);
+                        interleaveSimple(result, data, channels);
                     }
-                        
-
-                    //for (i = 0; i < numSamps; i++)
-                    //{
-                    //    for (c = 0; c < channels; c++)
-                    //    {
-                    //        //data[(i * channels) + c] = (float)junctionsSamps[0][i].Re;
-                    //        data[(i * channels) + c] = ((c + 1) % 2) * (result[0][i]) + (c % 2) * (result[1][i]);
-                    //    }
-                    //}
                 }
             }
             else
@@ -570,40 +597,207 @@ public class SDN : MonoBehaviour
         }
     }
 
-    private void convHRTF(bool doIt)
-    {
 
+    //My Hanning Windows
+    float[] hanning;
+    void createHanning() {
+        hanning = new float[buffSize];
+        for (int i = 0; i < buffSize; i++) {
+            hanning[i] = 0.5f * (1f - (float)System.Math.Cos(2f * System.Math.PI * i / (buffSize - 1)));
+            //hamming
+            //.54 - .46*cos(2*pi*(0:M-1)'/(M-1));
+            //hanning[i] = 0.54f - 0.46f*((float)Math.Cos(2f * Math.PI * i / buffSize-1));
+            //Blackman
+            //hanning[i] = 0.42f - 0.5f * (float)Math.Cos(2 * Math.PI * i / buffSize) + 0.08f*(float)Math.Cos(4f*Math.PI*i / buffSize);
+        }
+
+    }
+
+
+    //Buffer circolare e sua posizione
+    Complex[] circularBuffer;
+    Complex[] circularBufferOLA;
+    int bufferPivot;
+    int OLAPivot;
+    int cycle = 0;
+    /*
+     * 0->completo : faccio fft + 3/4 prima
+     * 1->1/4 prima : faccio fft 1/4 prima
+     * 2->2/4 prima : faccio fft 2/4 prima
+     */
+
+    CircularBuffer circBuffer;
+    List<CircularBuffer> juncCircBuffer = new List<CircularBuffer>();
+
+
+    private void convHRTF_34window(bool doIt)
+    {
+        //Copia la funziona hrtf corretta
         hrtf_C = CopyArrayLinq(hrtf);       // TO DO: copy only if moving
         for (int j = 0; j < junctionsSamps.Count; j++)
         {
             Jhrtf_C[j] = CopyArrayLinq(Jhrtf[j]);
         }
 
+        //SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
+        for (int i = 0; i < fftLength / 2; i++)
+        {
+            //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
+            //Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
+            //Jffts[0][i].Re = 1;
+        }
+
+        result = circBuffer.getFromBuffer(Jffts[0], hrtf_C);
+
+        Debug.Log(" Junctions = " + junctionsSamps.Count);
+
+        //QUI FACCIO LE HRTF con le 6 riflessioni sui muri
+
+        if (doIt)
+        {
+            // same thing for junctions --- qui vengono fatte le altre 6 convoluzioni
+            for (int i = 0; i < junctionsSamps.Count; i++)
+            {
+
+                // reinitialize for next junction
+                for (int j = 0; j < Jffts.Length; j++)
+                {
+                    Jffts[j] = new Complex[fftLength];
+                }
+
+                // copy
+                Array.Copy(junctionsSamps[i], Jffts[0], buffSize);
+
+                Jresult[i] = juncCircBuffer[i].getFromBuffer(Jffts[0], Jhrtf_C[i]);
+
+
+                //// fft
+                //FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
+
+                //for (int j = 0; j < fftLength; j++)
+                //{
+                //    Jffts[1][j] = Jffts[0][j] * Jhrtf_C[i][0][j] * fftLength;
+                //    Jffts[2][j] = Jffts[0][j] * Jhrtf_C[i][1][j] * fftLength; // Jhrtf_C[i][1][j]
+                //}
+                ////}
+
+                //// ifft
+                //FourierTransform.FFT(Jffts[1], FourierTransform.Direction.Backward);
+                //FourierTransform.FFT(Jffts[2], FourierTransform.Direction.Backward);
+                //// output and OLA
+                //k = 0;
+                //while (k < fftLength)
+                //{
+                //    while (k < buffSize)
+                //    {
+                //        Jresult[i][0][k] = ((float)Jffts[1][k].Re + JsampOLA[i][0][k]);    // sometimes crushes here if reflection is removed abrubtly.
+                //        Jresult[i][1][k] = ((float)Jffts[2][k].Re + JsampOLA[i][1][k]);
+                //        k++;
+                //    }
+                //    JsampOLA[i][0][k - buffSize] = (float)Jffts[1][k].Re;
+                //    JsampOLA[i][1][k - buffSize] = (float)Jffts[2][k].Re;
+                //    k++;
+                //}
+
+            }
+        }
+        // reinitialize for next buffer
+        for (int j = 0; j < Jffts.Length; j++)
+        {
+            Jffts[j] = new Complex[fftLength];
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //STAMPO I PRIMI SAMPLES (DA CANCELLARE POI)
+        if (step < 3)
+        //if(step == 5)
+        {
+            string path = "Assets/Resources/test.txt";
+            //Write some text to the test.txt file
+            StreamWriter writer = new StreamWriter(path, true);
+            //for (int i = 0; i < circularBufferOLA.Length; i++){
+            //    writer.WriteLine(circularBufferOLA[i].Re.ToString());
+            //}
+            for (int i = 0; i < result[0].Length; i++){
+                writer.WriteLine(result[0][i].ToString());
+            }
+            //writer.WriteLine(circularBuffer.Length.ToString());
+            //for (int i = 0; i < circularBuffer.Length; i++)
+            //{
+            //    writer.WriteLine(circularBuffer[i].Re.ToString());
+            //}
+            writer.Close();
+        }
+
+        step++;
+    }
+
+
+
+    Complex[] OldBQueue;
+    Complex[] OldABQueue;
+
+    Complex[] sampleBuffer;
+
+    int step = 0;
+
+    
+
+
+        //PROBLEMA!!!
+        private void convHRTF(bool doIt)
+    {
+
+
+        //Copia la funziona hrtf corretta
+        hrtf_C = CopyArrayLinq(hrtf);       // TO DO: copy only if moving
+        for (int j = 0; j < junctionsSamps.Count; j++)
+        {
+            Jhrtf_C[j] = CopyArrayLinq(Jhrtf[j]);
+        }
+
+        //SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
+        for (int i = 0; i < fftLength / 2; i++)
+        {
+            //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
+            Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
+        }
+
         // direct fft of buffer 2048
         FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
 
         // fft of hrtfs
-        
-            for (int i = 0; i < fftLength; i++)
-            {
-                Jffts[1][i] = Jffts[0][i] * hrtf_C[0][i] * fftLength;
-                Jffts[2][i] = Jffts[0][i] * hrtf_C[1][i] * fftLength;
-            }
+        for (int i = 0; i < fftLength; i++)
+        {
+            Jffts[1][i] = Jffts[0][i] * hrtf_C[0][i] * fftLength;
+            Jffts[2][i] = Jffts[0][i] * hrtf_C[1][i] * fftLength;
+        }
+
         //}
 
         // inverse fft 2048
         FourierTransform.FFT(Jffts[1], FourierTransform.Direction.Backward);
         FourierTransform.FFT(Jffts[2], FourierTransform.Direction.Backward);
 
+        //OLAOLA
+        //Debug.Log(Jffts[1][buffSize+10]);
         // seperate and store results 1024 and OLA samples 1024
         int k = 0;
         while (k < fftLength)
         {
             while (k < buffSize)
             {
-                //result[0][k] = left_channel.process((float)Jffts[1][k].Re + sampOLA[0][k]);
-                //result[1][k] = right_channel.process((float)Jffts[2][k].Re + sampOLA[1][k]);
-
                 result[0][k] = ((float)Jffts[1][k].Re + sampOLA[0][k]);
                 result[1][k] = ((float)Jffts[2][k].Re + sampOLA[1][k]);
                 k++;
@@ -613,9 +807,12 @@ public class SDN : MonoBehaviour
             k++;
         }
 
+
+
+        //QUI FACCIO LE HRTF con le 6 riflessioni sui muri (DA SISTEMARE DOPO)
         if (doIt)
         {
-            // same thing for junctions
+            // same thing for junctions --- qui vengono fatte le altre 6 convoluzioni
             for (int i = 0; i < junctionsSamps.Count; i++)
             {
 
@@ -629,6 +826,7 @@ public class SDN : MonoBehaviour
                 Array.Copy(junctionsSamps[i], Jffts[0], buffSize);
 
                 // fft
+                
                 FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
                 
                     for (int j = 0; j < fftLength; j++)
@@ -663,7 +861,26 @@ public class SDN : MonoBehaviour
         {
             Jffts[j] = new Complex[fftLength];
         }
+
+        //STAMPO I PRIMI SAMPLES (DA CANCELLARE POI)
+        if (step < 4)
+        {
+            string path = "Assets/Resources/test.txt";
+            //Write some text to the test.txt file
+            StreamWriter writer = new StreamWriter(path, true);
+            for (int i = 0; i < result[0].Length; i++)
+            {
+                writer.WriteLine(result[0][i].ToString());
+            }
+            writer.Close();
+        }
+
+        step++;
     }
+
+
+
+
 
     void handleNewReflections(reflectionPath newDirectSound, List<reflectionPath> newReflections)
     {
@@ -674,6 +891,8 @@ public class SDN : MonoBehaviour
 
     private void removeHRTFmanager(int index) // updates (remove) list of azi/ele, database indices, and hrtfs array
     {
+
+        Debug.Log("Chiamato RemoveHRTFManager");
         // hrtf manager
         positionArray.RemoveAt(index);
         this.gameObject.GetComponent<HRTFmanager>().azEl.RemoveAt(index);
@@ -690,10 +909,15 @@ public class SDN : MonoBehaviour
         //this.gameObject.GetComponent<Snowman>().JoutR.RemoveAt(index);
         //this.gameObject.GetComponent<Snowman>().Jitd_l.RemoveAt(index);
         //this.gameObject.GetComponent<Snowman>().Jitd_r.RemoveAt(index);
+
+        //ROBA MIA
+        juncCircBuffer.RemoveAt(index);
     }
 
     private void addHRTFmanager(UnityEngine.Vector3 nodePos) // updates (add) list of azi/ele, database indices, and initialize hrtfs jagged array
     {
+
+        Debug.Log("Chiamato HRTFManager");
 
         float[][] tempBuff2 = new float[2][];
         float[][] tempBuff = new float[2][];
@@ -729,6 +953,10 @@ public class SDN : MonoBehaviour
         //this.gameObject.GetComponent<Snowman>().JoutR.Add(new Complex[fftLength]);
         //this.gameObject.GetComponent<Snowman>().Jitd_l.Add(0.0f);
         //this.gameObject.GetComponent<Snowman>().Jitd_r.Add(0.0f);
+
+
+        //ROBA MIA
+        juncCircBuffer.Add(new CircularBuffer(buffSize,buffSize,overlapSize,windowType));
     }
 
     private void processReflections()
