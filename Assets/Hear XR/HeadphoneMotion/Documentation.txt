@@ -1,0 +1,84 @@
+============================================================
+
+           iOS Headphone Motion Plugin for Unity
+
+============================================================
+
+See full documentation on GitHub:
+    https://github.com/anastasiadevana/HeadphoneMotion
+
+
+--------------------------------------------------------------------------------
+What is this?
+--------------------------------------------------------------------------------
+
+Apple released the new Headphone Motion API in iOS 14, which provides head 
+tracking data from compatible headphones. Currently (as of September 2020) the 
+only compatible device is AirPods Pro.
+
+Headphone Motion plugin exposes this API in Unity. Use this to get head tracking 
+data* from Apple headphones like AirPods Pro into your Unity scenes.
+
+* Please note that Apple's Head Motion API only provides rotational data (3dof), 
+but no positional data.
+
+
+--------------------------------------------------------------------------------
+Quick Start Guide
+--------------------------------------------------------------------------------
+
+Here is the minimum amount of code you will need to start using the plugin:
+
+
+1.  Include the HearXR namespace by adding the following line of code at the top 
+    of your script:
+
+    using HearXR;
+
+2.  Place the following code in some instantiation function in your script 
+    (for example into Unity's Start() call).
+    
+    // This call initializes the native plugin.
+    HeadphoneMotion.Init();
+    
+    // Check if headphone motion is available on this device.
+    if (HeadphoneMotion.IsHeadphoneMotionAvailable())
+    {
+        // Subscribe to the rotation callback.
+        // Alternatively, you can subscribe to OnHeadRotationRaw event to get 
+        // the x, y, z, w values as they come from the API.
+        HeadphoneMotion.OnHeadRotationQuaternion += HandleHeadRotationQuaternion;
+        
+        // Start tracking headphone motion.
+        HeadphoneMotion.StartTracking();
+    }
+
+3.  In the same script, place the function below, which is the handler function 
+    that receives the headpose rotation data.  In this example, the received data 
+    will be applied to the GameObject that this script is attached to.
+
+    private void HandleHeadRotationQuaternion(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+    }
+
+--------------------------------------------------------------------------------
+
+See full documentation on GitHub and feel free to examine the example scene for 
+some additional usage examples:
+    https://github.com/anastasiadevana/HeadphoneMotion
+    
+--------------------------------------------------------------------------------
+
+Hope you enjoy this plugin, and feel free to tag me on Twitter when you share 
+your creations with this! 
+
+If you give this plugin a try, I would appreciate an honest review on the Unity
+Asset Store :)
+
+Twitter: @AnastasiaDevana
+Website: hearxr.com
+
+--------------------------------------------------------------------------------
+
+2020 © Anastasia Devana
