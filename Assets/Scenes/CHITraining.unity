@@ -2471,7 +2471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3fab5a526934d6599c95c5c1ff1d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CIPIC: 152
+  CIPIC: 017
   UsePersonalizedSDN: 1
 --- !u!81 &1379053055
 AudioListener:

@@ -122,11 +122,6 @@ public class SDN : MonoBehaviour
 
     void Start()
     {
-        //DA CANCELLARE!!!!!
-        string path = "Assets/Resources/test.txt";
-        //Write some text to the test.txt file
-        StreamWriter writer = new StreamWriter(path, false);
-        writer.Close();
 
         GetComponent<AudioSource>().Play();
 
@@ -201,42 +196,11 @@ public class SDN : MonoBehaviour
             Jffts[i] = new Complex[fftLength];
         }
 
-
-        //CREO BUFFER PER VERSIONE Naive
-        createHanning();
-        //poi va fatto come Jffts
-        sampleBuffer = new Complex[buffSize * 2];
-        for (int i = 0; i < sampleBuffer.Length; i++) {
-            sampleBuffer[i] = new Complex();
-        }
-        
-
-        //CREO BUFFER PER VERSIONE 34
-        circularBuffer = new Complex[buffSize * 4];
-        circularBufferOLA = new Complex[buffSize * 4];
-        bufferPivot = buffSize;
-        OLAPivot = 0;
-        for (int i = 0; i < circularBuffer.Length; i++) {
-            circularBuffer[i] = new Complex();
-            circularBufferOLA[i] = new Complex();
-        }
-
-        //HANNING WINDOWS MIE
-        for (int i = 0; i < Jffts_hanningA.Length; i++)
-        {
-            Jffts_hanningA[i] = new Complex[fftLength];
-            Jffts_hanningAB[i] = new Complex[fftLength];
-            Jffts_hanningB[i] = new Complex[fftLength];
-        }
-
         //ROBA MIA
         overlapSize = buffSize / 2;
-        windowType = CircularBuffer.WindowType.hamming;
-        circBuffer = new CircularBuffer(buffSize, buffSize, overlapSize, windowType, false);
+        circBuffer = new CrossfadeBuffer(buffSize, overlapSize,  windowType, overWriteWaveform);
 
     }
-    int overlapSize;
-    CircularBuffer.WindowType windowType;
 
     void Update()
     {
@@ -597,38 +561,11 @@ public class SDN : MonoBehaviour
         }
     }
 
-
-    //My Hanning Windows
-    float[] hanning;
-    void createHanning() {
-        hanning = new float[buffSize];
-        for (int i = 0; i < buffSize; i++) {
-            hanning[i] = 0.5f * (1f - (float)System.Math.Cos(2f * System.Math.PI * i / (buffSize - 1)));
-            //hamming
-            //.54 - .46*cos(2*pi*(0:M-1)'/(M-1));
-            //hanning[i] = 0.54f - 0.46f*((float)Math.Cos(2f * Math.PI * i / buffSize-1));
-            //Blackman
-            //hanning[i] = 0.42f - 0.5f * (float)Math.Cos(2 * Math.PI * i / buffSize) + 0.08f*(float)Math.Cos(4f*Math.PI*i / buffSize);
-        }
-
-    }
-
-
-    //Buffer circolare e sua posizione
-    Complex[] circularBuffer;
-    Complex[] circularBufferOLA;
-    int bufferPivot;
-    int OLAPivot;
-    int cycle = 0;
-    /*
-     * 0->completo : faccio fft + 3/4 prima
-     * 1->1/4 prima : faccio fft 1/4 prima
-     * 2->2/4 prima : faccio fft 2/4 prima
-     */
-
-    CircularBuffer circBuffer;
-    List<CircularBuffer> juncCircBuffer = new List<CircularBuffer>();
-
+    CrossfadeBuffer circBuffer;
+    List<CrossfadeBuffer> juncCircBuffer = new List<CrossfadeBuffer>();
+    int overlapSize;
+    CrossfadeBuffer.WindowType windowType = CrossfadeBuffer.WindowType.hanning;
+    bool overWriteWaveform = false;
 
     private void convHRTF_34window(bool doIt)
     {
@@ -639,17 +576,10 @@ public class SDN : MonoBehaviour
             Jhrtf_C[j] = CopyArrayLinq(Jhrtf[j]);
         }
 
-        //SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
-        for (int i = 0; i < fftLength / 2; i++)
-        {
-            //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
-            //Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
-            //Jffts[0][i].Re = 1;
-        }
-
         result = circBuffer.getFromBuffer(Jffts[0], hrtf_C);
 
-        Debug.Log(" Junctions = " + junctionsSamps.Count);
+
+//        Debug.Log(" Junctions = " + junctionsSamps.Count);
 
         //QUI FACCIO LE HRTF con le 6 riflessioni sui muri
 
@@ -670,35 +600,6 @@ public class SDN : MonoBehaviour
 
                 Jresult[i] = juncCircBuffer[i].getFromBuffer(Jffts[0], Jhrtf_C[i]);
 
-
-                //// fft
-                //FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
-
-                //for (int j = 0; j < fftLength; j++)
-                //{
-                //    Jffts[1][j] = Jffts[0][j] * Jhrtf_C[i][0][j] * fftLength;
-                //    Jffts[2][j] = Jffts[0][j] * Jhrtf_C[i][1][j] * fftLength; // Jhrtf_C[i][1][j]
-                //}
-                ////}
-
-                //// ifft
-                //FourierTransform.FFT(Jffts[1], FourierTransform.Direction.Backward);
-                //FourierTransform.FFT(Jffts[2], FourierTransform.Direction.Backward);
-                //// output and OLA
-                //k = 0;
-                //while (k < fftLength)
-                //{
-                //    while (k < buffSize)
-                //    {
-                //        Jresult[i][0][k] = ((float)Jffts[1][k].Re + JsampOLA[i][0][k]);    // sometimes crushes here if reflection is removed abrubtly.
-                //        Jresult[i][1][k] = ((float)Jffts[2][k].Re + JsampOLA[i][1][k]);
-                //        k++;
-                //    }
-                //    JsampOLA[i][0][k - buffSize] = (float)Jffts[1][k].Re;
-                //    JsampOLA[i][1][k - buffSize] = (float)Jffts[2][k].Re;
-                //    k++;
-                //}
-
             }
         }
         // reinitialize for next buffer
@@ -707,40 +608,6 @@ public class SDN : MonoBehaviour
             Jffts[j] = new Complex[fftLength];
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-        //STAMPO I PRIMI SAMPLES (DA CANCELLARE POI)
-        if (step < 3)
-        //if(step == 5)
-        {
-            string path = "Assets/Resources/test.txt";
-            //Write some text to the test.txt file
-            StreamWriter writer = new StreamWriter(path, true);
-            //for (int i = 0; i < circularBufferOLA.Length; i++){
-            //    writer.WriteLine(circularBufferOLA[i].Re.ToString());
-            //}
-            for (int i = 0; i < result[0].Length; i++){
-                writer.WriteLine(result[0][i].ToString());
-            }
-            //writer.WriteLine(circularBuffer.Length.ToString());
-            //for (int i = 0; i < circularBuffer.Length; i++)
-            //{
-            //    writer.WriteLine(circularBuffer[i].Re.ToString());
-            //}
-            writer.Close();
-        }
-
-        step++;
     }
 
 
@@ -752,11 +619,11 @@ public class SDN : MonoBehaviour
 
     int step = 0;
 
-    
 
 
-        //PROBLEMA!!!
-        private void convHRTF(bool doIt)
+
+    ////PROBLEMA!!!
+    private void convHRTF(bool doIt)
     {
 
 
@@ -767,12 +634,12 @@ public class SDN : MonoBehaviour
             Jhrtf_C[j] = CopyArrayLinq(Jhrtf[j]);
         }
 
-        //SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
-        for (int i = 0; i < fftLength / 2; i++)
-        {
-            //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
-            Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
-        }
+        ////SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
+        //for (int i = 0; i < fftLength / 2; i++)
+        //{
+        //    //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
+        //    Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
+        //}
 
         // direct fft of buffer 2048
         FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
@@ -826,14 +693,14 @@ public class SDN : MonoBehaviour
                 Array.Copy(junctionsSamps[i], Jffts[0], buffSize);
 
                 // fft
-                
+
                 FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
-                
-                    for (int j = 0; j < fftLength; j++)
-                    {
-                        Jffts[1][j] = Jffts[0][j] * Jhrtf_C[i][0][j] * fftLength;
-                        Jffts[2][j] = Jffts[0][j] * Jhrtf_C[i][1][j] * fftLength; // Jhrtf_C[i][1][j]
-                    }
+
+                for (int j = 0; j < fftLength; j++)
+                {
+                    Jffts[1][j] = Jffts[0][j] * Jhrtf_C[i][0][j] * fftLength;
+                    Jffts[2][j] = Jffts[0][j] * Jhrtf_C[i][1][j] * fftLength; // Jhrtf_C[i][1][j]
+                }
                 //}
 
                 // ifft
@@ -861,21 +728,6 @@ public class SDN : MonoBehaviour
         {
             Jffts[j] = new Complex[fftLength];
         }
-
-        //STAMPO I PRIMI SAMPLES (DA CANCELLARE POI)
-        if (step < 4)
-        {
-            string path = "Assets/Resources/test.txt";
-            //Write some text to the test.txt file
-            StreamWriter writer = new StreamWriter(path, true);
-            for (int i = 0; i < result[0].Length; i++)
-            {
-                writer.WriteLine(result[0][i].ToString());
-            }
-            writer.Close();
-        }
-
-        step++;
     }
 
 
@@ -917,7 +769,7 @@ public class SDN : MonoBehaviour
     private void addHRTFmanager(UnityEngine.Vector3 nodePos) // updates (add) list of azi/ele, database indices, and initialize hrtfs jagged array
     {
 
-        Debug.Log("Chiamato HRTFManager");
+//        Debug.Log("Chiamato HRTFManager");
 
         float[][] tempBuff2 = new float[2][];
         float[][] tempBuff = new float[2][];
@@ -956,7 +808,7 @@ public class SDN : MonoBehaviour
 
 
         //ROBA MIA
-        juncCircBuffer.Add(new CircularBuffer(buffSize,buffSize,overlapSize,windowType));
+        juncCircBuffer.Add(new CrossfadeBuffer(buffSize,overlapSize,windowType));
     }
 
     private void processReflections()

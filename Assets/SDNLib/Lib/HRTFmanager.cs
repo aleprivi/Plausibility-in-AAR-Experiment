@@ -102,7 +102,7 @@ public class HRTFmanager : MonoBehaviour
 
     }
 
-    void FixedUpdate()
+    void Update()
     {
 
         listenerPos = listener.transform.position;

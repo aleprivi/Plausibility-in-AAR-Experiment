@@ -59,14 +59,16 @@ public class SDNEnvConfig : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        Application.targetFrameRate = 10;
+        //Application.targetFrameRate = 10;
 
         AudioConfiguration AC = AudioSettings.GetConfiguration();
         Debug.Log(AC.sampleRate);
-        Debug.Log(AC.dspBufferSize);
+        AC.dspBufferSize = 512;
+        AudioSettings.Reset(AC);
+
         buffSize = AC.dspBufferSize;
         fftLength = 2 * buffSize;
-
+        Debug.Log(AC.dspBufferSize);
         // full hrtf set
         for (int i = 0; i < matrix_l.Length; i++)
         {

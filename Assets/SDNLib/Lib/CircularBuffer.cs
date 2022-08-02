@@ -17,11 +17,9 @@ public class CircularBuffer : MonoBehaviour
     int outStartPivot;
     int outLength;
 
-    int winSize;
     int overlap;
 
-    int buffSize;
-    int fftLength;
+    int buffSize; //= alla windowsize
 
     /*
      * windowSize-> in sample: deve essere un divisore/multiplo di buffsize
@@ -42,36 +40,36 @@ public class CircularBuffer : MonoBehaviour
     float[] window;
     private void createWindow(WindowType type)
     {
-        window = new float[winSize];
+        window = new float[buffSize];
 
-        for (int n = 0; n < winSize; n++)
+        for (int n = 0; n < buffSize; n++)
         {
             switch (type) {
                 //hanning
                 case WindowType.hanning:
-                    window[n] = 0.5f * (1f - (float)System.Math.Cos(2f * System.Math.PI * n / (winSize - 1)));
+                    window[n] = 0.5f * (1f - (float)System.Math.Cos(2f * System.Math.PI * n / (buffSize - 1)));
                     break;
                 //hamming
                 case WindowType.hamming:
-                    window[n] = 0.54f - 0.46f * ((float)System.Math.Cos(2f * System.Math.PI * n / winSize - 1));
+                    window[n] = 0.54f - 0.46f * ((float)System.Math.Cos(2f * System.Math.PI * n / buffSize - 1));
                     break;
                 case WindowType.blackmann:
-                    window[n] = 0.42f - 0.5f * ((float)System.Math.Cos(2f * System.Math.PI * n / winSize)) + 0.08f * ((float)System.Math.Cos(4f * System.Math.PI * n / winSize));
+                    window[n] = 0.42f - 0.5f * ((float)System.Math.Cos(2f * System.Math.PI * n / buffSize)) + 0.08f * ((float)System.Math.Cos(4f * System.Math.PI * n / buffSize));
                     break;
                 case WindowType.square:
                     window[n] = 1;
                     break;
                 case WindowType.triangle:
-                    window[n] = 1-Math.Abs((n-(winSize/2.0f))/(winSize/2.0f));
+                    window[n] = 1-Math.Abs((n-(buffSize / 2.0f))/(buffSize / 2.0f));
                     break;
                 case WindowType.tukey:
                     float alpha = 0.5f;
-                    if (n > winSize / 2) {
-                        window[n] = window[winSize - n];
+                    if (n > buffSize / 2) {
+                        window[n] = window[buffSize - n];
                     } else {
-                        if (n < (alpha * winSize / 2.0f))
+                        if (n < (alpha * buffSize / 2.0f))
                         {
-                            window[n] = (float)(0.5f * (1 - Math.Cos(2 * Math.PI * n / (alpha * winSize))));
+                            window[n] = (float)(0.5f * (1 - Math.Cos(2 * Math.PI * n / (alpha * buffSize))));
                         }
                         else {
                             window[n] = 1;
@@ -87,45 +85,47 @@ public class CircularBuffer : MonoBehaviour
 
     bool resetInput;
 
-    public CircularBuffer(int bufferSize, int windowSize, int overlapSize, WindowType windowType, bool bypassWaveform) {
+    public CircularBuffer(int bufferSize, int overlapSize, WindowType windowType, bool bypassWaveform) {
 
         if (bypassWaveform) { Debug.Log("Disattivato reset forma d'onda"); }
         resetInput = bypassWaveform;
 
         buffSize = bufferSize;
-        fftLength = 2 * buffSize;
-        winSize = windowSize;
         overlap = overlapSize;
 
         //Creo i buffer
-        inBuffer = new Complex[buffSize * (bufferSize / overlapSize)];
+        inBuffer = new Complex[buffSize * 4];
         inStartPivot = 0;
         inLength = bufferSize;
+
+        //Creo i due buffer di uscita
         outBuffer = new Complex[2][];
         for (int i = 0; i < outBuffer.Length; i++)
         {
-            outBuffer[i] = new Complex[buffSize * (bufferSize / overlapSize) + bufferSize];
+            outBuffer[i] = new Complex[inBuffer.Length + bufferSize];
         }
         outStartPivot = 0;
         outLength = bufferSize;
+
+
         tempWindow = new Complex[3][];
         for (int i = 0; i < tempWindow.Length; i++)
         {
-            tempWindow[i] = new Complex[windowSize * 2];
+            tempWindow[i] = new Complex[buffSize * 2];
         }
 
         //Creo la finestra
         createWindow(windowType);
 
 
-
+        //Inizializzo la stampa del file
 
         string path = "Assets/Resources/test.txt";
         StreamWriter writer = new StreamWriter(path, false);
         writer.Close();
     }
 
-    public CircularBuffer(int bufferSize, int windowSize, int overlapSize, WindowType windowType) : this(bufferSize, windowSize, overlapSize, windowType, false) {
+    public CircularBuffer(int bufferSize, int overlapSize, WindowType windowType) : this(bufferSize, overlapSize, windowType, false) {
     }
     
 
@@ -135,10 +135,10 @@ public class CircularBuffer : MonoBehaviour
         //SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
         if (resetInput)
         {
-            for (int i = 0; i < fftLength / 2; i++)
+            for (int i = 0; i < buffSize; i++)
             {
-                data[i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
-                //data[i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
+                //data[i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
+                data[i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
                 //data[i].Re = 1;
             }
         }
@@ -159,13 +159,9 @@ public class CircularBuffer : MonoBehaviour
 
     public bool ThereIsEnoughData()
     {
-        if (inLength >= winSize) return true;
+        if (inLength >= buffSize) return true;
         else return false;
     }
-
-
-
-
 
     Complex[][] tempWindow;
     public float[][] getFromBuffer(Complex[] data, Complex[][] hrtfs)
@@ -175,14 +171,14 @@ public class CircularBuffer : MonoBehaviour
 
         for (int i = 0; i < tempWindow.Length; i++)
         {
-            tempWindow[i] = new Complex[winSize*2];
+            tempWindow[i] = new Complex[buffSize * 2];
         }
 
         //int ss = 0;
         while (ThereIsEnoughData())
         {
             //Copio la finestra di dati
-            for (int i = 0; i < winSize; i++)
+            for (int i = 0; i < buffSize; i++)
             {
                 tempWindow[0][i] = inBuffer[inStartPivot] * window[i];
                 inStartPivot = (inStartPivot + 1) % (inBuffer.Length);
@@ -194,22 +190,22 @@ public class CircularBuffer : MonoBehaviour
 
             FourierTransform.FFT(tempWindow[0], FourierTransform.Direction.Forward);
 
-            for (int i = 0; i < winSize*2; i++)
+
+            //Calcolo la FFT
+
+            for (int i = 0; i < buffSize * 2; i++)
             {
-                tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * winSize*2;
-                tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * winSize*2;
-                //Jffts_hanningA[1][i] = Jffts_hanningA[0][i];
-                //Jffts_hanningA[2][i] = Jffts_hanningA[0][i];
+                tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * buffSize * 2;
+                tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * buffSize * 2;
+                //tempWindow[1][i] = tempWindow[0][i];
+                //tempWindow[2][i] = tempWindow[0][i];
             }
             FourierTransform.FFT(tempWindow[1], FourierTransform.Direction.Backward);
             FourierTransform.FFT(tempWindow[2], FourierTransform.Direction.Backward);
 
-            /*
-             * ELABORAZIONI --- ToDo
-             */
 
             //Salvo i dati elaborati
-            for (int i = 0; i < winSize * 2; i++)
+            for (int i = 0; i < buffSize * 2; i++)
             {
                 int start = (outStartPivot + outLength - overlap) % outBuffer[0].Length;
                 //outBuffer[0][start].Re += 3;
@@ -221,7 +217,7 @@ public class CircularBuffer : MonoBehaviour
                 outBuffer[1][start].Re = b;
                 outLength++;
             }
-            outLength -= (winSize + overlap);
+            outLength -= (buffSize + overlap);
 
 
             //ss++;
@@ -248,7 +244,14 @@ public class CircularBuffer : MonoBehaviour
         return outData;
     }
 
-
+    public float[][] getFromBuffer(Complex[] data, Complex[][] hrtfs, bool writeTestFile) {
+        float[][] outData = getFromBuffer(data, hrtfs);
+        if (writeTestFile) {
+            Debug.Log("Scrivo File");
+            WriteFile(outData[0]);
+        }
+        return outData;
+    }
 
 
 
@@ -257,7 +260,7 @@ public class CircularBuffer : MonoBehaviour
     public void WriteFile()
     {
         //STAMPO I PRIMI SAMPLES (DA CANCELLARE POI)
-        if (step < 10)
+        if (step < 2)
         //if(step == 1)
         {
             string path = "Assets/Resources/test.txt";
@@ -287,12 +290,16 @@ public class CircularBuffer : MonoBehaviour
 
     public void WriteFile(float[] data)
     {
-        string path = "Assets/Resources/test.txt";
-        StreamWriter writer = new StreamWriter(path, true);
-        for (int i = 0; i < data.Length; i++)
+        if (step < 20)
         {
-            writer.WriteLine(data[i].ToString());
+            string path = "Assets/Resources/test.txt";
+            StreamWriter writer = new StreamWriter(path, true);
+            for (int i = 0; i < data.Length; i++)
+            {
+                writer.WriteLine(data[i].ToString());
+            }
+            writer.Close();
         }
-        writer.Close();
+        step++;
     }
 }
