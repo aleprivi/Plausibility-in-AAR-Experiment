@@ -66,7 +66,10 @@ public class HRTFmanager : MonoBehaviour
         AudioConfiguration AC = AudioSettings.GetConfiguration();
         sampleRate = AC.sampleRate;
         buffSize = AC.dspBufferSize;
-        fftLength = 2 * buffSize;
+
+        //MODIFICATO!!!!
+        //        fftLength = 2 * buffSize;
+        fftLength = buffSize;
 
         //listener = GameObject.Find("CenterEyeAnchor");
 

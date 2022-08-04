@@ -6,16 +6,9 @@ using System.ComponentModel;
 using UnityEngine;
 using System;
 using AForge.Math;
-using System.IO;
 
 public class SDN : MonoBehaviour
 {
-    //ROBA MIA
-    private Complex[][] Jffts_hanningA = new Complex[3][];
-    private Complex[][] Jffts_hanningAB = new Complex[3][];
-    private Complex[][] Jffts_hanningB = new Complex[3][];
-    //FINE ROBA MIA
-
     private SDNEnvConfig subjectInfo;
 
     public GameObject listener;
@@ -87,7 +80,6 @@ public class SDN : MonoBehaviour
 
     // junctions HRTF convolution variables
     private List<Complex[]> junctionsSamps;
-    private List<float[][]> JsampOLA;
     private List<Complex[][]> Jhrtf_C;
     private List<Complex[][]> Jhrtf;
     //private List<float[][]> Jbig_result;
@@ -122,7 +114,6 @@ public class SDN : MonoBehaviour
 
     void Start()
     {
-
         GetComponent<AudioSource>().Play();
 
         _source = this.gameObject.GetComponent<AudioSource>();
@@ -130,7 +121,6 @@ public class SDN : MonoBehaviour
         AudioConfiguration AC = AudioSettings.GetConfiguration();
         sampleRate = AC.sampleRate;
         buffSize = AC.dspBufferSize;
-
         inSamples = new Queue<float>();
         outSamples = new Queue<float>();
 
@@ -172,7 +162,9 @@ public class SDN : MonoBehaviour
 
         //FPcam = GameObject.Find("CenterEyeAnchor");
 
-        fftLength = 2 * buffSize;
+        //NON MODIFICATO!!
+//        fftLength = 2 * buffSize;
+        fftLength = buffSize;
 
         AFout = new Complex[fftLength];
 
@@ -185,7 +177,6 @@ public class SDN : MonoBehaviour
         }
 
         junctionsSamps = new List<Complex[]>();
-        JsampOLA = new List<float[][]>();
         Jresult = new List<float[][]>();
         Jhrtf_C = new List<Complex[][]>();
         Jhrtf = new List<Complex[][]>();
@@ -197,8 +188,7 @@ public class SDN : MonoBehaviour
         }
 
         //ROBA MIA
-        overlapSize = buffSize / 2;
-        circBuffer = new CrossfadeBuffer(buffSize, overlapSize,  windowType, overWriteWaveform);
+        circBuffer = new CrossfadeBuffer(buffSize);
 
     }
 
@@ -521,10 +511,7 @@ public class SDN : MonoBehaviour
                         Jffts[0][i] = new Complex(outSamples.Dequeue(), 0);  //Carico i samples
                     }
 
-                    //MODIFICATO!!!
-                    //convHRTF(doHrtfReflections);
-                    //convHRTF_Naive(doHrtfReflections);
-                    convHRTF_34window(doHrtfReflections);
+                    convHRTF_Crossfade(doHrtfReflections);
 
                     if (doHrtfReflections)
                     {
@@ -563,11 +550,9 @@ public class SDN : MonoBehaviour
 
     CrossfadeBuffer circBuffer;
     List<CrossfadeBuffer> juncCircBuffer = new List<CrossfadeBuffer>();
-    int overlapSize;
     CrossfadeBuffer.WindowType windowType = CrossfadeBuffer.WindowType.hanning;
-    bool overWriteWaveform = false;
 
-    private void convHRTF_34window(bool doIt)
+    private void convHRTF_Crossfade(bool doIt)
     {
         //Copia la funziona hrtf corretta
         hrtf_C = CopyArrayLinq(hrtf);       // TO DO: copy only if moving
@@ -620,120 +605,6 @@ public class SDN : MonoBehaviour
     int step = 0;
 
 
-
-
-    ////PROBLEMA!!!
-    private void convHRTF(bool doIt)
-    {
-
-
-        //Copia la funziona hrtf corretta
-        hrtf_C = CopyArrayLinq(hrtf);       // TO DO: copy only if moving
-        for (int j = 0; j < junctionsSamps.Count; j++)
-        {
-            Jhrtf_C[j] = CopyArrayLinq(Jhrtf[j]);
-        }
-
-        ////SOSTITUISCO CON UN SIMIL-SINE WAVE PER TEST (DA CANCELLARE)
-        //for (int i = 0; i < fftLength / 2; i++)
-        //{
-        //    //Jffts[0][i].Re = (Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize)) + Mathf.Sin(2 * Mathf.PI * i / (buffSize)))/2;
-        //    Jffts[0][i].Re = Mathf.Sin(2 * Mathf.PI * 2 * i / (buffSize));
-        //}
-
-        // direct fft of buffer 2048
-        FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
-
-        // fft of hrtfs
-        for (int i = 0; i < fftLength; i++)
-        {
-            Jffts[1][i] = Jffts[0][i] * hrtf_C[0][i] * fftLength;
-            Jffts[2][i] = Jffts[0][i] * hrtf_C[1][i] * fftLength;
-        }
-
-        //}
-
-        // inverse fft 2048
-        FourierTransform.FFT(Jffts[1], FourierTransform.Direction.Backward);
-        FourierTransform.FFT(Jffts[2], FourierTransform.Direction.Backward);
-
-        //OLAOLA
-        //Debug.Log(Jffts[1][buffSize+10]);
-        // seperate and store results 1024 and OLA samples 1024
-        int k = 0;
-        while (k < fftLength)
-        {
-            while (k < buffSize)
-            {
-                result[0][k] = ((float)Jffts[1][k].Re + sampOLA[0][k]);
-                result[1][k] = ((float)Jffts[2][k].Re + sampOLA[1][k]);
-                k++;
-            }
-            sampOLA[0][k - buffSize] = (float)Jffts[1][k].Re;
-            sampOLA[1][k - buffSize] = (float)Jffts[2][k].Re;
-            k++;
-        }
-
-
-
-        //QUI FACCIO LE HRTF con le 6 riflessioni sui muri (DA SISTEMARE DOPO)
-        if (doIt)
-        {
-            // same thing for junctions --- qui vengono fatte le altre 6 convoluzioni
-            for (int i = 0; i < junctionsSamps.Count; i++)
-            {
-
-                // reinitialize for next junction
-                for (int j = 0; j < Jffts.Length; j++)
-                {
-                    Jffts[j] = new Complex[fftLength];
-                }
-
-                // copy
-                Array.Copy(junctionsSamps[i], Jffts[0], buffSize);
-
-                // fft
-
-                FourierTransform.FFT(Jffts[0], FourierTransform.Direction.Forward);
-
-                for (int j = 0; j < fftLength; j++)
-                {
-                    Jffts[1][j] = Jffts[0][j] * Jhrtf_C[i][0][j] * fftLength;
-                    Jffts[2][j] = Jffts[0][j] * Jhrtf_C[i][1][j] * fftLength; // Jhrtf_C[i][1][j]
-                }
-                //}
-
-                // ifft
-                FourierTransform.FFT(Jffts[1], FourierTransform.Direction.Backward);
-                FourierTransform.FFT(Jffts[2], FourierTransform.Direction.Backward);
-                // output and OLA
-                k = 0;
-                while (k < fftLength)
-                {
-                    while (k < buffSize)
-                    {
-                        Jresult[i][0][k] = ((float)Jffts[1][k].Re + JsampOLA[i][0][k]);    // sometimes crushes here if reflection is removed abrubtly.
-                        Jresult[i][1][k] = ((float)Jffts[2][k].Re + JsampOLA[i][1][k]);
-                        k++;
-                    }
-                    JsampOLA[i][0][k - buffSize] = (float)Jffts[1][k].Re;
-                    JsampOLA[i][1][k - buffSize] = (float)Jffts[2][k].Re;
-                    k++;
-                }
-
-            }
-        }
-        // reinitialize for next buffer
-        for (int j = 0; j < Jffts.Length; j++)
-        {
-            Jffts[j] = new Complex[fftLength];
-        }
-    }
-
-
-
-
-
     void handleNewReflections(reflectionPath newDirectSound, List<reflectionPath> newReflections)
     {
         directSound = newDirectSound;
@@ -753,14 +624,7 @@ public class SDN : MonoBehaviour
         // junction manager
         junctionsSamps.RemoveAt(index);
         Jhrtf_C.RemoveAt(index);
-        JsampOLA.RemoveAt(index);
         Jresult.RemoveAt(index);
-
-        // snowman manager
-        //this.gameObject.GetComponent<Snowman>().JoutL.RemoveAt(index);
-        //this.gameObject.GetComponent<Snowman>().JoutR.RemoveAt(index);
-        //this.gameObject.GetComponent<Snowman>().Jitd_l.RemoveAt(index);
-        //this.gameObject.GetComponent<Snowman>().Jitd_r.RemoveAt(index);
 
         //ROBA MIA
         juncCircBuffer.RemoveAt(index);
@@ -796,19 +660,11 @@ public class SDN : MonoBehaviour
 
         // junction manager
         junctionsSamps.Add(new Complex[fftLength]);
-        JsampOLA.Add(tempBuff);
         Jresult.Add(tempBuffBuff);
         Jhrtf_C.Add(tempBuff2_CC);
 
-        // snowman manager
-        //this.gameObject.GetComponent<Snowman>().JoutL.Add(new Complex[fftLength]);
-        //this.gameObject.GetComponent<Snowman>().JoutR.Add(new Complex[fftLength]);
-        //this.gameObject.GetComponent<Snowman>().Jitd_l.Add(0.0f);
-        //this.gameObject.GetComponent<Snowman>().Jitd_r.Add(0.0f);
-
-
         //ROBA MIA
-        juncCircBuffer.Add(new CrossfadeBuffer(buffSize,overlapSize,windowType));
+        juncCircBuffer.Add(new CrossfadeBuffer(buffSize));
     }
 
     private void processReflections()

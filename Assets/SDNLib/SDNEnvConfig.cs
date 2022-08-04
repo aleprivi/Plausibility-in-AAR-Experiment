@@ -48,26 +48,35 @@ public class SDNEnvConfig : MonoBehaviour
     private float[] azimuths = new float[27] { -90, -80, -65, -55, -45, -40, -35, -30, -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 55, 65, 80, 90 };
     private float[] elevations = new float[52] { -90, -45, -39.374f, -33.748f, -28.122f, -22.496f, -16.87f, -11.244f, -5.618f, 0.00800000000000267f, 5.634f, 11.26f, 16.886f, 22.512f, 28.138f, 33.764f, 39.39f, 45.016f, 50.642f, 56.268f, 61.894f, 67.52f, 73.146f, 78.772f, 84.398f, 90.024f, 95.65f, 101.276f, 106.902f, 112.528f, 118.154f, 123.78f, 129.406f, 135.032f, 140.658f, 146.284f, 151.91f, 157.536f, 163.162f, 168.788f, 174.414f, 180.04f, 185.666f, 191.292f, 196.918f, 202.544f, 208.17f, 213.796f, 219.422f, 225.048f, 230.674f, 270 };
 
+    public int BufferSize = 1024;
+    public int SystemSampleRate = 44100;
+
     private void Awake()
     {
+        AudioConfiguration AC = AudioSettings.GetConfiguration();
+        AC.dspBufferSize = BufferSize;
+        AC.sampleRate = SystemSampleRate;
+        AudioSettings.Reset(AC);
 
         //CREO IL BOUNDARY
         GameObject bound = new GameObject("bounds_DO_NOT_REMOVE");
         bound.AddComponent<boundary>();
-    }
+    //}
 
-    // Use this for initialization
-    void Start()
-    {
-        //Application.targetFrameRate = 10;
+    //// Use this for initialization
+    //void Start()
+    //{
 
-        AudioConfiguration AC = AudioSettings.GetConfiguration();
+        //AudioConfiguration AC = AudioSettings.GetConfiguration();
+        
+
         Debug.Log(AC.sampleRate);
-        AC.dspBufferSize = 512;
-        AudioSettings.Reset(AC);
-
+        
         buffSize = AC.dspBufferSize;
-        fftLength = 2 * buffSize;
+
+//        MODIFICATO!!!
+        //fftLength = 2 * buffSize;
+        fftLength = buffSize;
         Debug.Log(AC.dspBufferSize);
         // full hrtf set
         for (int i = 0; i < matrix_l.Length; i++)
