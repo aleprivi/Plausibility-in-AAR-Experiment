@@ -87,7 +87,7 @@ public class HeadDistance : MonoBehaviour
         //        Debug.Log("N° of heads found: " + m_FaceManager.trackables.count);
         m_Info.Clear();
         if (m_FaceManager.trackables.count == 0) {
-            ipoc.check_BeHeaded(true);
+            if (ipoc != null) ipoc.check_BeHeaded(true);
             m_Info.Append("Head LOST!");
         }
 
@@ -96,7 +96,7 @@ public class HeadDistance : MonoBehaviour
 
             if (face.trackingState == TrackingState.Tracking)
             {
-                ipoc.check_BeHeaded(false);
+                if (ipoc != null) ipoc.check_BeHeaded(false);
 
                 //COMPONGO STRINGA
                 var camera = m_CameraManager.GetComponent<Camera>();
@@ -129,7 +129,7 @@ public class HeadDistance : MonoBehaviour
 
             }
             else {
-                ipoc.check_BeHeaded(true);
+                if (ipoc != null) ipoc.check_BeHeaded(true);
                 m_Info.Append("Head LOST! " + face.trackingState);
             }
         }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(WallFiltAndGain))]
+[CanEditMultipleObjects]
 public class Wall_class: Editor
 {
 

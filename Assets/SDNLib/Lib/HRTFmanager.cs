@@ -37,14 +37,6 @@ public class HRTFmanager : MonoBehaviour
     // HRTF pairs for direct sound and junctions. updating if position of source, listener and listener's head rotation is changing.
     private AForge.Math.Complex[][] hrtf_direct = new AForge.Math.Complex[2][];
     public List<AForge.Math.Complex[][]> hrtf_nodes = new List<AForge.Math.Complex[][]>(); // dynamic list of hrtf, following "network" in SDN script
-
-    //// Snowman parameters
-    ////private AForge.Math.Complex[][] hrtf_snowman_direct = new AForge.Math.Complex[2][];
-    //private int nfreq; // half spectrum size
-    //private float[] omega; // frequency fft points
-    //private float omega_low = 500; // snowman cutoff freq low
-    //private float omega_high = 3000; // snowman cutoff freq high
-    //private int idx_low, idx_high; // fft indexes for omega low and high
                                    
     private float[] f_axis; // frequency axis
 
@@ -67,11 +59,7 @@ public class HRTFmanager : MonoBehaviour
         sampleRate = AC.sampleRate;
         buffSize = AC.dspBufferSize;
 
-        //MODIFICATO!!!!
-        //        fftLength = 2 * buffSize;
         fftLength = buffSize;
-
-        //listener = GameObject.Find("CenterEyeAnchor");
 
         prevListenerPos = new Vector3(listener.transform.position.x, listener.transform.position.y, listener.transform.position.y);
         prevSourcePos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
@@ -82,20 +70,6 @@ public class HRTFmanager : MonoBehaviour
         {
             hrtf_direct[i] = new AForge.Math.Complex[fftLength];
         }
-
-        //// snowman param
-        //nfreq = Mathf.FloorToInt(fftLength / 2);
-        //omega = new float[nfreq + 1];
-        //float[] omega2_low = new float[nfreq + 1];
-        //float[] omega2_high = new float[nfreq + 1];
-        //for (int i = 0; i <= nfreq; i++)
-        //{
-        //    omega[i] = i * sampleRate / (2 * nfreq);  // [0, ... , Nyquist = 22050]
-        //    omega2_low[i] = Mathf.Abs(omega[i] - omega_low);
-        //    omega2_high[i] = Mathf.Abs(omega[i] - omega_high);
-        //}
-        //idx_low = Enumerable.Range(0, omega2_low.Length).Aggregate((a, b) => (omega2_low[a] < omega2_low[b]) ? a : b); // find index
-        //idx_high = Enumerable.Range(0, omega2_high.Length).Aggregate((a, b) => (omega2_high[a] < omega2_high[b]) ? a : b);
 
         f_axis = new float[fftLength];
         for (int j = 0; j < fftLength; j++)
@@ -122,12 +96,6 @@ public class HRTFmanager : MonoBehaviour
             azEl_direct = getAzElInteraural(this.gameObject.transform.position);
             hrtf_direct = listener.GetComponent<SDNEnvConfig>().getInterpolated_HRTF(azEl_direct);
 
-            //if (snowman) // Hybrid between snowman and measured hrtf
-            //{
-            //    hybridSnowman(hrtf_direct, this.gameObject.GetComponent<Snowman>().getSnowmanFFT_left(), this.gameObject.GetComponent<Snowman>().getSnowmanFFT_right());
-            //    Debug.Log("SNOWMAN !");
-            //}
-
             // JUNCTIONS azi/ele update
             positionArray = this.gameObject.GetComponent<SDN>().positionArray;
             if (positionArray.Count > 0)
@@ -140,123 +108,12 @@ public class HRTFmanager : MonoBehaviour
                     // get hrtfs from database
                     hrtf_nodes[i] = listener.GetComponent<SDNEnvConfig>().getInterpolated_HRTF(azEl[i]);
 
-                    //if (snowman)
-                    //    JhybridSnowman(hrtf_nodes[i], this.gameObject.GetComponent<Snowman>().J_getSnowmanFFT_left(i), this.gameObject.GetComponent<Snowman>().J_getSnowmanFFT_right(i), i);
                 }
 
 
             }
         }
     }
-
-    //public void hybridSnowman(AForge.Math.Complex[][] hrtf, AForge.Math.Complex[] snow_l, AForge.Math.Complex[] snow_r)
-    //{
-
-    //    int i, j;
-
-    //    // construct new fft log10 magnitude
-    //    AForge.Math.Complex[] As_l = new AForge.Math.Complex[fftLength];
-    //    AForge.Math.Complex[] As_r = new AForge.Math.Complex[fftLength];
-
-    //    for (i = 0; i < fftLength; i++)
-    //    {
-    //        As_l[i] = hrtf[0][i];
-    //        As_r[i] = hrtf[1][i];
-    //    }
-
-
-    //    // minimum phase reconstruction
-
-    //    mps(ref As_l); // convert to minimum phase
-    //    mps(ref As_r);
-
-    //    for (i = 0; i < fftLength; i++)
-    //    {
-    //        hrtf_direct[0][i] = As_l[i];
-    //        hrtf_direct[1][i] = As_r[i];
-    //    }
-
-    //}
-
-    //public void JhybridSnowman(AForge.Math.Complex[][] hrtf, AForge.Math.Complex[] snow_l, AForge.Math.Complex[] snow_r, int index) // sorry for duplicating code
-    //{
-
-    //    int i, j;
-
-    //    // construct new fft log10 magnitude
-    //    AForge.Math.Complex[] As_l = new AForge.Math.Complex[fftLength];
-    //    AForge.Math.Complex[] As_r = new AForge.Math.Complex[fftLength];
-    //    j = 1;
-    //    for (i = 0; i < fftLength; i++)
-    //    {
-    //        if (i <= idx_low) // snowman
-    //        {
-    //            As_l[i].Re = (float)snow_l[i].Magnitude;
-    //            As_r[i].Re = (float)snow_r[i].Magnitude;
-    //        }
-    //        else if (i > idx_low && i < idx_high) // cross-fade
-    //        {
-    //            As_l[i].Re = (float)snow_l[i].Magnitude + ((float)hrtf[0][i].Magnitude - (float)snow_l[i].Magnitude) / (omega[idx_high] - omega[idx_low]);
-    //            As_r[i].Re = (float)snow_r[i].Magnitude + ((float)hrtf[1][i].Magnitude - (float)snow_r[i].Magnitude) / (omega[idx_high] - omega[idx_low]);
-    //        }
-    //        else if (i >= idx_high && i <= nfreq) // measured
-    //        {
-    //            As_l[i].Re = (float)hrtf[0][i].Magnitude;
-    //            As_r[i].Re = (float)hrtf[1][i].Magnitude;
-    //        }
-    //        else // mirror first half of spectrum to second half
-    //        {
-    //            As_l[i].Re = As_l[i - 2 * j].Re;
-    //            As_r[i].Re = As_r[i - 2 * j].Re;
-    //            j++;
-    //        }
-    //    }
-
-    //    // minimum phase reconstruction
-
-    //    float delay_t = this.gameObject.GetComponent<Snowman>().Jitd_l[index] / sampleRate;
-    //    float[] phase_delay = new float[fftLength];
-    //    mps(ref As_l); // convert to minimum phase
-    //    mps(ref As_r);
-    //    if (azEl[index][0] < 0) // apply delay to right ear
-    //    {
-
-    //        for (i = 0; i < fftLength; i++)
-    //        {
-    //            phase_delay[i] = (float)As_r[i].Phase + (-2) * Mathf.PI * delay_t * f_axis[i];
-
-    //            hrtf_nodes[index][0][i] = hrtf[0][i];
-    //            hrtf_nodes[index][1][i] = hrtf[1][i];
-    //        }
-
-    //    }
-    //    else // apply delay to left ear
-    //    {
-    //        for (i = 0; i < fftLength; i++)
-    //        {
-    //            phase_delay[i] = (float)As_l[i].Phase + (-2) * Mathf.PI * delay_t * f_axis[i];
-
-    //            hrtf_nodes[index][0][i] = hrtf[0][i];
-    //            hrtf_nodes[index][1][i] = hrtf[1][i];
-    //        }
-    //    }
-    //}
-
-    //public void mps(ref AForge.Math.Complex[] s)
-    //{
-    //    int i;
-    //    for (i = 0; i < s.Length; i++)
-    //    {
-    //        s[i] = AForge.Math.Complex.Log(s[i]);
-    //    }
-
-    //    AForge.Math.FourierTransform.FFT(s, AForge.Math.FourierTransform.Direction.Backward);
-    //    AForge.Math.Complex[] folded = fold(s);
-    //    AForge.Math.FourierTransform.FFT( folded, AForge.Math.FourierTransform.Direction.Forward);
-
-    //    for (i = 0; i < s.Length; i++)
-    //        s[i] = AForge.Math.Complex.Exp(folded[i]);
-    //}
 
     public void clipdb(ref AForge.Math.Complex[] s, int cutoff)
     { // ccrma function
@@ -521,11 +378,6 @@ public class HRTFmanager : MonoBehaviour
     {
         return hrtf_direct;
     }
-
-    //public bool getBoolSnowman()
-    //{
-    //    return snowman;
-    //}
 
     public float[] getAzElDirect()
     {

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311915, g: 0.3807396, b: 0.35872662, a: 1}
+  m_IndirectSpecularColor: {r: 0.3708625, g: 0.37838694, b: 0.35726872, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -475,6 +475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -688,6 +689,7 @@ MonoBehaviour:
   UseAirBudsPro: 1
   DigitalTwinHead: {fileID: 1379053060}
   m_CameraManager: {fileID: 1060013188}
+  ipoc: {fileID: 0}
 --- !u!114 &903227067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1729,6 +1731,7 @@ MonoBehaviour:
   testo: {fileID: 1553342944}
   testo_timer: {fileID: 1042561100}
   head: {fileID: 1379053053}
+  recording_seconds: 20
 --- !u!1 &2052394279
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,6 +25,8 @@ public class SDN : MonoBehaviour
     public bool doLateReflections = true;
     public bool doHrtfReflections = true;
 
+    public float volumeGain = 1f;
+
     private reflectionFinder RF;
 
     private reflectionPath directSound;
@@ -546,6 +548,11 @@ public class SDN : MonoBehaviour
                 }
             }
         }
+
+        for (int j = 0; j < data.Length; j++)
+        {
+            data[j] = data[j] * volumeGain;
+        }
     }
 
     CrossfadeBuffer circBuffer;
@@ -615,7 +622,7 @@ public class SDN : MonoBehaviour
     private void removeHRTFmanager(int index) // updates (remove) list of azi/ele, database indices, and hrtfs array
     {
 
-        Debug.Log("Chiamato RemoveHRTFManager");
+//        Debug.Log("Chiamato RemoveHRTFManager");
         // hrtf manager
         positionArray.RemoveAt(index);
         this.gameObject.GetComponent<HRTFmanager>().azEl.RemoveAt(index);
@@ -625,6 +632,12 @@ public class SDN : MonoBehaviour
         junctionsSamps.RemoveAt(index);
         Jhrtf_C.RemoveAt(index);
         Jresult.RemoveAt(index);
+
+        // snowman manager
+        //this.gameObject.GetComponent<Snowman>().JoutL.RemoveAt(index);
+        //this.gameObject.GetComponent<Snowman>().JoutR.RemoveAt(index);
+        //this.gameObject.GetComponent<Snowman>().Jitd_l.RemoveAt(index);
+        //this.gameObject.GetComponent<Snowman>().Jitd_r.RemoveAt(index);
 
         //ROBA MIA
         juncCircBuffer.RemoveAt(index);
@@ -662,6 +675,13 @@ public class SDN : MonoBehaviour
         junctionsSamps.Add(new Complex[fftLength]);
         Jresult.Add(tempBuffBuff);
         Jhrtf_C.Add(tempBuff2_CC);
+
+        // snowman manager
+        //this.gameObject.GetComponent<Snowman>().JoutL.Add(new Complex[fftLength]);
+        //this.gameObject.GetComponent<Snowman>().JoutR.Add(new Complex[fftLength]);
+        //this.gameObject.GetComponent<Snowman>().Jitd_l.Add(0.0f);
+        //this.gameObject.GetComponent<Snowman>().Jitd_r.Add(0.0f);
+
 
         //ROBA MIA
         juncCircBuffer.Add(new CrossfadeBuffer(buffSize));

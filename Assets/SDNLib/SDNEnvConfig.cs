@@ -10,6 +10,7 @@ public class SDNEnvConfig : MonoBehaviour
 {
     public string CIPIC;
     public bool UsePersonalizedSDN = true;
+    public bool UsePersistentDataPath = false;
     //public HRTFcontainer HRTFCamera;
 
 
@@ -60,25 +61,14 @@ public class SDNEnvConfig : MonoBehaviour
 
         //CREO IL BOUNDARY
         GameObject bound = new GameObject("bounds_DO_NOT_REMOVE");
-        bound.AddComponent<boundary>();
-    //}
-
-    //// Use this for initialization
-    //void Start()
-    //{
-
-        //AudioConfiguration AC = AudioSettings.GetConfiguration();
-        
-
-        Debug.Log(AC.sampleRate);
+        bound.AddComponent<boundary>();        
         
         buffSize = AC.dspBufferSize;
 
-//        MODIFICATO!!!
-        //fftLength = 2 * buffSize;
         fftLength = buffSize;
-        Debug.Log(AC.dspBufferSize);
-        // full hrtf set
+        int lats = buffSize*1000/AC.sampleRate;
+        Debug.Log("SDN Lib correctly started at " + AC.sampleRate + "Hz with sample buffer " + AC.dspBufferSize+". Latency is " + lats +"ms");
+
         for (int i = 0; i < matrix_l.Length; i++)
         {
             matrix_l[i] = new AForge.Math.Complex[elNum][];
@@ -104,21 +94,34 @@ public class SDNEnvConfig : MonoBehaviour
 
         string textFile; // 2d text file containing left and right hrtfs for a specific azimuth
         string fileName;
-        //string filePath = subj_i.DataPath + "subject" + cipic_subject + "_txt";
 
-        // list all hrtf text files in the directory
-        //var targetDirectory = Directory.GetFiles(filePath, "*.txt", SearchOption.TopDirectoryOnly); //  SearchOption.TopDirectoryOnly
-        //            Debug.Log("number of files:" + targetDirectory.GetLength(0))
+        TextAsset[] txt_a;
 
-        TextAsset[] txt_a = Resources.LoadAll<TextAsset>("subject" + cipic_subject + "_txt");
+        string folderdelimit = "/";
+        #if (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN)
+                         folderdelimit = "\\";
+        #endif
+
+
+        if (!UsePersistentDataPath)
+        {
+            txt_a = Resources.LoadAll<TextAsset>("subject" + cipic_subject + "_txt");
+        }
+        else {
+            Debug.Log("Using your Persistend Data Path-->" + Application.persistentDataPath + folderdelimit + "subject_txt");
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt", "*.txt");
+            txt_a = new TextAsset[files.Length];
+            for (int i = 0; i < files.Length; i++) {
+                txt_a[i] = new TextAsset(File.ReadAllText(files[i]));
+                txt_a[i].name = files[i].Split(folderdelimit).Last();
+            }
+        }
+
 
         int i_l = 0, i_r = 0, j = 0, k = 0;      //j_l = 0, j_r = 0, k_l = 0, k_r = 0;
 
         foreach (TextAsset txtfile in txt_a)
-        //foreach (string currentFile in targetDirectory)
         {
-            //fileName = Path.GetFileName(currentFile);
-            //textFile = File.ReadAllText(currentFile);
 
             fileName = txtfile.name;
             textFile = txtfile.text;
@@ -126,13 +129,8 @@ public class SDNEnvConfig : MonoBehaviour
             j = 0;
             k = 0;
 
-            //Debug.Log(currentFile);
-
             if (fileName[0].Equals('L') == true)
             {
-                //Debug.Log(fileName);
-                //Debug.Log(textFile.Split('\n').Length);
-                // store one by one    [i=azimuth, j=elevation, k=sample]
                 foreach (var row in textFile.Split('\n'))
                 {
                     if (j == elNum)
@@ -143,7 +141,6 @@ public class SDNEnvConfig : MonoBehaviour
 
                     foreach (var col in row.Trim().Split(' '))
                     {
-                        //Debug.Log("i_l "+ i_l + "- j "+ j + "- k " + k);
                         matrix_l[i_l][j][k] = new AForge.Math.Complex(float.Parse(col.Trim(), System.Globalization.NumberStyles.Float), 0);
                         k++;
                     }
@@ -155,8 +152,6 @@ public class SDNEnvConfig : MonoBehaviour
             }
             else if (fileName[0].Equals('R') == true)
             {
-                //Debug.Log(fileName);
-                // store one by one    [i=azimuth, j=elevation, k=sample]
                 foreach (var row in textFile.Split('\n'))
                 {
                     if (j == elNum)
@@ -195,12 +190,21 @@ public class SDNEnvConfig : MonoBehaviour
         // triangles
 
 //        Debug.Log("subject" + cipic_subject + "_txt/triangles/triangles");
-        TextAsset triang = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/triangles/triangles");
+        TextAsset triang;
 
-        //filePath = subj_i.DataPath + "/subject" + cipic_subject + "_txt/triangles/triangles.txt";
-        //textFile = File.ReadAllText(filePath);
+        
 
-        textFile = triang.text;
+        if (!UsePersistentDataPath)
+        {
+            triang = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/triangles/triangles");
+            textFile = triang.text;
+        }
+        else
+        {
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt" + folderdelimit + "triangles", "*.txt");
+            textFile = File.ReadAllText(files[0]);
+        }
+
 
         j = 0;
         foreach (var row in textFile.Split('\n'))
@@ -218,12 +222,19 @@ public class SDNEnvConfig : MonoBehaviour
             j++;
         }
         // points
-        TextAsset punti = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/points/points");
+        TextAsset punti;
 
-        //filePath = subj_i.DataPath + "/subject" + cipic_subject + "_txt/points/points.txt";
-        //textFile = File.ReadAllText(filePath);
+        if (!UsePersistentDataPath)
+        {
+            punti = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/points/points");
+            textFile = punti.text;
+        }
+        else
+        {
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt" + folderdelimit + "points", "*.txt");
+            textFile = File.ReadAllText(files[0]);
+        }
 
-        textFile = punti.text;
         j = 0;
         foreach (var row in textFile.Split('\n'))
         {
@@ -250,8 +261,15 @@ public class SDNEnvConfig : MonoBehaviour
 
         // flag
         loaded = true;
-        Debug.Log("HRTF dataset loaded ! CIPIC subject ID: " + cipic_subject);
 
+
+        if (UsePersistentDataPath)
+        {
+            Debug.Log("HRTF dataset loaded ! CIPIC subject ID: " + cipic_subject);
+        }
+        else {
+            Debug.Log("External HRTF dataset correctly loaded!");
+        }
 
     }
 

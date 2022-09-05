@@ -81,6 +81,8 @@ public class AccuracyLog : MonoBehaviour
 
     bool first = true;
 
+    public int recording_seconds = 20; 
+
     IEnumerator TrackPos(float startingTime,string type)
     {
         if (first) {
@@ -95,9 +97,9 @@ public class AccuracyLog : MonoBehaviour
         //Write some text to the test.txt file
         StreamWriter writer = new StreamWriter(path, true);
         int cont = 0;
-        while (Time.time - startingTime < 3)
+        while (Time.time - startingTime < recording_seconds)
         {
-            testo_timer.text = Math.Round(3-(Time.time-startingTime),1).ToString();
+            testo_timer.text = Math.Round(recording_seconds - (Time.time-startingTime),1).ToString();
 
             StringBuilder m_Info = new StringBuilder();
             m_Info.Append(Time.time + ",");

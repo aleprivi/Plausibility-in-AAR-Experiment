@@ -200,13 +200,13 @@ public class CrossfadeBuffer : MonoBehaviour
         //        for (int i = 0; i < buffSize * 2; i++)
         for (int i = 0; i < buffSize; i++)
         {
-            ////NUOVO HRTF
-            tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * buffSize;
-            tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * buffSize;
+                ////NUOVO HRTF
+                tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * buffSize;
+                tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * buffSize;
 
-            ////VECCHIO HRTF
-            tempWindow[3][i] = tempWindow[0][i] * old_hrtfs[0][i] * buffSize;
-            tempWindow[4][i] = tempWindow[0][i] * old_hrtfs[1][i] * buffSize;
+                ////VECCHIO HRTF
+                tempWindow[3][i] = tempWindow[0][i] * old_hrtfs[0][i] * buffSize;
+                tempWindow[4][i] = tempWindow[0][i] * old_hrtfs[1][i] * buffSize;
     }
 
         FourierTransform.FFT(tempWindow[0], FourierTransform.Direction.Backward);
@@ -254,9 +254,8 @@ public class CrossfadeBuffer : MonoBehaviour
         for (int i = 0; i < buffSize; i++)
         {
             //NUOVO HRTF
-            tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * buffSize;
-            tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * buffSize;
-
+                tempWindow[1][i] = tempWindow[0][i] * hrtfs[0][i] * buffSize;
+                tempWindow[2][i] = tempWindow[0][i] * hrtfs[1][i] * buffSize;
 
             //tempWindow[1][i] = tempWindow[0][i];
             //tempWindow[2][i] = tempWindow[0][i];
