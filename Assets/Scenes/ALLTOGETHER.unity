@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44824797, g: 0.49827498, b: 0.57558143, a: 1}
+  m_IndirectSpecularColor: {r: 0.44557709, g: 0.49499387, b: 0.57295513, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -548,6 +548,7 @@ MonoBehaviour:
   height: 4
   width: 5
   depth: 20
+  wallabs: 0.99
   showWalls: 0
 --- !u!4 &279608266
 Transform:
@@ -758,16 +759,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener: {fileID: 1379053053}
-  a: 0
-  b: 0
-  h: 0
-  rho: 0
-  e_b: 0
-  e_d: 0
-  shift: 0
-  Jitd_l: []
-  Jitd_r: []
 --- !u!114 &382425999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,6 +789,7 @@ MonoBehaviour:
   enableListen: 1
   doLateReflections: 1
   doHrtfReflections: 1
+  volumeGain: 1
   positionArray: []
 --- !u!82 &382426001
 AudioSource:
@@ -1253,6 +1245,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SegnapostoInFondo
       objectReference: {fileID: 0}
+    - target: {fileID: 1258646480729192, guid: c3eb64e478b2bb748ae1501daf818368, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4410843128935598, guid: c3eb64e478b2bb748ae1501daf818368, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1574,6 +1570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -2041,6 +2038,16 @@ PrefabInstance:
     - target: {fileID: 2722581053841682930, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722581053841682930, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
+        type: 3}
+      propertyPath: m_Maskable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2722581053841682930, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
+        type: 3}
+      propertyPath: m_RaycastTarget
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2583,6 +2590,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CIPIC: 152
   UsePersonalizedSDN: 1
+  UsePersistentDataPath: 0
+  BufferSize: 1024
+  SystemSampleRate: 44100
 --- !u!81 &1379053055
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3101,16 +3111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener: {fileID: 1379053053}
-  a: 0
-  b: 0
-  h: 0
-  rho: 0
-  e_b: 0
-  e_d: 0
-  shift: 0
-  Jitd_l: []
-  Jitd_r: []
 --- !u!114 &1781837256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3141,6 +3141,7 @@ MonoBehaviour:
   enableListen: 1
   doLateReflections: 1
   doHrtfReflections: 1
+  volumeGain: 1
   positionArray: []
 --- !u!82 &1781837258
 AudioSource:
@@ -3351,16 +3352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener: {fileID: 1379053053}
-  a: 0
-  b: 0
-  h: 0
-  rho: 0
-  e_b: 0
-  e_d: 0
-  shift: 0
-  Jitd_l: []
-  Jitd_r: []
 --- !u!114 &1822478365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3391,6 +3382,7 @@ MonoBehaviour:
   enableListen: 1
   doLateReflections: 1
   doHrtfReflections: 1
+  volumeGain: 1
   positionArray: []
 --- !u!82 &1822478367
 AudioSource:
@@ -4086,7 +4078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4266498507362718
 Transform:
   m_ObjectHideFlags: 0
@@ -4332,7 +4324,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5584055683897365466
 Transform:
   m_ObjectHideFlags: 0
@@ -4361,16 +4353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listener: {fileID: 1379053053}
-  a: 0
-  b: 0
-  h: 0
-  rho: 0
-  e_b: 0
-  e_d: 0
-  shift: 0
-  Jitd_l: []
-  Jitd_r: []
 --- !u!114 &5586771433502589494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4401,6 +4383,7 @@ MonoBehaviour:
   enableListen: 1
   doLateReflections: 1
   doHrtfReflections: 1
+  volumeGain: 1
   positionArray: []
 --- !u!82 &5586771433502589496
 AudioSource:

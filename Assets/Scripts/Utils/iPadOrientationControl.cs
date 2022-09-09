@@ -7,11 +7,19 @@ using UnityEngine.UI;
 
 public class iPadOrientationControl : MonoBehaviour
 {
+
+
+    bool hide_blackscreen = false;
+
     public Camera ARCamera;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (Application.isEditor)
+        {
+            GetComponent<Image>().enabled = false;
+        }
         this.GetComponent<Image>().CrossFadeAlpha(0, 0.01f, false);
         currentTime = waitingTime;
     }

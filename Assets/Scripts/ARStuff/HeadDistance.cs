@@ -125,12 +125,15 @@ public class HeadDistance : MonoBehaviour
                  */
                 DigitalTwinHead.transform.position = face.transform.position;
 
-
+                errorPlayed = false;
+                isHeadAvailable = true;
 
             }
             else {
                 if (ipoc != null) ipoc.check_BeHeaded(true);
                 m_Info.Append("Head LOST! " + face.trackingState);
+                playErrorOnce();
+                isHeadAvailable = false;
             }
         }
 
@@ -138,6 +141,19 @@ public class HeadDistance : MonoBehaviour
 //        Debug.Log(m_Info);
 
     }
+
+    bool errorPlayed = false;
+    void playErrorOnce() {
+        if (audioError != null && !errorPlayed) audioError.Play();
+        errorPlayed = true;
+    }
+
+
+    bool isHeadAvailable;
+    public bool getHeadState() {
+        return isHeadAvailable;
+    }
+    public AudioSource audioError;
 
     void Update()
     {

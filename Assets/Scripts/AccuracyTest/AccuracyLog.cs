@@ -14,6 +14,7 @@ public class AccuracyLog : MonoBehaviour
     Camera ars;
     ARSessionOrigin arso;
     public GameObject head;
+    public HeadDistance headUtils;
 
     Vector3 startingPosition;
     Quaternion startingRotation;
@@ -23,7 +24,7 @@ public class AccuracyLog : MonoBehaviour
     void Start()
     {
         
-        ars = GameObject.FindObjectOfType<Camera>();
+        ars = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         arso = GameObject.FindObjectOfType<ARSessionOrigin>();
 
 
@@ -36,7 +37,12 @@ public class AccuracyLog : MonoBehaviour
             "Cam_X_Raw,Cam_Y_Raw,Cam_Z_Or," +
             "Y_ROT," +
             "Head_X_Normalized,Head_Y_Normalized,Head_Z_Normalized," +
-            "Head_X_Raw,Head_Y_Raw,Head_Z_Raw";
+            "Head_X_Raw,Head_Y_Raw,Head_Z_Raw,"
+             +
+            "GridX,GridY,Step,NullMeasure";
+
+
+        //Aggiungere: coord X, Y, Step, OK-NULL
 
         writer.WriteLine(val);
         writer.Close();
@@ -71,19 +77,22 @@ public class AccuracyLog : MonoBehaviour
     }
 
     public void setStartingPosition() {
-        StartCoroutine(TrackPos(Time.time, "center"));
+        StartCoroutine(TrackPos(Time.time, false));
     }
 
     // Update is called once per frame
     void Update()
     {
+        //testo.text = ars.transform.position.x + "---" + ars.transform.position.z;
     }
 
     bool first = true;
 
-    public int recording_seconds = 20; 
+    public int recording_seconds = 20;
 
-    IEnumerator TrackPos(float startingTime,string type)
+    int step = 0;
+
+    IEnumerator TrackPos(float startingTime,bool shake)
     {
         if (first) {
             startingPosition = ars.transform.position;
@@ -93,11 +102,13 @@ public class AccuracyLog : MonoBehaviour
 
         testo.text = "Inizio Tracking. Attendi...";
 
+        step++;
+
         string path = Application.persistentDataPath + "/accuracyTest.csv";
         //Write some text to the test.txt file
         StreamWriter writer = new StreamWriter(path, true);
         int cont = 0;
-        while (Time.time - startingTime < recording_seconds)
+        while (Time.time - startingTime < recording_seconds && headUtils.getHeadState())
         {
             testo_timer.text = Math.Round(recording_seconds - (Time.time-startingTime),1).ToString();
 
@@ -145,14 +156,33 @@ public class AccuracyLog : MonoBehaviour
             //XYZHEAD RAW
             m_Info.Append(head.transform.position.x + ",");
             m_Info.Append(head.transform.position.y + ",");
-            m_Info.Append(head.transform.position.z);
-            
+            m_Info.Append(head.transform.position.z + ",");
+
+            //GRID X-Y
+            m_Info.Append(Mathf.Round(ars.transform.position.x * 2) + ",");
+            m_Info.Append(Mathf.Round(ars.transform.position.z * 2) + ",");
+
+            //step number
+            m_Info.Append(step + ",");
+
+            //isNotNull
+            m_Info.Append(false + ",");
+
             writer.WriteLine(m_Info);
             yield return null;
         }
+
+        if (!headUtils.getHeadState())
+        {
+            writer.WriteLine("-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,true");
+            testo.text = "Head Lost... restart!";
+        }
+        else {
+            testo.text = "Fine, muoviti!";
+        }
         writer.Close();
 
-        testo.text = "Fine, muoviti!";
+        
 
 
     }
