@@ -724,7 +724,6 @@ GameObject:
   - component: {fileID: 382426001}
   - component: {fileID: 382426000}
   - component: {fileID: 382425999}
-  - component: {fileID: 382425998}
   m_Layer: 0
   m_Name: passi
   m_TagString: Untagged
@@ -747,18 +746,6 @@ Transform:
   m_Father: {fileID: 5584055683897365466}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &382425998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 382425996}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &382425999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -788,7 +775,7 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  doHrtfReflections: 1
+  applyHrtfReflections: 1
   volumeGain: 1
   positionArray: []
 --- !u!82 &382426001
@@ -1899,6 +1886,7 @@ MonoBehaviour:
   DigitalTwinHead: {fileID: 1379053060}
   m_CameraManager: {fileID: 1060013188}
   ipoc: {fileID: 219623605}
+  audioError: {fileID: 0}
 --- !u!114 &903227067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3076,7 +3064,6 @@ GameObject:
   - component: {fileID: 1781837258}
   - component: {fileID: 1781837257}
   - component: {fileID: 1781837256}
-  - component: {fileID: 1781837255}
   m_Layer: 0
   m_Name: backGoal
   m_TagString: Untagged
@@ -3099,18 +3086,6 @@ Transform:
   m_Father: {fileID: 1944638704}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1781837255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1781837253}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e43c188b2d841f38a36969c8348497, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1781837256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3140,7 +3115,7 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  doHrtfReflections: 1
+  applyHrtfReflections: 1
   volumeGain: 1
   positionArray: []
 --- !u!82 &1781837258
@@ -3381,7 +3356,7 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  doHrtfReflections: 1
+  applyHrtfReflections: 1
   volumeGain: 1
   positionArray: []
 --- !u!82 &1822478367
@@ -4382,7 +4357,7 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  doHrtfReflections: 1
+  applyHrtfReflections: 1
   volumeGain: 1
   positionArray: []
 --- !u!82 &5586771433502589496
