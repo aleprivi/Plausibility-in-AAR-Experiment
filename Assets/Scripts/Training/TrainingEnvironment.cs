@@ -32,9 +32,11 @@ public class TrainingEnvironment : MonoBehaviour
     bool firstTargetReached = false;
 
     public void StartTraining() {
-        Vector3 tmp_pos = new Vector3(0,0, Random.Range(2f, 4f));
+        // Vector3 tmp_pos = new Vector3(0,0, Random.Range(2f, 4f));
+        Vector3 tmp_pos = new Vector3(0, 0, Random.Range(0f, 1.5f));
         front.transform.localPosition = tmp_pos;
-        tmp_pos = new Vector3(0, 0, Random.Range(-2f, -4f));
+        //tmp_pos = new Vector3(0, 0, Random.Range(-2f, -4f));
+        tmp_pos = new Vector3(0, 0, Random.Range(0f, -1.5f));
         back.transform.localPosition = tmp_pos;
         activeObject.SetActive(true);
         activeObject.GetComponent<AudioSource>().Play();

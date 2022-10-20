@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -195,30 +196,39 @@ public class reflectionFinder : MonoBehaviour
         layerMask = ~layerMask;
         if (Physics.Raycast(boundaryRay, out boundaryHit, Mathf.Infinity, layerMask)) {
 
-			if (boundaryHit.collider.name != listener.name) {
 
-				Vector3 invNormal = boundaryHit.normal * -1.0f;
-				float angleToPlane = Vector3.Dot (invNormal, boundaryRay.direction);
-				angleToPlane /= invNormal.magnitude * boundaryRay.direction.magnitude;
-				float perpendicularDist = angleToPlane * boundaryHit.distance;
+			try
+			{
+				if (boundaryHit.collider.name != listener.name || boundaryHit.collider.name != "bounds_DO_NOT_REMOVE")
+				{
 
-				Vector3 imageSource = sourcePos + (perpendicularDist * 2 * invNormal);
-				Ray imageSourceRay = new Ray (imageSource, (listenerPos - imageSource).normalized);
+					Vector3 invNormal = boundaryHit.normal * -1.0f;
+					float angleToPlane = Vector3.Dot(invNormal, boundaryRay.direction);
+					angleToPlane /= invNormal.magnitude * boundaryRay.direction.magnitude;
+					float perpendicularDist = angleToPlane * boundaryHit.distance;
 
-				float angleToListener = Vector3.Dot (boundaryHit.normal, imageSourceRay.direction);
-				angleToListener /= (boundaryHit.normal.magnitude * imageSourceRay.direction.magnitude);
-				angleToListener = Mathf.Acos (angleToListener);
-				float len = perpendicularDist / Mathf.Cos (angleToListener);
-				Vector3 reflectionPoint = imageSource + (imageSourceRay.direction * len);
+					Vector3 imageSource = sourcePos + (perpendicularDist * 2 * invNormal);
+					Ray imageSourceRay = new Ray(imageSource, (listenerPos - imageSource).normalized);
 
-				currPath.segments.Add (new Ray (sourcePos, (reflectionPoint - sourcePos).normalized));
-				currPath.segments.Add (new Ray (reflectionPoint, (listenerPos - reflectionPoint).normalized));
-				currPath.lengths.Add (Vector3.Distance (sourcePos, reflectionPoint));
-				currPath.lengths.Add (Vector3.Distance (reflectionPoint, listenerPos));
+					float angleToListener = Vector3.Dot(boundaryHit.normal, imageSourceRay.direction);
+					angleToListener /= (boundaryHit.normal.magnitude * imageSourceRay.direction.magnitude);
+					angleToListener = Mathf.Acos(angleToListener);
+					float len = perpendicularDist / Mathf.Cos(angleToListener);
+					Vector3 reflectionPoint = imageSource + (imageSourceRay.direction * len);
 
-                // validate path and set wall number according to collider name (wall name)
-                validatePath(currPath, boundaryHit.collider.name);
-			}
+					currPath.segments.Add(new Ray(sourcePos, (reflectionPoint - sourcePos).normalized));
+					currPath.segments.Add(new Ray(reflectionPoint, (listenerPos - reflectionPoint).normalized));
+					currPath.lengths.Add(Vector3.Distance(sourcePos, reflectionPoint));
+					currPath.lengths.Add(Vector3.Distance(reflectionPoint, listenerPos));
+
+					// validate path and set wall number according to collider name (wall name)
+					validatePath(currPath, boundaryHit.collider.name);
+				}
+			}catch(NullReferenceException ex)
+            {
+				Debug.Log("=======Errore di " + boundaryHit.collider.name + "==========");
+				Debug.Log(ex.Message);
+            }
 		}
 	}
 

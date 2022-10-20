@@ -11,6 +11,8 @@ TagManager:
   - value
   - otherCameras
   - DigitalHead
+  - txt1
+  - txt2
   layers:
   - Default
   - TransparentFX

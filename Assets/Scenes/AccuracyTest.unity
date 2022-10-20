@@ -2325,7 +2325,7 @@ MonoBehaviour:
   testo_timer: {fileID: 1042561100}
   head: {fileID: 1379053053}
   headUtils: {fileID: 903227066}
-  recording_seconds: 600
+  recording_seconds: 20
 --- !u!82 &1880866339
 AudioSource:
   m_ObjectHideFlags: 0

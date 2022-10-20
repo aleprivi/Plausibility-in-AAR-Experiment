@@ -68,6 +68,8 @@ public class LinearEnvironment : MonoBehaviour
 
         reachedLabel.text = "";
 
+        CHIagent.SetActive(true);
+
         if (intimate_Condition) maxDistance = 0.38f;
         maxSteps = 30;
         

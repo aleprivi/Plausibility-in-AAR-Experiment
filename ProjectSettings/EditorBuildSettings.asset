@@ -9,11 +9,23 @@ EditorBuildSettings:
     path: Assets/Scenes/AccuracyTest.unity
     guid: 603e89abe784542f28917edd8c86e7d2
   - enabled: 1
-    path: Assets/Scenes/SceneSelector.unity
-    guid: d62b8234ce9f54f8ab52bc8698e0ef9d
+    path: Assets/Scenes/Calibration Scenes/CalibrationSelector.unity
+    guid: d19c63317423c40aea130ee129f5485d
   - enabled: 1
     path: Assets/Scenes/ALLTOGETHER.unity
     guid: e55236e8d6fd042e9a7acb0d978f720a
+  - enabled: 1
+    path: Assets/Scenes/SceneSelector.unity
+    guid: d62b8234ce9f54f8ab52bc8698e0ef9d
+  - enabled: 1
+    path: Assets/Scenes/Calibration Scenes/Loudness CorrCorr.unity
+    guid: ff39f3e53668e444482befd86464d093
+  - enabled: 1
+    path: Assets/Scenes/Calibration Scenes/Loudness RealCorr.unity
+    guid: 09e9e1845aad242298b7a2b426b64b5d
+  - enabled: 1
+    path: Assets/Scenes/Calibration Scenes/Loudness RealRT60.unity
+    guid: ba968c9f47d6640a29955365ed24f52f
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 963b8ef41555f43bd9f4e2053a23c462,
       type: 2}
