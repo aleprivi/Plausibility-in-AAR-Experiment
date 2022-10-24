@@ -103,11 +103,16 @@ public class HRTFmanager : MonoBehaviour
                 // constantly go through the list and update azi and ele
                 for (int i = 0; i < 2; i++) // Parallel.For(0, positionArray.Count, i => //
                 {
+                    try{
                     azEl[i] = getAzElInteraural(positionArray[i]);
 
                     // get hrtfs from database
                     hrtf_nodes[i] = listener.GetComponent<SDNEnvConfig>().getInterpolated_HRTF(azEl[i]);
-
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log("Warning: Some unexpected reposition Happened?");
+                    }
                 }
 
 

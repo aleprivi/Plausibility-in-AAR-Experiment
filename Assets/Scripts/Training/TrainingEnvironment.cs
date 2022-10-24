@@ -24,7 +24,7 @@ public class TrainingEnvironment : MonoBehaviour
         first = Random.Range(1, 3);
 //        Debug.Log(first);
         activeObject = (first == 1) ? front : back;
-        instructions.text = "Posiziona al centro del bollino, guarda dritto di fronte a te premi START";
+        //instructions.text = "Posiziona al centro del bollino, guarda dritto di fronte a te premi START";
         front.SetActive(false);
         back.SetActive(false);
     }
