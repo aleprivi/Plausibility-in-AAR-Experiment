@@ -28,9 +28,14 @@ public class ProcedureFlowChart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
+
         procedureState = ProcedureStates.CalibrationReady;
         calibrator = gameObject.GetComponent<Calibrator>();
+        calibrator.procedureFlowChart = this;
         procDefinition = gameObject.GetComponent<ProcDefinition>();
+        procDefinition.procedureFlowChart = this;
         guiManager = gameObject.GetComponent<GUIManager>();
         nextStep();
     }
@@ -56,7 +61,7 @@ public class ProcedureFlowChart : MonoBehaviour
                 procedureState = ProcedureStates.Procedure;
                 break;
             case ProcedureStates.Procedure:
-            guiManager.showMessage(procedureMessage, 5);
+            guiManager.showMessage(procedureMessage, 2);
                 procedureState = ProcedureStates.End;
                 procDefinition.startProcedure();
                 break;

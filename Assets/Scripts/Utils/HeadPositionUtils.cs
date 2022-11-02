@@ -2,18 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomPosition : MonoBehaviour
+public class HeadPositionUtils : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        
+        #if UNITY_EDITOR
+            ARCamera = GameObject.Find("AR Camera");
+        #endif
     }
 
+    public GameObject ARCamera;
 
     // Update is called once per frame
     void Update()
     {
+        #if UNITY_EDITOR
+            this.transform.position = ARCamera.transform.position;
+        #endif
+
         if (Input.GetKeyDown(KeyCode.X))
         {
 

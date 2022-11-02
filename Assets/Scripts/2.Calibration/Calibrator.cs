@@ -8,23 +8,26 @@ public class Calibrator : MonoBehaviour
 //tenendo il leggio a una misura fissa dal pavimento
 
     //public GameObject ExperimentLogic;
-    public GameObject ARCamera;
+    public GameObject digitalHead;
     public GameObject Room;
     public GameObject[] experimentElements;
-    public ProcedureFlowChart procedureFlowChart;
+    [HideInInspector] public ProcedureFlowChart procedureFlowChart;
 
     public void Start(){
         name = "Calibration";
+        #if UNITY_EDITOR
+            digitalHead = GameObject.Find("AR Camera");
+        #endif
     }
 
     public void startCalibration(){
         Debug.Log("Calibration started");
 
         Debug.Log("Reposition!");
-        Vector3 calibratedPosition = new Vector3(ARCamera.transform.position.x, ARCamera.transform.position.y, ARCamera.transform.position.z);
-        Vector3 eulerAngle = ARCamera.transform.rotation.eulerAngles;
+        Vector3 calibratedPosition = new Vector3(digitalHead.transform.position.x, digitalHead.transform.position.y, digitalHead.transform.position.z);
+        Vector3 eulerAngle = digitalHead.transform.rotation.eulerAngles;
 
-        Room.transform.position = new Vector3(calibratedPosition.x, ARCamera.transform.position.y - 1.85f,calibratedPosition.z);
+        Room.transform.position = new Vector3(calibratedPosition.x, digitalHead.transform.position.y - 1.85f,calibratedPosition.z);
         Room.transform.rotation = Quaternion.Euler(0, eulerAngle.y, 0);
         
         foreach(GameObject gameObject in experimentElements){

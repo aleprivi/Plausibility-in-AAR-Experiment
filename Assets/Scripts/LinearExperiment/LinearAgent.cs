@@ -44,19 +44,14 @@ public class LinearAgent : Agent {
         //if (e > eMin) { e = e - ((1f - eMin) / (float)annealingSteps); } //Questo non serve in quanto non previsto da Slater
         //GameObject.Find("ETxt").GetComponent<Text>().text = "Epsilon: " + e.ToString("F2");
         float currentQ = q_table[lastState][action];
-        GameObject.Find("QTxt").GetComponent<Text>().text = "Current Q-value: " + currentQ.ToString("F2");
+        //GameObject.Find("QTxt").GetComponent<Text>().text = "Current Q-value: " + currentQ.ToString("F2");
 		return new float[1] {action};
 	}
 
     void printQTable() {
         WriteLogs.WriteQTable("Qtable", q_table);
-
-
     }
 
-    ///??????????
-    ///??????????
-    ///??????????
     /// <summary>
     /// Gets the values stored within the Q table.
     /// </summary>

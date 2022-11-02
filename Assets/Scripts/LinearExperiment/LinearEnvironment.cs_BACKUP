@@ -3,15 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class EnvironmentParameters
-{
-    public int state_size { get; set; }
-    public int action_size { get; set; }
-    public List<string> action_descriptions { get; set; }
-    public string action_space_type { get; set; }
-    public string state_space_type { get; set; }
-    public int num_agents { get; set; }
-}
 
 public class LinearEnvironment : MonoBehaviour
 {

@@ -1,32 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class TargetReached : MonoBehaviour
 {
-    // Start is called before the first frame update
+    MainExperiment slaterExperiment;
+    GameObject digitalHead;
+    
+    bool targetReached = false;
     void Start()
     {
+        slaterExperiment = GameObject.FindObjectOfType<MainExperiment>();
+        digitalHead = GameObject.FindGameObjectWithTag("DigitalHead");
         
     }
 
-    
-
-
-    // Update is called once per frame
     void Update()
     {
-
-        LinearEnvironment linEnvironment = GameObject.FindObjectOfType<LinearEnvironment>();
-
-        
-
-        GameObject xx = GameObject.FindGameObjectWithTag("DigitalHead");
-        //Debug.Log("Dist dal goal " + linEnvironment.get2DDistance(xx, this.gameObject));
-        if (linEnvironment.get2DDistance(xx, this.gameObject) < 0.5) {
-            linEnvironment.setReachedGoal();
-            //SceneManager.LoadScene("CHITraining");
+        if (slaterExperiment.get2DDistance(digitalHead, this.gameObject) < 0.5 && !targetReached) {
+            Debug.Log("Goal Object Identifies that the Target has been Reached!");
+            slaterExperiment.endProcedure();
+            targetReached = true;
         }
     }
 }
