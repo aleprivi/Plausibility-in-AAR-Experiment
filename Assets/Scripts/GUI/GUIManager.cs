@@ -13,7 +13,7 @@ public class GUIManager : MonoBehaviour
     Button instructionButton;
 
     //Pannello UserInfo
-    TextMeshProUGUI headDist, headHeight, headRot, headLost;
+    TextMeshProUGUI headDist, headHeight, headRot, headLost, headX, headY, headZ;
 
     //Pannello IA Info
     TextMeshProUGUI userTarget, userAgent, lastReward, lastState, lastAction;
@@ -52,9 +52,12 @@ public class GUIManager : MonoBehaviour
             headDist.text = "Distance: " + Math.Round(headDistance*100, 1) +"cm";
             headHeight.text = "Height: " + Math.Round((head.transform.position.y-iPad.transform.position.y)*100, 1)+"cm";
             headRot.text = "Rotation: " + Math.Round(head.transform.rotation.eulerAngles.y, 0)+"°";
+            //headX.text = "X: " + Math.Round(head.transform.position.x, 2);
+            //headY.text = "Y: " + Math.Round(head.transform.position.y, 2);
+            //headZ.text = "Z: " + Math.Round(head.transform.position.z, 2);
             headLost.text = "";
         }
-        if(isHeadLost){
+        if(debugMode && isHeadLost){
             headDist.text = "";
             headHeight.text = "";
             headRot.text = "";
@@ -142,6 +145,9 @@ public class GUIManager : MonoBehaviour
             headHeight = GameObject.Find("headHeight").GetComponent<TextMeshProUGUI>();
             headRot = GameObject.Find("headRot").GetComponent<TextMeshProUGUI>();
             headLost = GameObject.Find("headLost").GetComponent<TextMeshProUGUI>();
+            //headX = GameObject.Find("headX").GetComponent<TextMeshProUGUI>();
+            //headY = GameObject.Find("headY").GetComponent<TextMeshProUGUI>();
+            //headZ = GameObject.Find("headZ").GetComponent<TextMeshProUGUI>();
 
             userTarget = GameObject.Find("usrTargetDst").GetComponent<TextMeshProUGUI>();
             userAgent = GameObject.Find("usrAgentDst").GetComponent<TextMeshProUGUI>();
@@ -162,7 +168,8 @@ public class GUIManager : MonoBehaviour
         }
 
         debugButton.gameObject.SetActive(false);
-        visible = true;
+        debugButton.gameObject.SetActive(false);
+        if(!debugMode) visible = true;
         toggleMeshesandGUI();
     }
 

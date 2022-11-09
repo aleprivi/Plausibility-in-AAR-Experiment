@@ -95,7 +95,7 @@ public class SDN : MonoBehaviour
     AudioSource _source;
 
     //private bool loaded = false; // trick to let know that the HRTFs are loaded from the text file.
-    private bool snowman = false;
+    //private bool snowman = false;
 
     void Awake() {
         SDNEnvConfig[] tmp = FindObjectsOfType<SDNEnvConfig>();
@@ -244,41 +244,69 @@ public class SDN : MonoBehaviour
         int numSampsToConsume = inSamples.Count;
         // horrible hack to solve latency @ startup - the queue quickly fills up from
         // the audio thread before the main thread can catch up. I am a bad person for doing this.
-        if (inSamples.Count > 10000)
+
+        /*if (inSamples.Count > 10000)
         {
             inSamples.Clear();
             sampleMX.ReleaseMutex();
             return;
+        }*/
+        if (inSamples.Count > 10000)
+        {
+            Debug.Log("SDN.cs: inSamples.Count > 10000");
         }
+
 
         int i, j;
 
+        //if(idx>1024){Debug.Log("CCX idx super il 1024 - " + numSampsToConsume);}
         for (i = 0; i < numSampsToConsume; i++)
         {
-            outVal = 0.0f;
-            inVal = inSamples.Dequeue() * networkInScale; //networkInScale = 1/network.Count;
-//CREDO sia il numero di muri del network, altrimenti è il numero di nodi (cioè 36 - nodi "i-j" diagonali)
+            
+                outVal = 0.0f;
+                inVal = inSamples.Dequeue() * networkInScale; //networkInScale = 1/network.Count;
+    //CREDO sia il numero di muri del network, altrimenti è il numero di nodi (cioè 36 - nodi "i-j" diagonali)
 
-            // direct path processing
-            directDelay.write(inVal);
-            directVal = directDelay.read(); //leggo il sample con il delay indicato già corretto
-            directVal *= directAtt; //calcolata come 1/distanza (approssimata?). Distanza è sempre positiva, quindi
-            //non inverte la fase
-            outSamples.Enqueue(directVal);
+                // direct path processing
+                directDelay.write(inVal);
+                directVal = directDelay.read(); //leggo il sample con il delay indicato già corretto
+                directVal *= directAtt; //calcolata come 1/distanza (approssimata?). Distanza è sempre positiva, quindi
+                //non inverte la fase
+                outSamples.Enqueue(directVal);
 
-            // Prendo lo stesso sample e lo butto su tutti i nodi, con il delay corretto
-            for (j = 0; j < network.Count; j++) //Per tutti i nodi presenti (6?)
-            {
-                junctionsSamps[j][idx] = new Complex(network[j].getOutgoing(), 0); //leggo il sample con il delay
-                //corretto. Gestisco un buffer intero con idx, che è definito globale 
+            //try{
+                // Prendo lo stesso sample e lo butto su tutti i nodi, con il delay corretto
+                for (j = 0; j < network.Count; j++) //Per tutti i nodi presenti (6?)
+                {
+                try{
+                    junctionsSamps[j][idx] = new Complex(network[j].getOutgoing(), 0); //leggo il sample con il delay
+                    //corretto. Gestisco un buffer intero con idx, che è definito globale 
+                }catch(Exception e){
+                        Debug.Log("ERRORE!!!");
+                        Debug.Log("CCX junctionsSamps Length = " + junctionsSamps.Count);
+                        Debug.Log("CCX junctionsSamps[j] Length = " + junctionsSamps[j].Length);
+                        Debug.Log("CCX idx: " + idx);
+                        Debug.Log("CCX j: " + j);
 
-                network[j].inputIncoming(inVal);
-                network[j].doScattering(doLateReflections);
-            }
-            idx++;
+                        sampleMX.ReleaseMutex();
+                        networkMX.ReleaseMutex();
+                        return;
+                        //Debug.Log("Errore: " + e);
+                    }
+                    network[j].inputIncoming(inVal);
+                    network[j].doScattering(doLateReflections);
+                }
+                //if(idx == 0){Debug.Log("idx È stato resettato");}
+                idx++;
 
-            // outVal += directVal;
-            // outSamples.Enqueue(outVal*10);
+                //idx = (idx + 1)  % 1024; //MODIFICATO!!!!
+
+                // outVal += directVal;
+                // outSamples.Enqueue(outVal*10);
+            /*}catch(Exception e){
+                Debug.Log("CULOOOO!!!!");
+                Debug.Log(e);
+            }*/
 
         }
         sampleMX.ReleaseMutex();
@@ -376,7 +404,7 @@ public class SDN : MonoBehaviour
     {
         SDNnode.setWallAbs(abs);
     }
-
+/*
     public void enableAll()
     {
         enableListen = true;
@@ -393,7 +421,7 @@ public class SDN : MonoBehaviour
     {
         enableListen = false;
         doLateReflections = false;
-    }
+    }*/
 
     public List<SDNnode> getNetwork()
     {

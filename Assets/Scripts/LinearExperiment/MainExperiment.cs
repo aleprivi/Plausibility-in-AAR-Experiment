@@ -54,14 +54,13 @@ public class MainExperiment : ProcDefinition
     }
 
 
-    bool isExperimentRunning; //L'esperimento is running?
+    public bool isExperimentRunning; //L'esperimento is running?
     float actualTime; //Il tempo Attuale che manca alla fine
     bool playedSound; //Il suono è già partito??
     void Update()
     {
         //Se l'esperimento non è avviato non faccio nulla
         if(!isExperimentRunning) return;
-
 
         float UserGoalDist = get2DDistance(digitalHead, GoalObject);
         float AgentGoalDist = get2DDistance(AudioAgent, GoalObject);
@@ -72,7 +71,7 @@ public class MainExperiment : ProcDefinition
         if (AgentGoalDist-UserGoalDist < MinUserAgentDistance)
         {
             //?? Modificare fermando
-            Debug.Log("NON VA BENE!!! entrato nella Intimate!");
+            //Debug.Log("NON VA BENE!!! entrato nella Intimate!");
             float distanceToStepOut = MinUserAgentDistance - (AgentGoalDist-UserGoalDist); //La distanza che deve fare l'agente per uscire dalla zona intima
             AudioAgent.transform.localPosition = Vector3.MoveTowards(AudioAgent.transform.localPosition, GoalObject.transform.localPosition, -distanceToStepOut); //Muovo l'agente lontano dallo user            
             actualTime = -1;
@@ -95,7 +94,6 @@ public class MainExperiment : ProcDefinition
             if(preStepTime > 0){
                 preStepTime -= Time.deltaTime;
             }else{
-                Debug.Log("Change");
                 AudioSource audiotmp = AudioAgent.GetComponent<AudioSource>();
                 audiotmp.clip = SilenceSound;
                 firstStep = false;
@@ -115,7 +113,7 @@ public class MainExperiment : ProcDefinition
         {
             if (!playedSound)
             {
-                Debug.Log("Time to play the sound ;) ");
+                //Debug.Log("Time to play the sound ;) ");
                 playedSound = true;
                 AudioSource audiotmp = AudioAgent.GetComponent<AudioSource>();
                 audioSteps.Stop();
@@ -127,7 +125,7 @@ public class MainExperiment : ProcDefinition
                 if(guiManager.debugMode && guiManager.RLDebugMode) {
                     guiManager.debugButton.gameObject.SetActive(true);
                 }else{
-                    Debug.Log("Step " + currentStep + " - Tempo di sistema: " + Time.time);
+//                    Debug.Log("Step " + currentStep + " - Tempo di sistema: " + Time.time);
                     EndStep();
                 }
             }
@@ -154,6 +152,7 @@ public class MainExperiment : ProcDefinition
 
     //Quando avvio preparo l'ambiente
     public void Start(){
+        //AudioAgent.SetActive(false);
         isExperimentRunning = false;
         digitalHead = GameObject.FindGameObjectWithTag("DigitalHead");
         //Che condizione?
@@ -228,6 +227,7 @@ public class MainExperiment : ProcDefinition
 
     public void Step(int action)
     {
+        Debug.Log("Step Done");
         //SEMAFORO?
         //acceptingSteps = false;
 
@@ -247,6 +247,7 @@ public class MainExperiment : ProcDefinition
         playedSound = false;
 
         AudioSource audiotmp = AudioAgent.GetComponent<AudioSource>();
+        audiotmp.Stop();
 
         int metres = 0;
 
@@ -349,7 +350,7 @@ public class MainExperiment : ProcDefinition
             reward = -1;
         }
 
-        Debug.Log("Ricompensa: " + reward);
+        //Debug.Log("Ricompensa: " + reward);
 
         preStepDistance = UserGoalDist;
 
@@ -368,7 +369,7 @@ public class MainExperiment : ProcDefinition
 
 
 
-        Debug.Log("Last State" + ((LinearAgent)agent).lastState + " - Current State " + collectState());
+        //Debug.Log("Last State" + ((LinearAgent)agent).lastState + " - Current State " + collectState());
         agent.SendState(collectState(), reward, false);
 
 

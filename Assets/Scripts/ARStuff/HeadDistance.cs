@@ -85,7 +85,7 @@ public class HeadDistance : MonoBehaviour
             if (face.trackingState == TrackingState.Tracking)
             {
                 if (ipoc != null) ipoc.check_BeHeaded(false);
-                guiManager.showCoords(false);
+                if (guiManager != null) guiManager.showCoords(false);
 
                 //COMPONGO STRINGA
                 var camera = m_CameraManager.GetComponent<Camera>();
@@ -101,7 +101,7 @@ public class HeadDistance : MonoBehaviour
             }
             else {
                 if (ipoc != null) ipoc.check_BeHeaded(true);
-                guiManager.showCoords(true);
+                if (guiManager != null) guiManager.showCoords(true);
                 playErrorOnce();
                 isHeadAvailable = false;
             }
