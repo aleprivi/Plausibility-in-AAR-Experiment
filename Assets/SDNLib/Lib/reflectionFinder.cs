@@ -60,6 +60,7 @@ public class reflectionFinder : MonoBehaviour
 			if (doUpdate) {
 				if (!currentlyUpdating) {
 				if (Vector3.Distance (prevSourcePos, gameObject.transform.position) > 0.1f || Vector3.Distance (prevListenerPos, listener.transform.position) > 0.1f) {
+//					Debug.Log("Update reflections");
 					updateAllPaths ();
 					}
 				}

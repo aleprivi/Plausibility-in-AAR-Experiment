@@ -32,6 +32,7 @@ public class MainExperiment : ProcDefinition
     //Internal Vars
     EnvironmentParameters envParameters;
     float MinUserAgentDistance = 1.2f;
+    float MaxAgentGoalDistance = 14.85f;
     float startingTime;
     LinearAgent agent;
     float reward = 0;
@@ -65,7 +66,7 @@ public class MainExperiment : ProcDefinition
         float UserGoalDist = get2DDistance(digitalHead, GoalObject);
         float AgentGoalDist = get2DDistance(AudioAgent, GoalObject);
 
-        guiManager.showElementPositions(AgentGoalDist-UserGoalDist, UserGoalDist);
+        guiManager.showElementPositions(UserGoalDist, AgentGoalDist - UserGoalDist);
 
         //Se mi avvicino troppo faccio in modo che si allontani in maniera da essere alla distanza minima
         if (AgentGoalDist-UserGoalDist < MinUserAgentDistance)
@@ -73,6 +74,13 @@ public class MainExperiment : ProcDefinition
             //?? Modificare fermando
             //Debug.Log("NON VA BENE!!! entrato nella Intimate!");
             float distanceToStepOut = MinUserAgentDistance - (AgentGoalDist-UserGoalDist); //La distanza che deve fare l'agente per uscire dalla zona intima
+            AudioAgent.transform.localPosition = Vector3.MoveTowards(AudioAgent.transform.localPosition, GoalObject.transform.localPosition, -distanceToStepOut); //Muovo l'agente lontano dallo user            
+            actualTime = -1;
+        }
+
+        if(AgentGoalDist >= MaxAgentGoalDistance){
+            //Debug.Log("NON VA BENE!!! entrato nella Intimate!");
+            float distanceToStepOut = MaxAgentGoalDistance - 6;
             AudioAgent.transform.localPosition = Vector3.MoveTowards(AudioAgent.transform.localPosition, GoalObject.transform.localPosition, -distanceToStepOut); //Muovo l'agente lontano dallo user            
             actualTime = -1;
         }
@@ -152,7 +160,7 @@ public class MainExperiment : ProcDefinition
 
     //Quando avvio preparo l'ambiente
     public void Start(){
-        //AudioAgent.SetActive(false);
+        AudioAgent.SetActive(false);
         isExperimentRunning = false;
         digitalHead = GameObject.FindGameObjectWithTag("DigitalHead");
         //Che condizione?
@@ -227,7 +235,7 @@ public class MainExperiment : ProcDefinition
 
     public void Step(int action)
     {
-        Debug.Log("Step Done");
+        //Debug.Log("Step Done");
         //SEMAFORO?
         //acceptingSteps = false;
 

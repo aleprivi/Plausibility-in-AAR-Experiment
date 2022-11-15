@@ -41,8 +41,7 @@ public class ProcedureFlowChart : MonoBehaviour
     }
 
     public void nextStep(){
-        Debug.Log("Chiamato Next Step. Valore di procedureState: " + procedureState);
-        //Debug.Log(procedureState);
+        //Debug.Log("Chiamato Next Step. Valore di procedureState: " + procedureState);
         guiManager.showCoords(false);
         switch (procedureState)
         {

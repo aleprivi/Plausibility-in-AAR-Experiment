@@ -52,9 +52,6 @@ public class GUIManager : MonoBehaviour
             headDist.text = "Distance: " + Math.Round(headDistance*100, 1) +"cm";
             headHeight.text = "Height: " + Math.Round((head.transform.position.y-iPad.transform.position.y)*100, 1)+"cm";
             headRot.text = "Rotation: " + Math.Round(head.transform.rotation.eulerAngles.y, 0)+"°";
-            //headX.text = "X: " + Math.Round(head.transform.position.x, 2);
-            //headY.text = "Y: " + Math.Round(head.transform.position.y, 2);
-            //headZ.text = "Z: " + Math.Round(head.transform.position.z, 2);
             headLost.text = "";
         }
         if(debugMode && isHeadLost){

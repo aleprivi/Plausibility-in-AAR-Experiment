@@ -24,7 +24,7 @@ public class Calibrator : MonoBehaviour
     public ARSessionOrigin arSessionOrigin;
     public virtual void startCalibration(){
     
-        Debug.Log("Calibration started");
+        //Debug.Log("Calibration started");
 
         /*Vector3 calibratedPosition = new Vector3(digitalHead.transform.position.x, digitalHead.transform.position.y, digitalHead.transform.position.z);
         Vector3 eulerAngle = digitalHead.transform.rotation.eulerAngles;
@@ -49,7 +49,7 @@ public class Calibrator : MonoBehaviour
         GameObject.FindObjectOfType<rotateHead>().CalibrateHeadphones();
 
 
-        Debug.Log("Calibration ended");
+        //Debug.Log("Calibration ended");
         //Riassegno il controllo al main
         procedureFlowChart.nextStep();
     }
