@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class HeadPositionUtils : MonoBehaviour
 {
+    public bool AudioSourceTestMode = false;
+
     // Start is called before the first frame update
     void Start()
     {
         #if UNITY_EDITOR
             Debug.Log("Editor Mode");
-            ARCamera = GameObject.Find("AR Camera");
         #endif
+        ARCamera = GameObject.Find("AR Camera");
     }
 
     GameObject ARCamera;
@@ -19,26 +21,31 @@ public class HeadPositionUtils : MonoBehaviour
     void Update()
     {
         #if UNITY_EDITOR
-            this.transform.position = ARCamera.transform.position;
+                combineHeadPosition();
+#endif
+        if (AudioSourceTestMode) combineHeadPosition();
+    }
 
-            if (Input.GetKeyDown(KeyCode.X))
-            {
+    void combineHeadPosition() {
+        this.transform.position = ARCamera.transform.position;
 
-                float x = Random.Range(0, 10);
-                float y = Random.Range(0, 10);
-                float z = Random.Range(0, 10);
+        if (Input.GetKeyDown(KeyCode.X))
+        {
 
-                float r_x = Random.Range(0, 40);
-                float r_y = Random.Range(0, 360);
-                float r_z = Random.Range(0, 40);
+            float x = Random.Range(0, 10);
+            float y = Random.Range(0, 10);
+            float z = Random.Range(0, 10);
 
-                Vector3 tmp = new Vector3(x, y, z);
-                Vector3 tmp_rot = new Vector3(r_x, r_y, r_z);
+            float r_x = Random.Range(0, 40);
+            float r_y = Random.Range(0, 360);
+            float r_z = Random.Range(0, 40);
 
-                ARCamera.transform.position = tmp;
-                ARCamera.transform.Rotate(tmp_rot);
+            Vector3 tmp = new Vector3(x, y, z);
+            Vector3 tmp_rot = new Vector3(r_x, r_y, r_z);
 
-            }
-        #endif
+            ARCamera.transform.position = tmp;
+            ARCamera.transform.Rotate(tmp_rot);
+
+        }
     }
 }

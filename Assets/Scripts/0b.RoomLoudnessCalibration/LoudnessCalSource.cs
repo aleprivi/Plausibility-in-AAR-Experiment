@@ -36,5 +36,37 @@ public class LoudnessCalSource : MonoBehaviour
         audioSource.Play();
     }
 
+    bool useHRTF = true;
+    public void switchHRTF() {
+        useHRTF = !useHRTF;
+        currentSDN.applyHrtfReflections = useHRTF;
+    }
 
+    bool useReverb = true;
+    public void switchReverb() {
+        useReverb = !useReverb;
+        currentSDN.doLateReflections = useReverb;
+    }
+
+    public AudioClip[] audios;
+    public float[] xs;
+    public float[] ys;
+
+    public void loadSource(int num) {
+        audioSource.Stop();
+        audioSource.transform.position = new Vector3(0, ys[num], xs[num]);
+        currentSDN.volumeGain = float.Parse(inputField.text);
+        audioSource.clip = audios[num];
+        audioSource.Play();
+    }
+
+
+    bool corridor = true;
+    public GameObject corridorRoom;
+    public GameObject randoRoom;
+    public void switchRoom() {
+        corridor = !corridor;
+        corridorRoom.SetActive(corridor);
+        randoRoom.SetActive(!corridor);
+    }
 }

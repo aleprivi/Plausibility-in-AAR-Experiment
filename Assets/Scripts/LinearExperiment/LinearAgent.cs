@@ -25,32 +25,34 @@ public class LinearAgent : Agent {
 		for (int i = 0; i < env.state_size; i++) {
 			q_table [i] = new float[env.action_size];
 			for (int j = 0; j < env.action_size; j++) {
-				q_table [i] [j] = 0.0f;
+                if(WriteLogs.condition == 0){
+                    q_table [i] [j] = -1.0f;
+                }else{
+				    q_table [i] [j] = 0.0f;
+                }
 			}
 		}
 	}
 
     /// Decide l'azione da fare, basandosi sulla tabella precedente
 	public override float[] GetAction() {
-        printQTable();
-//        Debug.Log("Step di Q-Learning: ");
 
-        //Prendo Index dell'azione con ricompensa massima
-        action = q_table[lastState].ToList().IndexOf(q_table[lastState].Max());
-        if (Random.Range(0f, 1f) < e) {
-            //In base al numero di azioni ne prende una casuale
-            action = Random.Range(0, q_table[lastState].Length - 1);
+        if(WriteLogs.condition != 0){
+            //Prendo Index dell'azione con ricompensa massima
+            action = q_table[lastState].ToList().IndexOf(q_table[lastState].Max());
+            if (Random.Range(0f, 1f) < e) {
+                //In base al numero di azioni ne prende una casuale
+                action = Random.Range(0, q_table[lastState].Length - 1);
+            }
+            //if (e > eMin) { e = e - ((1f - eMin) / (float)annealingSteps); } //Questo non serve in quanto non previsto da Slater
+            //GameObject.Find("ETxt").GetComponent<Text>().text = "Epsilon: " + e.ToString("F2");
+            float currentQ = q_table[lastState][action];
+            //GameObject.Find("QTxt").GetComponent<Text>().text = "Current Q-value: " + currentQ.ToString("F2");
+            return new float[1] {action};
+        }else{
+            return new float[1] {Random.Range(0, q_table[lastState].Length - 1)};
         }
-        //if (e > eMin) { e = e - ((1f - eMin) / (float)annealingSteps); } //Questo non serve in quanto non previsto da Slater
-        //GameObject.Find("ETxt").GetComponent<Text>().text = "Epsilon: " + e.ToString("F2");
-        float currentQ = q_table[lastState][action];
-        //GameObject.Find("QTxt").GetComponent<Text>().text = "Current Q-value: " + currentQ.ToString("F2");
-		return new float[1] {action};
 	}
-
-    void printQTable() {
-        WriteLogs.WriteQTable("Qtable", q_table);
-    }
 
     /// <summary>
     /// Gets the values stored within the Q table.
@@ -79,11 +81,15 @@ public class LinearAgent : Agent {
         if (action != -1) {
 		    if (done == true)
 		    {
-		        q_table[lastState][action] += learning_rate * (reward - q_table[lastState][action]);
+                if(WriteLogs.condition != 0){
+		            q_table[lastState][action] += learning_rate * (reward - q_table[lastState][action]);
+                }
 		    } 
 		    else
 		    {
-		        q_table[lastState][action] += learning_rate * (reward + gamma * q_table[nextState].Max() - q_table[lastState][action]);
+                if(WriteLogs.condition != 0){
+    		        q_table[lastState][action] += learning_rate * (reward + gamma * q_table[nextState].Max() - q_table[lastState][action]);
+                }
 		    }
         }
         lastState = nextState;

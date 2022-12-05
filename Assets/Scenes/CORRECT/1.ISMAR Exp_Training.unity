@@ -264,9 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   digitalHead: {fileID: 1379053053}
   Room: {fileID: 113516165}
-  experimentElements:
-  - {fileID: 1822478362}
-  - {fileID: 1781837253}
   procedureFlowChart: {fileID: 0}
   arSessionOrigin: {fileID: 903227060}
 --- !u!4 &122120885
@@ -351,6 +348,9 @@ MonoBehaviour:
   procedureFlowChart: {fileID: 0}
   front: {fileID: 1822478362}
   back: {fileID: 1781837253}
+  head: {fileID: 1379053053}
+  iPad: {fileID: 1060013185}
+  LogWritePerSecond: 10
 --- !u!1 &127996257
 GameObject:
   m_ObjectHideFlags: 0
@@ -5904,6 +5904,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019d9003a6d5f4a06b89ccdc2f69d783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSourceTestMode: 0
 --- !u!1 &1393410532 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2691892507611182312, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
@@ -7446,6 +7447,7 @@ MonoBehaviour:
   doLateReflections: 1
   applyHrtfReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &1781837258
 AudioSource:
@@ -7676,6 +7678,7 @@ MonoBehaviour:
   doLateReflections: 1
   applyHrtfReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &1822478367
 AudioSource:

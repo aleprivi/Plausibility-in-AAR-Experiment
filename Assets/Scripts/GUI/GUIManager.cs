@@ -146,17 +146,23 @@ public class GUIManager : MonoBehaviour
             //headY = GameObject.Find("headY").GetComponent<TextMeshProUGUI>();
             //headZ = GameObject.Find("headZ").GetComponent<TextMeshProUGUI>();
 
-            userTarget = GameObject.Find("usrTargetDst").GetComponent<TextMeshProUGUI>();
-            userAgent = GameObject.Find("usrAgentDst").GetComponent<TextMeshProUGUI>();
-            lastReward = GameObject.Find("lastReward").GetComponent<TextMeshProUGUI>();
-            lastState = GameObject.Find("lastState").GetComponent<TextMeshProUGUI>();
-            lastAction = GameObject.Find("lastAction").GetComponent<TextMeshProUGUI>();
+            if(GameObject.Find("usrTargetDst") != null)
+                userTarget = GameObject.Find("usrTargetDst").GetComponent<TextMeshProUGUI>();
+            if (GameObject.Find("usrAgentDst") != null)
+                userAgent = GameObject.Find("usrAgentDst").GetComponent<TextMeshProUGUI>();
+            if (GameObject.Find("lastReward") != null)
+                lastReward = GameObject.Find("lastReward").GetComponent<TextMeshProUGUI>();
+            if (GameObject.Find("lastState") != null)
+                lastState = GameObject.Find("lastState").GetComponent<TextMeshProUGUI>();
+            if (GameObject.Find("lastAction") != null)
+                lastAction = GameObject.Find("lastAction").GetComponent<TextMeshProUGUI>();
 
             scoreTable = new TextMeshProUGUI[4,6];
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < 6; j++){
                     string name = "C" + i + "" + j;
-                    scoreTable[i,j] = GameObject.Find(name).GetComponent<TextMeshProUGUI>();
+                    if(GameObject.Find(name) != null)
+                        scoreTable[i,j] = GameObject.Find(name).GetComponent<TextMeshProUGUI>();
                 }
             }
 
@@ -182,8 +188,6 @@ public class GUIManager : MonoBehaviour
         }
 
     }
-
-
 
     public GameObject head;
     public GameObject iPad;

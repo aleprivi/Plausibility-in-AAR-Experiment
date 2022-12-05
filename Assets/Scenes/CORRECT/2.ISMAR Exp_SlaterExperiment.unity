@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  RLDebugMode: 1
+  RLDebugMode: 0
   instructionPanel: {fileID: 1683245109}
   meshesToHide:
   - {fileID: 896919441}
@@ -350,7 +350,7 @@ MonoBehaviour:
   AudioAgent: {fileID: 5578590545316323680}
   GoalObject: {fileID: 1508142351529716}
   actions: []
-  UseIntimateCondition: 1
+  useRandomAlgorithm: 0
   sampleAudio: {fileID: 8300000, guid: 5e37bc4365f334c689cbb507dfbd06aa, type: 3}
   BreatheSound: {fileID: 8300000, guid: aae6464e68ede46a6ac54c6a90b8f8e3, type: 3}
   audioSteps: {fileID: 382426001}
@@ -359,6 +359,8 @@ MonoBehaviour:
   guiManager: {fileID: 122120887}
   maxSteps: 30
   isExperimentRunning: 0
+  LogWritePerSecond: 10
+  iPad: {fileID: 1060013185}
 --- !u!1 &134781301
 GameObject:
   m_ObjectHideFlags: 0
@@ -6542,6 +6544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019d9003a6d5f4a06b89ccdc2f69d783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AudioSourceTestMode: 0
 --- !u!114 &1379053062
 MonoBehaviour:
   m_ObjectHideFlags: 0

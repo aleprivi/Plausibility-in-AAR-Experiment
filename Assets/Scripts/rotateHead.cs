@@ -6,6 +6,8 @@ using HearXR;
 public class rotateHead : MonoBehaviour
 {
 
+    public bool smoothMovement = false;
+
     void Start()
     {
         HeadphoneMotion.Init();

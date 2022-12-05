@@ -38,8 +38,8 @@ public class SDNEnvConfig : MonoBehaviour
     private AForge.Math.Complex[][][] matrix_r = new AForge.Math.Complex[azNum][][]; // right hrtf 3d matrix, as in Matlab
 
     // Delaunay triangles and points (in Matlab)
-    private int[][] triangles = new int[2652][]; // 2652 x 3
-    private float[][] points = new float[1404][]; // 1404 x 2
+    private int[][] triangles = new int[2652][]; // 2652 x 3-> punto1, punto2, punto3 datio in base alla posizione su points
+    private float[][] points = new float[1404][]; // 1404 x 2-> azimuth e elevation?
 
     // interp param
     float g1, g2, g3, det;
@@ -102,14 +102,13 @@ public class SDNEnvConfig : MonoBehaviour
                          folderdelimit = "\\";
         #endif
 
-
         if (!UsePersistentDataPath)
         {
             txt_a = Resources.LoadAll<TextAsset>("subject" + cipic_subject + "_txt");
         }
         else {
-            Debug.Log("Using your Persistend Data Path-->" + Application.persistentDataPath + folderdelimit + "subject_txt");
-            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt", "*.txt");
+            Debug.Log("Using your Persistend Data Path-->" + Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt");
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt", "*.txt");
             txt_a = new TextAsset[files.Length];
             for (int i = 0; i < files.Length; i++) {
                 txt_a[i] = new TextAsset(File.ReadAllText(files[i]));
@@ -201,7 +200,7 @@ public class SDNEnvConfig : MonoBehaviour
         }
         else
         {
-            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt" + folderdelimit + "triangles", "*.txt");
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt" + folderdelimit + "triangles", "*.txt");
             textFile = File.ReadAllText(files[0]);
         }
 
@@ -231,7 +230,7 @@ public class SDNEnvConfig : MonoBehaviour
         }
         else
         {
-            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject_txt" + folderdelimit + "points", "*.txt");
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt" + folderdelimit + "points", "*.txt");
             textFile = File.ReadAllText(files[0]);
         }
 
@@ -263,9 +262,9 @@ public class SDNEnvConfig : MonoBehaviour
         loaded = true;
 
 
-        if (UsePersistentDataPath)
+        if (!UsePersistentDataPath)
         {
-            Debug.Log("HRTF dataset loaded ! CIPIC subject ID: " + cipic_subject);
+            Debug.Log("HRTF dataset loaded! CIPIC subject ID: " + cipic_subject);
         }
         else {
             Debug.Log("External HRTF dataset correctly loaded!");
@@ -374,4 +373,204 @@ public class SDNEnvConfig : MonoBehaviour
     {
         return loaded;
     }
+
+
+    public void SwitchHRTF(string id){
+        for (int i = 0; i < matrix_l.Length; i++)
+        {
+            matrix_l[i] = new AForge.Math.Complex[elNum][];
+            matrix_r[i] = new AForge.Math.Complex[elNum][];
+            for (int jj = 0; jj < matrix_l[i].Length; jj++)
+            {
+                matrix_l[i][jj] = new AForge.Math.Complex[fftLength];
+                matrix_r[i][jj] = new AForge.Math.Complex[fftLength];
+            }
+        }
+
+        cipic_subject = id; // KEMAR HATS with small pinnae
+
+        string textFile; // 2d text file containing left and right hrtfs for a specific azimuth
+        string fileName;
+
+        TextAsset[] txt_a;
+
+        string folderdelimit = "/";
+
+        #if (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN)
+                                 folderdelimit = "\\";
+        #endif
+
+
+        if (!UsePersistentDataPath)
+        {
+            txt_a = Resources.LoadAll<TextAsset>("subject" + cipic_subject + "_txt");
+        }
+        else
+        {
+            //Debug.Log("Using your Persistend Data Path-->" + Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt");
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt", "*.txt");
+            txt_a = new TextAsset[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                txt_a[i] = new TextAsset(File.ReadAllText(files[i]));
+                txt_a[i].name = files[i].Split(folderdelimit).Last();
+            }
+        }
+
+
+        int i_l = 0, i_r = 0, j = 0, k = 0;
+
+        foreach (TextAsset txtfile in txt_a)
+        {
+
+            fileName = txtfile.name;
+            textFile = txtfile.text;
+
+            j = 0;
+            k = 0;
+
+            if (fileName[0].Equals('L') == true)
+            {
+                foreach (var row in textFile.Split('\n'))
+                {
+                    if (j == elNum)
+                    {
+                        break;
+                    }
+                    k = 0;
+
+                    foreach (var col in row.Trim().Split(' '))
+                    {
+                        matrix_l[i_l][j][k] = new AForge.Math.Complex(float.Parse(col.Trim(), System.Globalization.NumberStyles.Float), 0);
+                        k++;
+                    }
+                    // compute fft
+                    AForge.Math.FourierTransform.FFT(matrix_l[i_l][j], AForge.Math.FourierTransform.Direction.Forward);
+                    j++;
+                }
+                i_l++;
+            }
+            else if (fileName[0].Equals('R') == true)
+            {
+                foreach (var row in textFile.Split('\n'))
+                {
+                    if (j == elNum)
+                    {
+                        break;
+                    }
+                    k = 0;
+                    foreach (var col in row.Trim().Split(' '))
+                    {
+                        matrix_r[i_r][j][k] = new AForge.Math.Complex(float.Parse(col.Trim(), System.Globalization.NumberStyles.Float), 0);
+                        k++;
+                    }
+                    // compute fft
+                    AForge.Math.FourierTransform.FFT(matrix_r[i_r][j], AForge.Math.FourierTransform.Direction.Forward);
+                    j++;
+                }
+                i_r++;
+            }
+            else
+            {
+                //Debug.Log("WARNING! This file is not in the correct format!");
+                //break;
+            }
+
+        }
+
+        // LOAD triangles and points
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            triangles[i] = new int[3];
+        }
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i] = new float[2];
+        }
+        // triangles
+
+        //        Debug.Log("subject" + cipic_subject + "_txt/triangles/triangles");
+        TextAsset triang;
+
+
+
+        if (!UsePersistentDataPath)
+        {
+            triang = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/triangles/triangles");
+            textFile = triang.text;
+        }
+        else
+        {
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt" + folderdelimit + "triangles", "*.txt");
+            textFile = File.ReadAllText(files[0]);
+        }
+
+
+        j = 0;
+        foreach (var row in textFile.Split('\n'))
+        {
+            if (j == 2652)
+            {
+                break;
+            }
+            k = 0;
+            foreach (var col in row.Trim().Split(' '))
+            {
+                triangles[j][k] = int.Parse(col.Trim(), System.Globalization.NumberStyles.Integer);
+                k++;
+            }
+            j++;
+        }
+        // points
+        TextAsset punti;
+
+        if (!UsePersistentDataPath)
+        {
+            punti = Resources.Load<TextAsset>("subject" + cipic_subject + "_txt/points/points");
+            textFile = punti.text;
+        }
+        else
+        {
+            string[] files = Directory.GetFiles(Application.persistentDataPath + folderdelimit + "subject" + cipic_subject + "_txt" + folderdelimit + "points", "*.txt");
+            textFile = File.ReadAllText(files[0]);
+        }
+
+        j = 0;
+        foreach (var row in textFile.Split('\n'))
+        {
+            if (j == 1404)
+            {
+                break;
+            }
+            k = 0;
+            foreach (var col in row.Trim().Split(' '))
+            {
+                points[j][k] = float.Parse(col.Trim(), System.Globalization.NumberStyles.Float);
+                k++;
+            }
+            j++;
+        }
+
+        for (int i = 0; i < indices.Length; i++)
+        {
+            indices[i] = new int[2];
+        }
+        T = new float[4];
+        invT = new float[4];
+        X = new float[2];
+
+        // flag
+        loaded = true;
+
+
+        if (!UsePersistentDataPath)
+        {
+            Debug.Log("HRTF dataset correctly swapped using PersistentDataPath! CIPIC subject ID: " + id);
+        }
+        else
+        {
+            Debug.Log("HRTF dataset correctly swapped! CIPIC subject ID: " + id);
+        }
+    }
+
 }

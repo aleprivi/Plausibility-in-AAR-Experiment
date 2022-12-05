@@ -96,7 +96,7 @@ public class audioRec : MonoBehaviour {
 	
 
 		var filepath = fileName;
-		Debug.Log(filepath);
+//		Debug.Log(filepath);
 		Directory.CreateDirectory(Path.GetDirectoryName(filepath));
 		ClipData clipdata = new ClipData ();
 		clipdata.samples = sampleCount;
@@ -114,7 +114,7 @@ public class audioRec : MonoBehaviour {
 
 			memstrm.WriteTo (fileStream);
 			WriteHeader(fileStream,clipdata.samples,clipdata.channels,sampleRate);
-			print ("wrote file");
+			print ("wrote file at " + filepath);
 		}
 	}
 

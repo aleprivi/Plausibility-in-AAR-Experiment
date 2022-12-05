@@ -158,8 +158,8 @@ public class SDN : MonoBehaviour
         }
         //sampleMX = new Mutex();
         networkMX = new Mutex();
-        audioProcessThread = new Thread(audioProcess);
-        audioProcessThread.Start();
+        //audioProcessThread = new Thread(audioProcess);
+        //audioProcessThread.Start();
         scriptInit = true;
 
         fftLength = buffSize;
@@ -203,7 +203,7 @@ public class SDN : MonoBehaviour
             directAtt = 1.0f / (UnityEngine.Vector3.Distance(listener.transform.position, gameObject.transform.position) + 1.0f); //Corretta
             networkInScale = 1.0f / network.Count;
             if(network.Count != oldnetworkcount){
-                Debug.Log("Network count changed: " + network.Count);
+                //Debug.Log("Network count changed: " + network.Count);
             }
             oldnetworkcount = network.Count;
             haveNewReflections = false;
@@ -224,6 +224,10 @@ public class SDN : MonoBehaviour
         }
     }
 
+
+
+
+
     void OnApplicationQuit()
     {
         audioProcessKeepAlive = false;
@@ -239,68 +243,7 @@ public class SDN : MonoBehaviour
 
     }
 
-    public void propagateNetwork()
-    {
-
-        //sampleMX.WaitOne();
-        networkMX.WaitOne();
-
-
-
-        int numSampsToConsume = inSamples.Count;
-        // horrible hack to solve latency @ startup - the queue quickly fills up from
-        // the audio thread before the main thread can catch up. I am a bad person for doing this.
-        if (inSamples.Count > 10000)
-        {
-            Debug.Log("Terrible hack incoming!!!");
-            inSamples.Clear();
-            //sampleMX.ReleaseMutex();
-            networkMX.ReleaseMutex(); //Riga aggiunta da me... è corretta?
-            return;
-        }
-
-        int i, j;
-
-        for (i = 0; i < numSampsToConsume; i++)
-        {
-            outVal = 0.0f;
-            inVal = inSamples.Dequeue() * networkInScale; //networkInScale = 1/network.Count;
-//CREDO sia il numero di muri del network, altrimenti è il numero di nodi (cioè 36 - nodi "i-j" diagonali)
-
-            // direct path processing
-            directDelay.write(inVal);
-            directVal = directDelay.read(); //leggo il sample con il delay indicato già corretto
-            directVal *= directAtt; //calcolata come 1/distanza (approssimata?). Distanza è sempre positiva, quindi
-            //non inverte la fase
-            outSamples.Enqueue(directVal);
-
-            // Prendo lo stesso sample e lo butto su tutti i nodi, con il delay corretto
-            for (j = 0; j < network.Count; j++) //Per tutti i nodi presenti (6?)
-            {
-            try{
-                junctionsSamps[j][idx] = new Complex(network[j].getOutgoing(), 0); //leggo il sample con il delay
-                //corretto. Gestisco un buffer intero con idx, che è definito globale 
-            }catch(Exception e){
-                    Debug.Log("ERRORE!!!");
-                    Debug.Log("CCX junctionsSamps Length = " + junctionsSamps.Count);
-                    Debug.Log("CCX junctionsSamps[j] Length = " + junctionsSamps[j].Length);
-                    Debug.Log("CCX idx: " + idx);
-                    Debug.Log("CCX j: " + j);
-
-                    //sampleMX.ReleaseMutex();
-                    networkMX.ReleaseMutex();
-                    return;
-                }
-                network[j].inputIncoming(inVal);
-                network[j].doScattering(doLateReflections);
-            }
-            idx++;
-        }
-
-
-        //sampleMX.ReleaseMutex();
-        networkMX.ReleaseMutex();
-    }
+    
 
     public void checkDelayClear()
     {
@@ -540,7 +483,7 @@ public class SDN : MonoBehaviour
                 }
             }
 
-
+            propagateNetwork();
 
             //Applico un gain del volume
             for (int j = 0; j < data.Length; j++)
@@ -550,7 +493,7 @@ public class SDN : MonoBehaviour
 
             //sampleMX.ReleaseMutex();
 
-            propagateNetwork();
+            
 
         }
         else
@@ -566,6 +509,75 @@ public class SDN : MonoBehaviour
 
 
 
+    }
+
+    public void propagateNetwork()
+    {
+
+        //sampleMX.WaitOne();
+        networkMX.WaitOne();
+
+
+
+        int numSampsToConsume = inSamples.Count;
+        // horrible hack to solve latency @ startup - the queue quickly fills up from
+        // the audio thread before the main thread can catch up. I am a bad person for doing this.
+        if (inSamples.Count > 10000)
+        {
+            Debug.Log("Terrible hack incoming!!!");
+            inSamples.Clear();
+            //sampleMX.ReleaseMutex();
+            networkMX.ReleaseMutex(); //Riga aggiunta da me... è corretta?
+            return;
+        }
+
+        int i, j;
+
+        for (i = 0; i < numSampsToConsume; i++)
+        {
+            outVal = 0.0f;
+            inVal = inSamples.Dequeue() * networkInScale; //networkInScale = 1/network.Count;
+                                                          //CREDO sia il numero di muri del network, altrimenti è il numero di nodi (cioè 36 - nodi "i-j" diagonali)
+
+            // direct path processing
+            directDelay.write(inVal);
+            directVal = directDelay.read(); //leggo il sample con il delay indicato già corretto
+            directVal *= directAtt; //calcolata come 1/distanza (approssimata?). Distanza è sempre positiva, quindi
+            //non inverte la fase
+            outSamples.Enqueue(directVal);
+
+            // Prendo lo stesso sample e lo butto su tutti i nodi, con il delay corretto
+            for (j = 0; j < network.Count; j++) //Per tutti i nodi presenti (6?)
+            {
+                try
+                {
+                    //junctionsSamps[j][idx] = new Complex(network[j].getOutgoing(), 0); //leggo il sample con il delay
+                                                                                       //corretto. Gestisco un buffer intero con idx, che è definito globale 
+                    junctionsSamps[j][i] = new Complex(network[j].getOutgoing(), 0); //leggo il sample con il delay
+                                                                                       //corretto. Gestisco un buffer intero con idx, che è definito globale 
+
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("ERRORE!!!");
+                    Debug.Log("CCX junctionsSamps Length = " + junctionsSamps.Count);
+                    Debug.Log("CCX junctionsSamps[j] Length = " + junctionsSamps[j].Length);
+                    Debug.Log("CCX idx: " + idx);
+                    Debug.Log("CCX j: " + j);
+
+                    //sampleMX.ReleaseMutex();
+                    networkMX.ReleaseMutex();
+                    return;
+                }
+                network[j].inputIncoming(inVal);
+                network[j].doScattering(doLateReflections);
+            }
+            //idx++;
+        }
+
+
+        //sampleMX.ReleaseMutex();
+        networkMX.ReleaseMutex();
     }
 
 
@@ -933,68 +945,6 @@ public class SDN : MonoBehaviour
             return Mathf.CeilToInt((distance * sampleRate) / airSpeed);//inverso di attenuation?
         }
     }
-
-    /*public class FDelay
-    {
-        // A polynomial interploation fractional delay line
-        // Based on Pelle Juul´s C++ implementation: https://github.com/PelleJuul/lyt/blob/master/library/fdelay.cpp
-
-        private int index = 300;
-        private int d0;
-        private int d1;
-        private int d2;
-        private int d3;
-        private float delay;
-        private float frac;
-        private float[] vec;
-
-        public FDelay()
-        {
-            setMaxDelay(1);
-            setDelay(1);
-        }
-
-        public FDelay(int maxDelay, float delay)
-        {
-            setMaxDelay(maxDelay);
-            setDelay(delay);
-        }
-
-        public void setMaxDelay(int newMaxDelay)
-        {
-            Array.Resize(ref vec, newMaxDelay + 4);
-        }
-
-        public void setDelay(float newDelay)
-        {
-            this.delay = newDelay;
-            d0 = Mathf.FloorToInt(delay);
-            d1 = Mathf.CeilToInt(delay);
-            d2 = d1 + 1;
-            d3 = d1 + 2;
-            frac = delay - d0;
-        }
-
-        public float process(float value)
-        {
-            float y0 = vec[(index - d0) % vec.Length];
-            float y1 = vec[(index - d1) % vec.Length];
-            float y2 = vec[(index - d2) % vec.Length];
-            float y3 = vec[(index - d3) % vec.Length];
-            float x = frac;
-
-            float y =
-                ((x - 1) * (x - 2) * (x - 3)) / ((0 - 1) * (0 - 2) * (0 - 3)) * y0 +
-                ((x - 0) * (x - 2) * (x - 3)) / ((1 - 0) * (1 - 2) * (1 - 3)) * y1 +
-                ((x - 0) * (x - 1) * (x - 3)) / ((2 - 0) * (2 - 1) * (2 - 3)) * y2 +
-                ((x - 0) * (x - 1) * (x - 2)) / ((3 - 0) * (3 - 1) * (3 - 2)) * y3;
-
-            vec[index % vec.Length] = value;
-            index += 1;
-
-            return y;
-        }
-    }*/
 
     public class SDNnode
     {

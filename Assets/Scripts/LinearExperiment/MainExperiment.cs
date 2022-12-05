@@ -15,7 +15,7 @@ public class MainExperiment : ProcDefinition
     public GameObject AudioAgent;
     public GameObject GoalObject;
     public float[] actions;
-    public bool UseIntimateCondition;
+    public bool useRandomAlgorithm = false;
     GameObject digitalHead;
 
     //Sounds to be played
@@ -49,6 +49,7 @@ public class MainExperiment : ProcDefinition
 
     public override void endProcedure()
     {
+        StopCoroutine(coroutine);
         Debug.Log("Procedure ended");
         isExperimentRunning = false;
         procedureFlowChart.nextStep();
@@ -164,7 +165,8 @@ public class MainExperiment : ProcDefinition
         isExperimentRunning = false;
         digitalHead = GameObject.FindGameObjectWithTag("DigitalHead");
         //Che condizione?
-        if (UseIntimateCondition) MinUserAgentDistance = 0.38f;
+        
+            if(WriteLogs.condition == 0 || WriteLogs.condition == 2) MinUserAgentDistance = 0.38f;
 
         #if UNITY_EDITOR
             digitalHead = GameObject.Find("AR Camera");
@@ -174,7 +176,7 @@ public class MainExperiment : ProcDefinition
 
         envParameters = new EnvironmentParameters()
         {
-            state_size = UseIntimateCondition ? 4 : 3, //Se intimate condition selezionata stati=3 altrimenti 4
+            state_size = (WriteLogs.condition == 1) ? 3 : 4, //Se intimate condition selezionata stati=3 altrimenti 4
             action_descriptions = new List<string>() { "Forward1", "Forward2", "BackWard1", "Backward2", "Stay", "ComeHere" },
             action_size = 6
         };
@@ -210,12 +212,15 @@ public class MainExperiment : ProcDefinition
     }
 
 
+    private IEnumerator coroutine;
     public override void startProcedure()
     {
         Debug.Log("Procedure started");
 
         AudioAgent.SetActive(true);
         GoalObject.SetActive(true);
+        coroutine = SaveData();
+        StartCoroutine(coroutine);
 
     //CHE ROBA È?
         //acceptingSteps = true;
@@ -363,19 +368,6 @@ public class MainExperiment : ProcDefinition
         preStepDistance = UserGoalDist;
 
         totalReward += reward;
-        
-        //STAMPO I LOGs??
-        //STEPS, z_POSAGENT; x_USER; y_USER; z_USER; REWARD; DISTANCE
-        /*string ss = actions[0] + "," + currentStep + ",";
-        ss += CHIagent.transform.position.z + ",";
-        ss += CHIuser.transform.position.x + "," + CHIuser.transform.position.y + "," + CHIuser.transform.position.z + ",";
-        ss += reward + ",";
-        ss += dist;*/
-
-        //??
-        //WriteLogs.WriteExperimentLog(ss);
-
-
 
         //Debug.Log("Last State" + ((LinearAgent)agent).lastState + " - Current State " + collectState());
         agent.SendState(collectState(), reward, false);
@@ -389,6 +381,8 @@ public class MainExperiment : ProcDefinition
 
         guiManager.showAlgoStats(reward, collectState(), action);
         guiManager.showScoreTable(agent.q_table);
+
+        WriteLogs.WriteQTable(Time.time,action, reward, agent.q_table);
 
         Step(action);
 
@@ -407,13 +401,32 @@ public class MainExperiment : ProcDefinition
             return 1; //public
         }
         else{
-            if (UseIntimateCondition && d <= 1.2f)
+            if ((WriteLogs.condition == 2 || WriteLogs.condition == 0) && d <= 1.2f)
             {
                 return 3; //Intimate, se prevista
             }
             else {
                 return 2; //Social
             }
+        }
+    }
+
+
+
+    public float LogWritePerSecond = 10;
+    public GameObject iPad;
+    //string val = "User,Step,Time,HeadX,HeadY,HeadZ,iPadX,iPadY,iPadZ,targetreached";
+    private IEnumerator SaveData()
+    {
+        while (true)
+        {
+            float wt = 1.0f/LogWritePerSecond;
+            yield return new WaitForSeconds(wt);
+            Vector3 h = digitalHead.transform.position;
+            Vector3 i = iPad.transform.position;
+            Vector3 a = AudioAgent.transform.position;
+            WriteLogs.WriteSlaterLog(Time.time,h.x,h.y,h.z,i.x,i.y,i.z,a.x,a.y,a.z);
+            //print("WaitAndPrint " + Time.time);
         }
     }
 }

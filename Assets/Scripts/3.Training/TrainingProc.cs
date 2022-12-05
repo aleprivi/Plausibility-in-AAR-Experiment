@@ -4,6 +4,8 @@ using UnityEngine;
 public class TrainingProc: ProcDefinition{
 
     GUIManager guiManager;
+
+    private IEnumerator coroutine;
     public override void startProcedure(){
         Debug.Log("Training started");
         guiManager = procedureFlowChart.gameObject.GetComponent<GUIManager>();
@@ -13,10 +15,13 @@ public class TrainingProc: ProcDefinition{
         //back.transform.localPosition = tmp_pos;
         activeObject.SetActive(true);
         activeObject.GetComponent<AudioSource>().Play();
+        coroutine = SaveData();
+        StartCoroutine(coroutine);
     }
     GameObject activeObject;
     public override void endProcedure()
     {
+        StopCoroutine(coroutine);
         procedureFlowChart.nextStep();
         Debug.Log("Training ended");
     }
@@ -47,6 +52,24 @@ public class TrainingProc: ProcDefinition{
         else
         {
             endProcedure();
+        }
+    }
+
+
+    public GameObject head;
+    public GameObject iPad;
+    public float LogWritePerSecond = 10;
+    //string val = "User,Step,Time,HeadX,HeadY,HeadZ,iPadX,iPadY,iPadZ,targetreached";
+    private IEnumerator SaveData()
+    {
+        while (true)
+        {
+            float wt = 1.0f/LogWritePerSecond;
+            yield return new WaitForSeconds(wt);
+            Vector3 h = head.transform.position;
+            Vector3 i = iPad.transform.position;
+            WriteLogs.WriteTrainingLog(Time.time,h.x,h.y,h.z,i.x,i.y,i.z,firstTargetReached?1:0);
+            //print("WaitAndPrint " + Time.time);
         }
     }
 }
