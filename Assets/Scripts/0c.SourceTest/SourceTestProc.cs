@@ -150,16 +150,19 @@ public class SourceTestProc : ProcDefinition {
         switch(type){
             case 0:
                 envConfig.SwitchHRTF(envConfig.CIPIC);
-                sourceSDN.applyHrtfReflections = true;
+                sourceSDN.applyHrtfToReflections = true;
+                sourceSDN.applyHrtfToDirectSound = true;
                 useHRTF = true;
                 break;
             case 1:
                 envConfig.SwitchHRTF("165");
-                sourceSDN.applyHrtfReflections = true;
+                sourceSDN.applyHrtfToReflections = true;
+                sourceSDN.applyHrtfToDirectSound = true;
                 useHRTF = true;
                 break;
             case 2:
-                sourceSDN.applyHrtfReflections = false;
+                sourceSDN.applyHrtfToReflections = false;
+                sourceSDN.applyHrtfToDirectSound = false;
                 useHRTF = false;
                 break;
         }

@@ -16,6 +16,35 @@ public class WriteLogs : MonoBehaviour
     */
     public static int condition = 0;
 
+    public static void WriteFloatArray(float[] f, string filename){
+        string path = Application.persistentDataPath + "/" + filename + ".csv";
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path);
+        string val = "";
+        foreach (float el in f) {
+            val += el + ",";
+        }
+        //remove last ,
+        val = val.Substring(0, val.Length - 1);
+        writer.WriteLine(val);
+        writer.Close();
+    }
+    public static void WriteFloatArray(float[][] f, string filename){
+        string path = Application.persistentDataPath + "/" + filename + ".csv";
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path);
+        string val = "";
+        foreach (float[] el in f) {
+            foreach (float el2 in el) {
+                val += el2 + ";";
+            }
+            //remove last ;
+            val = val.Substring(0, val.Length - 1);
+            val += "\n";
+        }
+        writer.WriteLine(val);
+        writer.Close();
+    }
     public static string GetLastUser()
     {
         string path = Application.persistentDataPath + "/UserList.csv";

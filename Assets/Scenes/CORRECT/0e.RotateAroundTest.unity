@@ -317,7 +317,8 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 0
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1.2
   debugThisSource: 0
   positionArray: []
@@ -432,8 +433,8 @@ MonoBehaviour:
   saveDirectory: /Users/alessandroprivitera/Desktop/GitExperiments/RT60/RTs/
   fileNameStem: CorrCorr
   maxRecTime: 10
-  recordAudio: 1
-  init: 1
+  recordAudio: 0
+  init: 0
 --- !u!23 &458711326
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -630,7 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3fab5a526934d6599c95c5c1ff1d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CIPIC: 050
+  CIPIC: 050b
   UsePersonalizedSDN: 1
   UsePersistentDataPath: 0
   BufferSize: 512
@@ -729,6 +730,7 @@ GameObject:
   - component: {fileID: 1892799280}
   - component: {fileID: 1892799286}
   - component: {fileID: 1892799285}
+  - component: {fileID: 1892799288}
   - component: {fileID: 1892799284}
   - component: {fileID: 1892799283}
   - component: {fileID: 1892799287}
@@ -784,8 +786,9 @@ MonoBehaviour:
   PlayOnAwake: 1
   update: 1
   enableListen: 1
-  doLateReflections: 0
-  applyHrtfReflections: 1
+  doLateReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 0.6
   debugThisSource: 0
   positionArray: []
@@ -799,7 +802,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 18c7c57115aa049e7b753942abaff84e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: fead7c5727a87493fba89b071489dff1, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -949,10 +952,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveDirectory: /Users/alessandroprivitera/Desktop/GitExperiments/personalised HRTF
     Files
-  fileNameStem: Test
-  maxRecTime: 150
+  fileNameStem: HRTF_ITDInterno
+  maxRecTime: 30
   recordAudio: 0
   init: 0
+--- !u!114 &1892799288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892799279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9cd054dc569b428b9407e41563242aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  envConfig: {fileID: 1800015432}
+  hrtfManager: {fileID: 1892799282}
 --- !u!1001 &2048892755
 PrefabInstance:
   m_ObjectHideFlags: 0

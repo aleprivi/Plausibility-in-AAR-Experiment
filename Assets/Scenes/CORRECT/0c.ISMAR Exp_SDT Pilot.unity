@@ -5894,9 +5894,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3fab5a526934d6599c95c5c1ff1d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CIPIC: 152
+  CIPIC: 050b
   UsePersonalizedSDN: 1
-  UsePersistentDataPath: 1
+  UsePersistentDataPath: 0
   BufferSize: 1024
   SystemSampleRate: 44100
 --- !u!81 &1379053055
@@ -7912,7 +7912,8 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
   debugThisSource: 0
   positionArray: []

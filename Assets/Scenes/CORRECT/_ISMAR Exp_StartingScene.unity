@@ -262,12 +262,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02037f1cbe26d407d9a8c26309e3b51c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ARCamera: {fileID: 1060013185}
+  digitalHead: {fileID: 0}
   Room: {fileID: 113516165}
-  experimentElements:
-  - {fileID: 1822478362}
-  - {fileID: 1781837253}
   procedureFlowChart: {fileID: 0}
+  arSessionOrigin: {fileID: 0}
 --- !u!4 &122120885
 Transform:
   m_ObjectHideFlags: 0
@@ -296,6 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
+  RLDebugMode: 0
   instructionPanel: {fileID: 1683245109}
   meshesToHide:
   - {fileID: 896919441}
@@ -316,6 +315,7 @@ MonoBehaviour:
   - {fileID: 216072083}
   - {fileID: 207781813}
   toggleButton: {fileID: 1009923871}
+  debugButton: {fileID: 0}
   head: {fileID: 1379053053}
   iPad: {fileID: 1060013185}
 --- !u!114 &122120888
@@ -350,10 +350,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   procedureFlowChart: {fileID: 0}
-  name: Training
-  activeObject: {fileID: 0}
   front: {fileID: 1822478362}
   back: {fileID: 1781837253}
+  head: {fileID: 0}
+  iPad: {fileID: 0}
+  LogWritePerSecond: 10
 --- !u!1 &127996257
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,6 +392,7 @@ MonoBehaviour:
   - {fileID: 1379053053}
   - {fileID: 1508142351529716}
   - {fileID: 5578590545316323680}
+  sendToServer: 1
 --- !u!4 &127996259
 Transform:
   m_ObjectHideFlags: 0
@@ -1658,11 +1660,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener: {fileID: 1379053053}
+  PlayOnAwake: 1
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &382426001
 AudioSource:
@@ -4381,7 +4386,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1439a4f78e1b843559c2c9380c4b98c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FaceInfoText: {fileID: 0}
   UseAirBudsPro: 1
   DigitalTwinHead: {fileID: 1379053060}
   m_CameraManager: {fileID: 1060013188}
@@ -5286,25 +5290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c649571ed695c4699aaf529675fc7f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reward: 0
-  done: 0
-  maxSteps: 0
-  currentStep: 0
-  begun: 0
-  acceptingSteps: 0
-  actions: []
-  startingTime: 0
-  startButton: {fileID: 1749977543}
-  intimate_Condition: 1
-  sampleAudio: {fileID: 8300000, guid: c05a81e7c91bd46c2b65c09e992490c0, type: 3}
-  silence: {fileID: 8300000, guid: 93e73546ab5454017bc8b07737e35dda, type: 3}
-  audioSteps: {fileID: 382426001}
-  CHIagent: {fileID: 5578590545316323680}
-  agentDistanceFromUser: 3.7
-  CHIuser: {fileID: 1379053053}
-  CHIgoal: {fileID: 1508142351529716}
-  goalDistanceFromUser: 5
-  reachedLabel: {fileID: 1212065560}
 --- !u!1 &1140598755
 GameObject:
   m_ObjectHideFlags: 0
@@ -6134,7 +6119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3fab5a526934d6599c95c5c1ff1d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CIPIC: 152
+  CIPIC: 050
   UsePersonalizedSDN: 1
   UsePersistentDataPath: 0
   BufferSize: 1024
@@ -6159,6 +6144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e789aa9a16c014e2fb1b7ff83b98c0c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  smoothMovement: 0
 --- !u!4 &1379053060
 Transform:
   m_ObjectHideFlags: 0
@@ -7573,15 +7559,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb1400b1688184eb1ad1c4c19cc76386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExperimentLogic: {fileID: 1944638703}
-  Agente: {fileID: 5578590545316323680}
-  Goal: {fileID: 0}
-  ARCamera: {fileID: 1379053053}
-  Room: {fileID: 0}
-  etx: {fileID: 1553342944}
-  l_env: {fileID: 1136120438}
-  tr_env: {fileID: 1944638705}
-  step: 0
 --- !u!114 &1749977543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7739,11 +7716,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener: {fileID: 1379053053}
+  PlayOnAwake: 1
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &1781837258
 AudioSource:
@@ -7968,11 +7948,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener: {fileID: 1379053053}
+  PlayOnAwake: 1
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &1822478367
 AudioSource:
@@ -8656,15 +8639,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e40961e03b584c9fa69125206dff2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  front: {fileID: 1822478362}
-  back: {fileID: 1781837253}
-  first: 0
-  instructions: {fileID: 1212065560}
-  startButton: {fileID: 1749977543}
-  user: {fileID: 1379053053}
-  activeObject: {fileID: 0}
-  firstTargetReached: 0
-  TextFadeTime: 3
 --- !u!114 &1944638706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9820,11 +9794,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   listener: {fileID: 1379053053}
+  PlayOnAwake: 1
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
+  debugThisSource: 0
   positionArray: []
 --- !u!82 &5586771433502589496
 AudioSource:

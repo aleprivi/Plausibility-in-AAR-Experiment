@@ -39,7 +39,8 @@ public class LoudnessCalSource : MonoBehaviour
     bool useHRTF = true;
     public void switchHRTF() {
         useHRTF = !useHRTF;
-        currentSDN.applyHrtfReflections = useHRTF;
+        currentSDN.applyHrtfToReflections = useHRTF;
+        currentSDN.applyHrtfToDirectSound = useHRTF;
     }
 
     bool useReverb = true;
