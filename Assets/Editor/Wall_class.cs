@@ -21,7 +21,7 @@ public class Wall_class: Editor
         
     }
 
-    enum walltypes {concrete, carpet, glass, gypsum, vynil, wood, rockfon};
+    //enum walltypes {concrete, carpet, glass, gypsum, vynil, wood, rockfon};
 
     public override void OnInspectorGUI()
     {
