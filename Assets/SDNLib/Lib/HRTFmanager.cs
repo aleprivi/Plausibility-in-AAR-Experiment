@@ -102,8 +102,8 @@ public class HRTFmanager : MonoBehaviour
             HRTFData tmp = listener.GetComponent<SDNEnvConfig>().getInterpolated_HRTFDatas(azEl_direct);
             //Debug.Log("Direct Azimuth: " + azEl_direct[0] + " Elevation: " + azEl_direct[1] + " Elevation 1: " + azEl_direct[2]);
             //Debug.Log("Direct Azimuth: " + azEl_direct[0] + " ITD: " +  listener.GetComponent<SDNEnvConfig>().getSphericalHeadItd(azEl_direct));
-            float[] temp = listener.GetComponent<SDNEnvConfig>().getInterpolated_ITDs(azEl_direct);
-            Debug.Log("AziEle:" + (int)azEl_direct[0] + " #:" +  (int)temp[0] + "-" + (int)temp[1]);
+            //float[] temp = listener.GetComponent<SDNEnvConfig>().getInterpolated_ITDs(azEl_direct);
+            //Debug.Log("AziEle:" + (int)azEl_direct[0] + " #:" +  (int)temp[0] + "-" + (int)temp[1]);
 
 
             //hrtf_direct = listener.GetComponent<SDNEnvConfig>().getInterpolated_HRTF(azEl_direct);
