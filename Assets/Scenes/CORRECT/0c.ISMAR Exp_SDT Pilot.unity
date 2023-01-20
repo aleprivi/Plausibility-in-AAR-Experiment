@@ -5896,7 +5896,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CIPIC: 050
   UsePersonalizedSDN: 1
-  UsePersistentDataPath: 1
+  UsePersistentDataPath: 0
+  UseNewestSubject: 0
   BufferSize: 512
   SystemSampleRate: 44100
 --- !u!81 &1379053055
