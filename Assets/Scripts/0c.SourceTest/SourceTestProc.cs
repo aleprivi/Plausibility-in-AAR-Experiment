@@ -179,11 +179,14 @@ public class SourceTestProc : ProcDefinition {
 
     public HeadDistance headDistanceScript;
     public HeadPositionUtils headPositionUtilsScript;
+
+    public rotateHead headRotator;
     bool useHead = true;
     public void switchHead() {
         useHead = !useHead;
         headDistanceScript.enabled = useHead;
         headPositionUtilsScript.enabled = !useHead;
+        headRotator.setHeadphoneRotation(useHead);
         setVolume();
     }
 }

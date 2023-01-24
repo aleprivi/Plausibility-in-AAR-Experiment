@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class InitConfig : MonoBehaviour
 {
     public TMP_InputField Usernum_input;
+    public TMP_InputField CIPIC_input;
     public TextMeshProUGUI Usernum_text;
+    public TextMeshProUGUI CIPIC_text;
 
     void Start()
     {
@@ -23,12 +25,16 @@ public class InitConfig : MonoBehaviour
                     s = WriteLogs.GetNewUser();
                 }
         }
+        string c = WriteLogs.GetLastCIPIC();
+
         if(Usernum_input != null) Usernum_input.text = s;
         if(Usernum_text != null) Usernum_text.text = s;
+        if(CIPIC_input != null) CIPIC_input.text = c;
+        if(CIPIC_text != null) CIPIC_text.text = c;
     }
 
     public void StartExperiment() {
-        WriteLogs.Init();
+        WriteLogs.Init(Usernum_input.text);
         SceneManager.LoadScene("0a1.ExperimentMenu");
     }
 

@@ -21,21 +21,31 @@ public class rotateHead : MonoBehaviour
 
     private Quaternion _calibratedOffset = Quaternion.identity;
     private Quaternion _lastRotation = Quaternion.identity;
-    bool prec = true;
-    private void HandleHeadRotationQuaternion(Quaternion rotation)
+    //bool prec = true;
+    //public float LerpFactor = 0.3f;
+    public bool isEnabled = true;
+    public void setHeadphoneRotation(bool value){
+        isEnabled = value;
+    }
+    private async void HandleHeadRotationQuaternion(Quaternion rotation)
     {
-        if (prec)
+        if (isEnabled)
         {
+            //Lerp quaternion
+            //Quaternion tmp = Quaternion.Lerp(_lastRotation, rotation, LerpFactor);
+
             if (_calibratedOffset == Quaternion.identity)
             {
                 transform.rotation = rotation;
+                //transform.rotation = tmp;
             }
             else
             {
                 transform.rotation = rotation * Quaternion.Inverse(_calibratedOffset);
+                //transform.rotation = tmp * Quaternion.Inverse(_calibratedOffset);
             }
         }
-        prec = !prec;
+        //prec = !prec;
 
         //transform.rotation = rotation;
         _lastRotation = rotation;

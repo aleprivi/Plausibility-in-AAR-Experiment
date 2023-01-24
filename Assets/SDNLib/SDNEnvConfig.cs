@@ -106,6 +106,11 @@ public class SDNEnvConfig : MonoBehaviour
             CIPIC = last;
         }
 
+        if(!WriteLogs.CIPIC.Equals("000")){
+            Debug.Log("Bypassing! Using WriteLogs.CIPIC-->" + WriteLogs.CIPIC);
+            CIPIC = WriteLogs.CIPIC;
+        }
+
 
         AudioConfiguration AC = AudioSettings.GetConfiguration();
         AC.dspBufferSize = BufferSize;
@@ -123,6 +128,9 @@ public class SDNEnvConfig : MonoBehaviour
         Debug.Log("SDN Lib correctly started at " + AC.sampleRate + "Hz with sample buffer " + AC.dspBufferSize+". Latency is " + lats +"ms");
 
         SwitchHRTF(CIPIC);
+
+
+
         /*
         for (int i = 0; i < matrix_l.Length; i++)
         {

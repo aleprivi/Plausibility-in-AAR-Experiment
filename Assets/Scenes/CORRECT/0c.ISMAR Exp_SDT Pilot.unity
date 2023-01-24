@@ -775,6 +775,7 @@ MonoBehaviour:
   envConfig: {fileID: 1379053054}
   headDistanceScript: {fileID: 903227066}
   headPositionUtilsScript: {fileID: 1379053061}
+  headRotator: {fileID: 1379053056}
 --- !u!1 &152264947
 GameObject:
   m_ObjectHideFlags: 0
@@ -1646,8 +1647,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 219623604}
   - {fileID: 1323939741}
+  - {fileID: 219623604}
   - {fileID: 1009923869}
   - {fileID: 1683245110}
   - {fileID: 550725667}
@@ -4482,7 +4483,7 @@ PrefabInstance:
     - target: {fileID: 2722581053841682929, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2722581053841682929, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
@@ -5715,7 +5716,7 @@ RectTransform:
   - {fileID: 2048958076}
   - {fileID: 1577294300}
   m_Father: {fileID: 363761400}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5921,6 +5922,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothMovement: 0
+  isEnabled: 1
 --- !u!4 &1379053060
 Transform:
   m_ObjectHideFlags: 0
@@ -9723,7 +9725,7 @@ PrefabInstance:
     - target: {fileID: 970959895940035639, guid: dbd6825b9a9be40b3bec892d345f4e3e,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 970959895940035639, guid: dbd6825b9a9be40b3bec892d345f4e3e,
         type: 3}

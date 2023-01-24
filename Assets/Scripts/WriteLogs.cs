@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+//using System;
+using System.Linq;
+
 public class WriteLogs : MonoBehaviour
 {
     public static string filename = "testfile";
     public static string userNum = "noUser";
+    public static string CIPIC = "000";
     
     /*
     conditions:
@@ -16,37 +20,31 @@ public class WriteLogs : MonoBehaviour
     */
     public static int condition = 0;
 
-    public static void WriteFloatArray(float[] f, string filename){
-        string path = Application.persistentDataPath + "/" + filename + ".csv";
-        //Write some text to the test.txt file
-        StreamWriter writer = new StreamWriter(path);
-        string val = "";
-        foreach (float el in f) {
-            val += el + ",";
-        }
-        //remove last ,
-        val = val.Substring(0, val.Length - 1);
-        writer.WriteLine(val);
-        writer.Close();
-    }
-    public static void WriteFloatArray(float[][] f, string filename){
-        string path = Application.persistentDataPath + "/" + filename + ".csv";
-        //Write some text to the test.txt file
-        StreamWriter writer = new StreamWriter(path);
-        string val = "";
-        foreach (float[] el in f) {
-            foreach (float el2 in el) {
-                val += el2 + ";";
+    public static string GetLastCIPIC(){
+        //get CIPIC user, if exist
+        //if use persistentdatapath get newest directory inside and print it
+        string[] dirs = Directory.GetDirectories(Application.persistentDataPath);
+        string newestDir = dirs[0];
+        foreach(string dir in dirs){
+            if(Directory.GetCreationTime(dir) > Directory.GetCreationTime(newestDir)){
+                newestDir = dir;
             }
-            //remove last ;
-            val = val.Substring(0, val.Length - 1);
-            val += "\n";
         }
-        writer.WriteLine(val);
-        writer.Close();
+        
+        //take the last folder name
+        string folderdelimit = "/";
+        #if (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN)
+            folderdelimit = "\\";
+        #endif
+        string last = newestDir.Split(folderdelimit).Last();
+        //remove the last 4 char from the string and the first 7
+        last = last.Substring(7, last.Length-11);
+        CIPIC = last;
+        return CIPIC;
     }
     public static string GetLastUser()
     {
+        //Get Last User from file, if exists
         string path = Application.persistentDataPath + "/UserList.csv";
         if (File.Exists(path))
         {
@@ -104,10 +102,7 @@ public class WriteLogs : MonoBehaviour
 
         //Salvo i vari file necessari al log
         string Log_path = Application.persistentDataPath + "/" + filename + userNum + ".csv";
-        //Write some text to the test.txt file
 
-
-        //get date
         string training = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_training.csv";
         string slater = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slater.csv";
         string slaterTable = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slaterTable.csv";
@@ -161,6 +156,41 @@ public class WriteLogs : MonoBehaviour
 
         steps = 0;
     }
+
+
+
+
+
+    public static void WriteFloatArray(float[] f, string filename){
+        string path = Application.persistentDataPath + "/" + filename + ".csv";
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path);
+        string val = "";
+        foreach (float el in f) {
+            val += el + ",";
+        }
+        //remove last ,
+        val = val.Substring(0, val.Length - 1);
+        writer.WriteLine(val);
+        writer.Close();
+    }
+    public static void WriteFloatArray(float[][] f, string filename){
+        string path = Application.persistentDataPath + "/" + filename + ".csv";
+        //Write some text to the test.txt file
+        StreamWriter writer = new StreamWriter(path);
+        string val = "";
+        foreach (float[] el in f) {
+            foreach (float el2 in el) {
+                val += el2 + ";";
+            }
+            //remove last ;
+            val = val.Substring(0, val.Length - 1);
+            val += "\n";
+        }
+        writer.WriteLine(val);
+        writer.Close();
+    }
+
 
 
 
