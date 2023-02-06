@@ -14,7 +14,7 @@ public class AccuracyLog : MonoBehaviour
     Camera ars;
     ARSessionOrigin arso;
     public GameObject head;
-    public HeadDistance headUtils;
+    public HeadTracking headUtils;
 
     Vector3 startingPosition;
     Quaternion startingRotation;

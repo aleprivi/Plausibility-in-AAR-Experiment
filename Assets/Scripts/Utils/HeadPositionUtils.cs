@@ -29,7 +29,7 @@ public class HeadPositionUtils : MonoBehaviour
     void combineHeadPosition() {
         this.transform.position = ARCamera.transform.position;
         this.transform.rotation = ARCamera.transform.rotation;
-        Debug.Log(ARCamera.transform.position);
+        //Debug.Log(ARCamera.transform.position);
         if (Input.GetKeyDown(KeyCode.X))
         {
 

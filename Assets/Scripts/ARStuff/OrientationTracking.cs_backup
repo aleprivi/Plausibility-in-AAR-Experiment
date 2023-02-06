@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine;
+using HearXR;
+
+public class OrientationTracking : MonoBehaviour
+{
+
+    public enum EarTrackingType{Airpods, iPadHead, iPad, None};
+    public bool isAirPodsAvailable = false;
+    public EarTrackingType trackingType = EarTrackingType.Airpods;
+    public ARCameraManager ARCamera;
+
+    void Start(){
+        HeadphoneMotion.Init();
+
+        if (HeadphoneMotion.IsHeadphoneMotionAvailable())
+        {
+            HeadphoneMotion.OnHeadRotationQuaternion += HandleHeadRotationQuaternion;
+            HeadphoneMotion.StartTracking();
+            isAirPodsAvailable = true;
+        }else{
+            Debug.Log("AirPods not available");
+        }
+    }
+
+    private Quaternion _calibratedOffset = Quaternion.identity;
+    private Quaternion _lastRotation = Quaternion.identity;
+    private Quaternion _fixedTrackingRot = Quaternion.identity;
+
+    private async void HandleHeadRotationQuaternion(Quaternion rotation){
+
+        //Tracking Airpods
+        if (trackingType == EarTrackingType.Airpods){
+            if (_calibratedOffset == Quaternion.identity){
+                transform.rotation = rotation;
+            }else{
+                transform.rotation = rotation * Quaternion.Inverse(_calibratedOffset);
+            }
+        //Tracking iPadHead
+        }else if(trackingType == EarTrackingType.iPadHead){
+            //Nothing to be done
+        //Tracking solo iPad
+        }else if(trackingType == EarTrackingType.iPad){
+            //Nothing to be done
+        //No Tracking
+        }else{
+            transform.rotation = _fixedTrackingRot;
+        }
+
+        //salvo sempre l'ultima posizione
+        if(trackingType != EarTrackingType.None){
+            _fixedTrackingRot = transform.rotation;
+        }
+
+        _lastRotation = rotation;  //...se voglio calibrare
+    }
+
+    public void CalibrateAirpods(){
+        _calibratedOffset = _lastRotation;
+    }
+
+    void Update(){}
+}

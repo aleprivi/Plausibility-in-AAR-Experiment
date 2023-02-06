@@ -631,9 +631,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3fab5a526934d6599c95c5c1ff1d6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CIPIC: 137
+  CIPIC: 050
   UsePersonalizedSDN: 1
   UsePersistentDataPath: 0
+  UseNewestSubject: 0
   BufferSize: 512
   SystemSampleRate: 44100
 --- !u!81 &1800015433

@@ -49,11 +49,12 @@ public class iPadOrientationControl : MonoBehaviour
         }
     }
 
-    public bool hasHead = true;
+    //public bool hasHead = true;
     
-    // Update is called once per frame
     void Update()
     {
+
+        //se troppo in alto o troppo in basso fade
         float x_rot = ARCamera.transform.eulerAngles.x;
 
         x_rot = x_rot > 180 ? x_rot - 360 : x_rot;

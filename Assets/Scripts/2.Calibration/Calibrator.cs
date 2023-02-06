@@ -46,7 +46,7 @@ public class Calibrator : MonoBehaviour
 //        ExperimentLogic.transform.position = calibratedPosition;
 //        ExperimentLogic.transform.rotation = Quaternion.Euler(0,eulerAngle.y+180,0);
 
-        GameObject.FindObjectOfType<rotateHead>().CalibrateHeadphones();
+        GameObject.FindObjectOfType<HeadTracking>().CalibrateAirpods();
 
 
         //Debug.Log("Calibration ended");

@@ -177,16 +177,17 @@ public class SourceTestProc : ProcDefinition {
         setVolume();
     }
 
-    public HeadDistance headDistanceScript;
+    public HeadTracking headTracker;
+    //public HeadTracking headDistanceScript;
     public HeadPositionUtils headPositionUtilsScript;
 
-    public rotateHead headRotator;
-    bool useHead = true;
-    public void switchHead() {
+    //public HeadTracking headRotator;
+    //bool useHead = true;
+    /*public void switchHead() {
         useHead = !useHead;
-        headDistanceScript.enabled = useHead;
+        //headDistanceScript.enabled = useHead;
         headPositionUtilsScript.enabled = !useHead;
-        headRotator.setHeadphoneRotation(useHead);
+        //headTracker.setHeadphoneRotation(useHead);
         setVolume();
-    }
+    }*/
 }

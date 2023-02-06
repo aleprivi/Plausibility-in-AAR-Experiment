@@ -27,13 +27,14 @@ public class StartReal : MonoBehaviour
         IEnumerator GetRequest()
     {
         int tosend = (!isVirtual)? type:0;
-        Debug.Log("Sending: " + tosend);
+//        Debug.Log("Sending: " + tosend);
 
         string uri = "https://www.alessandroprivitera.it/CHITEST/StartMusic.php?type=" + tosend;
-        Debug.Log(uri);
+        //Debug.Log(uri);
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             yield return webRequest.SendWebRequest();
+            Debug.Log("Correctly sent: " + webRequest.downloadHandler.text);
             respMsg.text = webRequest.downloadHandler.text;
         }
                 

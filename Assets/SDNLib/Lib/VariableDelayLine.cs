@@ -48,6 +48,7 @@ public class VariableDelayLine{
             }
         }
         else{   //else apply the compression/expansion algorithm
+            //Debug.Log("Delay changed! Applying compression/expansion algorithm...");
             int j;
             float rest;
             //last sample must be treated in different way
