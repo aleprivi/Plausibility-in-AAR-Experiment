@@ -16,7 +16,8 @@ public class MUSHRASet : MonoBehaviour
     public void Start(){
         createConditions();
         if(b_nextPage()){
-            Debug.Log("First Page Created");
+//            Debug.Log("First Page Created");
+//            Debug.Log("Conditions loaded: " + conditions.GetLength(0) + " pages, " + conditions.GetLength(1) + " conditions");
         }else{
             Debug.Log("Conditions seems to be empty!");
         }
@@ -62,7 +63,18 @@ public class MUSHRASet : MonoBehaviour
             ShowConfirmationPanel(confirmationMessage, true);
             return false;
         }
-        
+
+        //find a gridlayoutgroup component and check its name ends with "Modes"
+        GridLayoutGroup[] grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
+
+        foreach(GridLayoutGroup g in grid){
+
+            if(g.name.EndsWith("Modes")){
+            Debug.Log("ON -> " + g.name);
+                g.enabled = true;
+            }
+        }
+        //grid.enabled = true;
         //get all children of gameObject and destroy them
         while(gameObject.transform.childCount > 0){
             Transform child = gameObject.transform.GetChild(0);
@@ -74,6 +86,7 @@ public class MUSHRASet : MonoBehaviour
                 }
                 
             }
+            
         }
 
         List<ExperimentalCondition> pageConditions = new List<ExperimentalCondition>();
@@ -112,6 +125,8 @@ public class MUSHRASet : MonoBehaviour
         }
         currentPage++;
         stepCounter.text = "Step " + currentPage + "/" + conditions.GetLength(0);
+
+
         return true;
     }
 
@@ -134,6 +149,10 @@ public class MUSHRASet : MonoBehaviour
                 Debug.Log("Conditions seems to be empty!");
             }
         }
+
+
+
+
 
     }
 

@@ -30,6 +30,7 @@ public class UIClassic : MonoBehaviour
 
     public void PlayCondition(){
         Debug.Log("Play " + gameObject.name);
+        mushraSet.conditions[page, item].setCondition();
     }
 
     public void RemoveCondition(float value){

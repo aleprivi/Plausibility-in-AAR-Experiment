@@ -112,7 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionsFilename: 
   instructionMessage: 
-  instructionPanel: {fileID: 5246003517464669447}
+  instructionPanel: {fileID: 5246003517464669441}
   oldButtonsPanel: {fileID: 5246003517262533266}
   buttonPrefab: {fileID: 6304875713319693096, guid: 1240ccdccbbfc4b758e966d530941b13,
     type: 3}
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionsFilename: 
   instructionMessage: 
-  instructionPanel: {fileID: 5246003517464669447}
+  instructionPanel: {fileID: 5246003517464669441}
   oldButtonsPanel: {fileID: 5246003517262533266}
   buttonPrefab: {fileID: 8920954993706963562, guid: 649fe050d44104d268036273a8afe963,
     type: 3}
@@ -904,7 +904,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionsFilename: 
   instructionMessage: 
-  instructionPanel: {fileID: 5246003517464669447}
+  instructionPanel: {fileID: 5246003517464669441}
   oldButtonsPanel: {fileID: 5246003517262533266}
   buttonPrefab: {fileID: 6304875713319693096, guid: 8342c21ddfb5d4536a3d8e121bceec48,
     type: 3}
@@ -2555,7 +2555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionsFilename: 
   instructionMessage: 
-  instructionPanel: {fileID: 5246003517464669447}
+  instructionPanel: {fileID: 5246003517464669441}
   oldButtonsPanel: {fileID: 5246003517262533266}
   buttonPrefab: {fileID: 1498846087349379895, guid: dba05cc85d61541ea943b0e39b9e7ce5,
     type: 3}

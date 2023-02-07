@@ -24,6 +24,16 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
     public Vector2 currentPosition;
     public void OnDrag(PointerEventData data)
     {
+        GridLayoutGroup[] grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
+        //Debug.Log("----------------");
+        grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
+        foreach(GridLayoutGroup g in grid){
+            Debug.Log(g.name);
+            if(g.name.EndsWith("Modes") && g.enabled){
+                g.enabled = false;
+            }
+        }
+
         if(isReference) return;
         transform.position = Input.mousePosition;
         float x = Input.mousePosition.x;
@@ -35,6 +45,7 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
 
     public void PlayCondition(){
         Debug.Log("Play " + gameObject.name);
+        mushraSet.conditions[page, item].setCondition();
     }
 
     /*public void Refresh(){

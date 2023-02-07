@@ -66,6 +66,11 @@ public class SourceTestProc : ProcDefinition {
         setVolume();
     }
 
+    public void switchVolume(bool real) {
+        realvolume = real;
+        setVolume();
+    }
+
     void setVolume() {
         float vol = 1;
         int index = (headphoneCalibration) ? 0 : 8;
@@ -97,6 +102,13 @@ public class SourceTestProc : ProcDefinition {
     public void calibrateHeadphone()
     {
         headphoneCalibration = !headphoneCalibration;
+        playType((int)sourceType);
+        setVolume();
+    }
+
+    public void calibrateHeadphone(bool value)
+    {
+        headphoneCalibration = value;
         playType((int)sourceType);
         setVolume();
     }
@@ -144,6 +156,13 @@ public class SourceTestProc : ProcDefinition {
         setVolume();
     }
 
+    public void switchRoom(bool value) { //Corridor True, Random False
+        corridor = value;
+        corridorRoom.SetActive(corridor);
+        randoRoom.SetActive(!corridor);
+        setVolume();
+    }
+
     public SDNEnvConfig envConfig;
     bool useHRTF = true;
     public void switchHRTF(int type) {
@@ -173,6 +192,13 @@ public class SourceTestProc : ProcDefinition {
     public void switchReverb()
     {
         useReflections = !useReflections;
+        sourceSDN.doLateReflections = useReflections;
+        setVolume();
+    }
+
+    public void switchReverb(bool value)
+    {
+        useReflections = value;
         sourceSDN.doLateReflections = useReflections;
         setVolume();
     }

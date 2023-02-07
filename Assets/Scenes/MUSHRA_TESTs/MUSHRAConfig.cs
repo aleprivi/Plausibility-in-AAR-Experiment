@@ -18,6 +18,7 @@ public class MUSHRAConfig: MonoBehaviour
     public void Awake(){
         //Set the correct environment
         MUSHRASet mushraSet = null;
+        //Debug.Log("===========cia0===========");
         for(int i = 0; i < gameObject.transform.childCount; i++){
             Transform child = gameObject.transform.GetChild(i);
             bool destroyElement = false;
@@ -42,8 +43,10 @@ public class MUSHRAConfig: MonoBehaviour
                     break;
             };
             if(destroyElement) Destroy(child.gameObject);
-            
         }
+
+        //Leggo il file name dal WriteLog
+        saveFileName = WriteLogs.userNum;
 
         if(mushraSet != null){
             mushraSet.conditionsFilename = conditionFilename;

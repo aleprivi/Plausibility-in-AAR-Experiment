@@ -1,0 +1,10 @@
+page, condition, name, HRTF, Reverb, SampleVolume, HeadPhoneEQ,EarTrack, HeadTrack, SamplePos
+1,1,A,kemar,calibrated,calibrated,equalized,ear,head,0
+1,2,B,none,large,+5,none,ipadhead,head+height,-45
+1,3,C,personal,none,+5,none,ipad,ipad,-45
+1,4,A,kemar,calibrated,calibrated,equalized,ear,head,0
+1,5,B,none,large,+5,none,ipadhead,head+height,-45
+1,6,C,personal,none,+5,none,ipad,ipad,-45
+1,7,A,kemar,calibrated,calibrated,equalized,ear,head,0
+1,8,B,none,large,+5,none,ipadhead,head+height,-45
+1,9,C,personal,none,+5,none,ipad,ipad,-45

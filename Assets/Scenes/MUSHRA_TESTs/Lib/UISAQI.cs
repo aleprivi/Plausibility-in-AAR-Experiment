@@ -30,6 +30,7 @@ public class UISAQI : MonoBehaviour
 
     public void PlayCondition(){
         Debug.Log("Play " + gameObject.name);
+        mushraSet.conditions[page, item].setCondition();
     }
 
     public void UpdateCondition(float value){

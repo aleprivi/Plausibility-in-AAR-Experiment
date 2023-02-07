@@ -43,7 +43,8 @@ public class WriteLogs : MonoBehaviour
         return CIPIC;
     }
     public static string GetLastUser()
-    {
+    {       
+
         //Get Last User from file, if exists
         string path = Application.persistentDataPath + "/UserList.csv";
         if (File.Exists(path))
@@ -150,7 +151,7 @@ public class WriteLogs : MonoBehaviour
             string val = "Time,User,Condition1,Condition2,Selected";
             writer.WriteLine(val);
             writer.Close();
-            Debug.Log("File now exists. No problem... happy testing ;)");
+//            Debug.Log("File now exists. No problem... happy testing ;)");
         }
 
 

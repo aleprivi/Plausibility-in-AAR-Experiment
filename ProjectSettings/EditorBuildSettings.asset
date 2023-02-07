@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MUSHRA_TESTs/Draggable.unity
-    guid: 5ed03babee1e447e79db51b76647ba42
-  - enabled: 1
     path: Assets/Scenes/CORRECT/00.START.unity
     guid: 41ea2790143564b7b8f19b22c3f7c2ff
   - enabled: 1
@@ -35,6 +32,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CORRECT/0e.RotateAroundTest.unity
     guid: 0d78991d4f80349d8bc44aa9a7a0fbd7
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.MUSHRA Slater.unity
+    guid: 3510eef0291f249f7b26c212433095c6
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.2.MUSHRA Forum.unity
+    guid: 52d5ce7ca2f2f4faf9bea6af37bad9c3
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.3.MUSHRA CHItaly.unity
+    guid: bde9301c6722c48b5b218bafb6b32991
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/EndScene.unity
+    guid: 36f845af564fa4eaf98015a2e89fae34
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 963b8ef41555f43bd9f4e2053a23c462,
       type: 2}

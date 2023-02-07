@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class MUSHRAConfirmationPanel : MonoBehaviour
 {
@@ -18,7 +19,9 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
     public void ConfirmAndPrint(){
 
         //Save to file
-        string path = Application.persistentDataPath + "/" + saveFileName + ".csv";
+        string  tmp_saveFileName = saveFileName + "_" + System.DateTime.Now.ToString("yy_MM_dd__HH_mm_ss");
+
+        string path = Application.persistentDataPath + "/" + tmp_saveFileName + ".csv";
         string text = "Condition Name,";
         if(!saveSAQI){ //SAVE MUSHRA
             text += "Points\n";
@@ -51,6 +54,7 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
         
         System.IO.File.WriteAllText(path, text);
         Debug.Log("File correctly saved to " + path);
+        SceneManager.LoadScene("EndScene");
 
     }
 
