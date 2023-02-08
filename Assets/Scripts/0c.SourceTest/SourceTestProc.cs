@@ -54,7 +54,7 @@ public class SourceTestProc : ProcDefinition {
         }
         setVolume();
         if(isVirtual){
-            Debug.Log("entrato");
+//            Debug.Log("entrato");
             sourceObject.GetComponent<AudioSource>().Play();
         }
         //sourceObject.GetComponent<AudioSource>().Play();
@@ -128,6 +128,16 @@ public class SourceTestProc : ProcDefinition {
         setVolume();
     }
 
+    public void playReality(bool value){
+        isVirtual = value;
+        if(isVirtual){
+            sourceAudio.Play();
+        }else{
+            sourceAudio.Stop();
+        }
+        setVolume();
+    }
+
 
     public enum SourceHeight { Sight = 0, Feet = 1};
     SourceHeight sourceHeight = SourceHeight.Sight;
@@ -137,7 +147,7 @@ public class SourceTestProc : ProcDefinition {
         switch (sourceHeight)
         {
             case SourceHeight.Feet:
-                y = 0.1f;
+                y = 0.3f;
                 break;
             case SourceHeight.Sight:
                 y = 1.6f;

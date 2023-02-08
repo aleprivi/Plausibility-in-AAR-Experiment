@@ -40,6 +40,24 @@ public class StartReal : MonoBehaviour
                 
     }
 
+
+    IEnumerator GetRequest(int type)
+    {
+        string uri = "https://www.alessandroprivitera.it/CHITEST/StartMusic.php?type=" + type;
+        //Debug.Log(uri);
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            yield return webRequest.SendWebRequest();
+            Debug.Log("Correctly sent: " + webRequest.downloadHandler.text);
+        }
+                
+    }
+    
+    public void SendParam(int type)
+    {
+        StartCoroutine(GetRequest(type));
+    }
+
     public GameObject[] guiElements;
 
 

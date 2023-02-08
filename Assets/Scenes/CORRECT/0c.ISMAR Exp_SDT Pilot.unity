@@ -720,11 +720,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   procedureFlowChart: {fileID: 0}
   sourceObject: {fileID: 1822478362}
-  voice: {fileID: 8300000, guid: 28ca35c07c77a42349abb7fe3b0cafff, type: 3}
-  voiceAirpods: {fileID: 8300000, guid: 5e37bc4365f334c689cbb507dfbd06aa, type: 3}
-  noise: {fileID: 8300000, guid: fead7c5727a87493fba89b071489dff1, type: 3}
-  noiseAirpods: {fileID: 8300000, guid: e87b650ea77ac4e70be08ed2a4da9e0a, type: 3}
-  ecological: {fileID: 8300000, guid: d74977f0eb35841fabf9d3fe1daad931, type: 3}
+  voice: {fileID: 8300000, guid: 88ef693ca2cc344c2a38bc03e35d06bc, type: 3}
+  voiceAirpods: {fileID: 8300000, guid: effe487180afb454e89d8e84601eb908, type: 3}
+  noise: {fileID: 8300000, guid: 72cce8ede7f5c4029b7e199e13c2e3b5, type: 3}
+  noiseAirpods: {fileID: 8300000, guid: 376b42532e06a488484ce455262c5bc6, type: 3}
+  ecological: {fileID: 8300000, guid: a619b9cb214d04dc885a78552308af1d, type: 3}
   ecologicalAirpods: {fileID: 8300000, guid: e5cfdc2d3837147df94f37a0eff7ce00, type: 3}
   voiceVolumes:
   - 1
@@ -7227,6 +7227,7 @@ MonoBehaviour:
   UsePersonalizedSDN: 1
   UsePersistentDataPath: 0
   UseNewestSubject: 0
+  cipic_subject: 
   BufferSize: 512
   SystemSampleRate: 44100
 --- !u!81 &1379053055

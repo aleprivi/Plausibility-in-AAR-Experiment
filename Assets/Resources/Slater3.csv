@@ -1,0 +1,3 @@
+page," condition"," name"," HRTF"," Reverb"," SampleVolume"," HeadPhoneEQ",EarTrack," HeadTrack"," SamplePos",SourceType,Real
+1,1,A,personal,calibrated,calibrated,equalized,ear,head,0,ecological,virtual
+1,2,B,kemar,large,+5,none,ear,head,0,ecological,virtual

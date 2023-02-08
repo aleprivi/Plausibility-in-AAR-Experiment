@@ -13,6 +13,15 @@ public struct HRTFData
     public AForge.Math.Complex[][] HRTFs;
     public float[] Delays;
 }
+
+public struct HRTFStore{
+    public string subject;
+    public AForge.Math.Complex[][][] matrix_l;
+    public AForge.Math.Complex[][][] matrix_r;
+    public int[][] triangles;
+    public float[][] points;
+    public float[] headsize;
+}
 public class SDNEnvConfig : MonoBehaviour
 {
     public string CIPIC;
@@ -21,7 +30,7 @@ public class SDNEnvConfig : MonoBehaviour
     //public HRTFcontainer HRTFCamera;
     public bool UseNewestSubject = false;
 
-
+    private List<HRTFStore> HRTFList = new List<HRTFStore>(); //Contiene tutte le HRTF caricabili
 
 
 
@@ -33,7 +42,7 @@ public class SDNEnvConfig : MonoBehaviour
 
 
 
-    private string cipic_subject;
+    public string cipic_subject; //Current Subject ID
 
     private static int hrtfLength = 200;
     private static int azNum = 27;
@@ -513,6 +522,33 @@ public class SDNEnvConfig : MonoBehaviour
 
 
     public void SwitchHRTF(string id){
+
+        /*
+        public struct HRTFStore{
+            public string subject;
+            private AForge.Math.Complex[][][] matrix_l;
+            private AForge.Math.Complex[][][] matrix_r;
+            private int[][] triangles;
+            private float[][] points;
+            private float[] headsize;
+        }
+        */
+
+        if(cipic_subject == id) return;
+
+        foreach(HRTFStore hrtf in HRTFList){
+            if(hrtf.subject == id){
+                cipic_subject = id;
+                matrix_l = hrtf.matrix_l;
+                matrix_r = hrtf.matrix_r;
+                triangles = hrtf.triangles;
+                points = hrtf.points;
+                headsize = hrtf.headsize;
+                Debug.Log("Switching to Stored HRTF: " + cipic_subject);
+                return;
+            }
+        }
+
         for (int i = 0; i < matrix_l.Length; i++)
         {
             matrix_l[i] = new AForge.Math.Complex[elNum][];
@@ -705,6 +741,15 @@ public class SDNEnvConfig : MonoBehaviour
         else {
             Debug.Log("External HRTF " + cipic_subject + " dataset correctly loaded!");
         }
+
+        HRTFStore tmp = new HRTFStore();
+        tmp.matrix_l = matrix_l;
+        tmp.matrix_r = matrix_r;
+        tmp.triangles = triangles;
+        tmp.points = points;
+        tmp.headsize = headsize;
+        tmp.subject = cipic_subject;
+        HRTFList.Add(tmp);
         
     }
 

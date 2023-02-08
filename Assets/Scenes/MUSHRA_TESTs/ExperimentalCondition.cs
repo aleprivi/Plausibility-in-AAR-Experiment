@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ExperimentalCondition
 {
@@ -42,8 +43,49 @@ public class ExperimentalCondition
 
     public void setCondition(){
 //        Debug.Log("HRTF= " + parameters[0]);
-        if(testSource != null){
-            Debug.Log("Setting condition " + name);
+        if(testSource == null) return;
+
+        //Get startReal
+        StartReal startReal = GameObject.FindObjectOfType<StartReal>();
+
+        //Real fake value
+        if(parameters[8] == "real"){
+            testProc.playReality(false);
+
+            if(parameters[7] == "voice"){
+                startReal.SendParam(1);
+            }else if(parameters[7] == "noise"){
+                startReal.SendParam(2);
+                //StartCoroutine(GetRequest(2));
+            }else if(parameters[7] == "ecological"){
+                startReal.SendParam(3);
+                //StartCoroutine(GetRequest(3));
+            }
+
+            
+            return;
+        }
+        testProc.playReality(true);
+        startReal.SendParam(0);
+        //StartCoroutine(GetRequest(0));
+
+        //Sample Type
+        if(parameters[7] == "voice"){
+            testProc.playType(0); //1
+        }else if(parameters[7] == "noise"){
+            testProc.playType(1); //2
+        }else if(parameters[7] == "ecological"){
+            testProc.playType(2); //3
+        }
+
+            //6.SamplePos -- 0, -45
+            if(parameters[6] == "0"){
+                testProc.playHeight(0);
+            } else if(parameters[6] == "-45"){
+                testProc.playHeight(1);
+            }
+
+//            Debug.Log("Setting condition " + name);
             //0.HRTF -- personal, kemar, none
             if(parameters[0] == "kemar"){
                 testProc.switchHRTF(0);
@@ -78,6 +120,7 @@ public class ExperimentalCondition
             } else if(parameters[3] == "none"){
                 testProc.switchVolume(false);
             }
+            
 
             //4.EarTrack -- ear, ipadhead, ipad
             if(parameters[4] == "ear"){
@@ -97,14 +140,15 @@ public class ExperimentalCondition
                 headTrack.headTrackingType = HeadTracking.HeadTrackingType.iPadAR;
             }
 
-            //6.SamplePos -- 0, -45
-            if(parameters[6] == "-45"){
-                testProc.playHeight(0);
-            } else if(parameters[6] == "0"){
-                testProc.playHeight(1);
-            }
-        }
+
+            
     }
+
+
+
+
+
+
 
 }
 

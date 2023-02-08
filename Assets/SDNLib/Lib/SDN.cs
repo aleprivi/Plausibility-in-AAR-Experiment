@@ -433,6 +433,8 @@ public class SDN : MonoBehaviour
         }
     }
 
+
+    
     void OnAudioFilterRead(float[] data, int channels) // audio processing by buffer
     {
         numSamps = data.Length / channels;
@@ -445,7 +447,6 @@ public class SDN : MonoBehaviour
         {
 
             //sampleMX.WaitOne();
-
             for (i = 0; i < numSamps; i++)
             {
                 AFin = 0.0f;
@@ -643,8 +644,7 @@ public class SDN : MonoBehaviour
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Warning: some junctions is lost in threads. Do Not Worry.");
-                    Debug.Log("void convHRTF_Crossfade");
+                    Debug.Log("Warning: some junctions is lost in threads. Do Not Worry. \n void convHRTF_Crossfade");
                     Debug.Log("Lost Reflection?");
                     
                 }
@@ -1077,59 +1077,78 @@ public class SDN : MonoBehaviour
 
         public void doScattering(bool outputLateReflections)
         {
-            FOSample = incoming.read();
-            FOSample *= incomingAttFactor; // divido per il numero di muri, perchè l'energia viene divisa in N pezzi
-            //Se RIGA successiva viene commentata posso bypassare il materiale
-            FOSample = wallFilter.Transform(FOSample);
-
-            //Calcolo il coefficiente simile al reale
-
-            FOSample *= nodeLoss; //Il sample lo moltiplico per l'assorbimento del muro
-            outgoingSample = FOSample;
-            HalfFOSample = 0.5f * FOSample;
-
-            int i, j;
-
-            for (i = 0; i < numConnections; i++)
-            {
-                connections[i].posSamp = connections[i].getSampleFromReverseConnection(); //Legge dalla delay_Line in entrata
-            }
-            for (i = 0; i < numConnections; i++)
-            {
-
-                outgoingSample += connections[i].posSamp;
-                outgoingSample += connections[i].prevSample;
-                connections[i].negSamp += (HalfFOSample);
-
-                for (j = 0; j < numConnections; j++)
-                {
-                    if (i == j)
-                    {
-                        connections[i].negSamp += connections[j].posSamp * scatteringFactorDiag;
-                    }
-                    else
-                    {
-                        connections[i].negSamp += connections[j].posSamp * scatteringFactor;
-                    }
-                }
-
-                connections[i].negSamp -= connections[i].prevSample;
-                connections[i].inputToDelay(connections[i].negSamp);
-                connections[i].prevSample = connections[i].negSamp;
-
-            }
-
-            if (outputLateReflections)
-            {
-                outgoingSample *= outgoingAttFactor;
-                //do listener filtering for each node
-                outgoing.write(outgoingSample);
-            }
-            else
-            {
+            
+            if(wallFilter == null) {
                 FOSample *= outgoingAttFactor;
                 outgoing.write(FOSample);
+                return;
             }
+
+                FOSample = incoming.read();
+                FOSample *= incomingAttFactor; // divido per il numero di muri, perchè l'energia viene divisa in N pezzi
+                //Se RIGA successiva viene commentata posso bypassare il materiale
+        try{
+                FOSample = wallFilter.Transform(FOSample);
+        }catch(Exception e){
+            if(wallFilter != null){
+            Debug.Log("wallFilter" + wallFilter );}
+            else{
+                Debug.Log("wallFilter is null");
+            }
+        }
+
+
+                //Calcolo il coefficiente simile al reale
+
+                FOSample *= nodeLoss; //Il sample lo moltiplico per l'assorbimento del muro
+                outgoingSample = FOSample;
+                HalfFOSample = 0.5f * FOSample;
+
+                int i, j;
+
+                for (i = 0; i < numConnections; i++)
+                {
+                    connections[i].posSamp = connections[i].getSampleFromReverseConnection(); //Legge dalla delay_Line in entrata
+                }
+
+                for (i = 0; i < numConnections; i++)
+                {
+
+                    outgoingSample += connections[i].posSamp;
+                    outgoingSample += connections[i].prevSample;
+                    connections[i].negSamp += (HalfFOSample);
+
+                    for (j = 0; j < numConnections; j++)
+                    {
+                        if (i == j)
+                        {
+                            connections[i].negSamp += connections[j].posSamp * scatteringFactorDiag;
+                        }
+                        else
+                        {
+                            connections[i].negSamp += connections[j].posSamp * scatteringFactor;
+                        }
+                    }
+
+                    connections[i].negSamp -= connections[i].prevSample;
+                    connections[i].inputToDelay(connections[i].negSamp);
+                    connections[i].prevSample = connections[i].negSamp;
+
+                }
+
+
+                if (outputLateReflections)
+                {
+                    outgoingSample *= outgoingAttFactor;
+                    //do listener filtering for each node
+                    outgoing.write(outgoingSample);
+                }
+                else
+                {
+                    FOSample *= outgoingAttFactor;
+                    outgoing.write(FOSample);
+                }
+            
         }
 
 

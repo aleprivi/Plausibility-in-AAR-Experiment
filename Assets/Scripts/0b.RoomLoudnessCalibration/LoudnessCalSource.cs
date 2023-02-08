@@ -55,7 +55,9 @@ public class LoudnessCalSource : MonoBehaviour
 
     public void loadSource(int num) {
         audioSource.Stop();
-        audioSource.transform.position = new Vector3(0, ys[num], xs[num]);
+        int posnum = num % (audios.Length/2);
+        //Debug.Log("posnum: " + posnum);
+        audioSource.transform.position = new Vector3(0, ys[posnum], xs[posnum]);
         currentSDN.volumeGain = float.Parse(inputField.text);
         audioSource.clip = audios[num];
         audioSource.Play();

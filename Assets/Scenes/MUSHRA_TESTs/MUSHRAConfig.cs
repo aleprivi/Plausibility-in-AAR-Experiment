@@ -13,6 +13,11 @@ public class MUSHRAConfig: MonoBehaviour
     public enum MUSHRAType{Classic, DragAndDrop, Elimination, SAQI};
     public MUSHRAType mushraType;
 
+    public enum SampleType{noise, ecologic, voice};
+    public enum SamplePosition{head, feet};
+
+    public SampleType sampleType;
+    public SamplePosition samplePosition;
     public string[] SAQIParams;
 
     public void Awake(){
@@ -56,6 +61,8 @@ public class MUSHRAConfig: MonoBehaviour
             mushraSet.instructionMessage = instructionMessage;
             mushraSet.mushraType = mushraType;
             mushraSet.SAQIparams = SAQIParams;
+            mushraSet.sampleType = sampleType;
+            mushraSet.samplePosition = samplePosition;
         }
     }
 }

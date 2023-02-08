@@ -13,6 +13,9 @@ public class MUSHRASet : MonoBehaviour
     public string conditionsFilename;
     public string instructionMessage;
     public TextMeshProUGUI instructionPanel;
+
+    public MUSHRAConfig.SampleType sampleType;
+    public MUSHRAConfig.SamplePosition samplePosition;
     public void Start(){
         createConditions();
         if(b_nextPage()){
@@ -26,6 +29,8 @@ public class MUSHRASet : MonoBehaviour
         if(mushraType == MUSHRAConfig.MUSHRAType.SAQI){
             b_NextSAQI();
         }
+
+        confirmationPanel.GetComponentInChildren<MUSHRAConfirmationPanel>().setSaveFileName(saveFileName);
     }
 
     public void createConditions(){
@@ -34,6 +39,7 @@ public class MUSHRASet : MonoBehaviour
         string[] tmpconds = file.text.Split('\n');
         int pages = 0;
         int conditions = 0;
+
         for(int i = 1; i < tmpconds.Length; i++){
             string[] tmp = tmpconds[i].Split(',');
             int p = int.Parse(tmp[0]);
@@ -47,8 +53,20 @@ public class MUSHRASet : MonoBehaviour
             string[] tmp = tmpconds[i].Split(',');
             int p = int.Parse(tmp[0]);
             int c = int.Parse(tmp[1]);
+//            Debug.Log(tmpconds[i]);
             this.conditions[p-1, c-1] = new ExperimentalCondition(tmp);
+//            Debug.Log(this.conditions[p-1, c-1]);
         }
+
+        //print all available conditions
+        /*for(int i = 0; i < this.conditions.GetLength(0); i++){
+            for(int j = 0; j < this.conditions.GetLength(1); j++){
+                if(this.conditions[i,j] != null){
+                    Debug.Log("Page " + i + " Condition " + j + ": " +this.conditions[i,j].ToString());
+                }
+            }
+        }*/
+
     }
 
 
@@ -59,22 +77,24 @@ public class MUSHRASet : MonoBehaviour
     public TextMeshProUGUI stepCounter;
     public string saveFileName;
     public bool b_nextPage(){ //Creo i bottoni con le condizioni corrette
+
+
+
         if(currentPage >= conditions.GetLength(0)){
             ShowConfirmationPanel(confirmationMessage, true);
             return false;
         }
 
-        //find a gridlayoutgroup component and check its name ends with "Modes"
-        GridLayoutGroup[] grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
-
-        foreach(GridLayoutGroup g in grid){
-
-            if(g.name.EndsWith("Modes")){
-            Debug.Log("ON -> " + g.name);
-                g.enabled = true;
+        if(mushraType == MUSHRAConfig.MUSHRAType.DragAndDrop){
+            //find a gridlayoutgroup component and check its name ends with "Modes"
+            GridLayoutGroup[] grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
+            foreach(GridLayoutGroup g in grid){
+                if(g.name.EndsWith("Modes")){
+                    g.enabled = true;
+                }
             }
         }
-        //grid.enabled = true;
+
         //get all children of gameObject and destroy them
         while(gameObject.transform.childCount > 0){
             Transform child = gameObject.transform.GetChild(0);
@@ -88,15 +108,17 @@ public class MUSHRASet : MonoBehaviour
             }
             
         }
-
+                
         List<ExperimentalCondition> pageConditions = new List<ExperimentalCondition>();
         for(int i = 0; i < conditions.GetLength(1); i++){
+//            Debug.Log(currentPage + "--" + i + "--"+ conditions[currentPage, i]);
             if(conditions[currentPage, i] != null){
                 pageConditions.Add(conditions[currentPage, i]);
                 foreach(string s in SAQIparams){
                     //Debug.Log(currentPage +  "--" + s);
                     conditions[currentPage, i].SAQI[s] = 0;
                 }
+
                 GameObject tmp = Instantiate(buttonPrefab, gameObject.transform);
                 tmp.name = conditions[currentPage, i].name;
                 switch(mushraType){
@@ -229,8 +251,8 @@ public class MUSHRASet : MonoBehaviour
     private void ShowConfirmationPanel(string message, bool showConfirm){
         confirmationPanel.SetActive(true);        
         bool tmpSAQI = (mushraType == MUSHRAConfig.MUSHRAType.SAQI);
-        Debug.Log("SAQI: " + tmpSAQI);
-        confirmationPanel.GetComponentInChildren<MUSHRAConfirmationPanel>().ShowConfirmationPanel(message, showConfirm,conditions,saveFileName, tmpSAQI, SAQIparams);
+//        Debug.Log("SAQI: " + tmpSAQI);
+        confirmationPanel.GetComponentInChildren<MUSHRAConfirmationPanel>().ShowConfirmationPanel(message, showConfirm,conditions, tmpSAQI, SAQIparams);
     }
 
     public MUSHRAConfig.MUSHRAType mushraType;

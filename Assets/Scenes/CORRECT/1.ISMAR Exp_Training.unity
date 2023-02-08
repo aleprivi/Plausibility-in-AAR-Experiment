@@ -5853,6 +5853,8 @@ MonoBehaviour:
   CIPIC: 152
   UsePersonalizedSDN: 1
   UsePersistentDataPath: 0
+  UseNewestSubject: 0
+  cipic_subject: 
   BufferSize: 1024
   SystemSampleRate: 44100
 --- !u!81 &1379053055
@@ -7445,7 +7447,8 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
   debugThisSource: 0
   positionArray: []
@@ -7459,7 +7462,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 68d6086d53cc64b22b6abdf301d41ad9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5e37bc4365f334c689cbb507dfbd06aa, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -7676,7 +7679,8 @@ MonoBehaviour:
   update: 1
   enableListen: 1
   doLateReflections: 1
-  applyHrtfReflections: 1
+  applyHrtfToDirectSound: 1
+  applyHrtfToReflections: 1
   volumeGain: 1
   debugThisSource: 0
   positionArray: []
@@ -7690,7 +7694,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 68d6086d53cc64b22b6abdf301d41ad9, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5e37bc4365f334c689cbb507dfbd06aa, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
