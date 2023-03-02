@@ -34,7 +34,7 @@ public class InitConfig : MonoBehaviour
     }
 
     public void StartExperiment() {
-        WriteLogs.Init(Usernum_input.text);
+        //WriteLogs.Init(Usernum_input.text);
         SceneManager.LoadScene("0a1.ExperimentMenu");
     }
 
@@ -47,9 +47,34 @@ public class InitConfig : MonoBehaviour
         Usernum_input.text = WriteLogs.GetNewUser();
     }
 
+    public bool CHITALY = false;
+
     public void OnClicked(Button button)
     {
-        SceneManager.LoadScene(button.name);
+        if(CHITALY){
+            //load a file with name usernum_input
+            int sn = WriteLogs.LoadExperimentStage();
+            switch(sn){
+                case 0:
+                    WriteLogs.Init(Usernum_input.text);
+                    SceneManager.LoadScene(button.name);
+                    break;
+                case 1:
+                    SceneManager.LoadScene("3.2.MUSHRA Forum");
+                    break;
+                case 2:
+                    SceneManager.LoadScene("3.2b.Instructions");
+                    break;
+                case 3:
+                    SceneManager.LoadScene("3.3.MUSHRA CHItaly");
+                    break;
+            }
+            return;
+        }
+
+
+
+        //Piccola modifica
     }
 
     public void StartSlaterExp(int condition)

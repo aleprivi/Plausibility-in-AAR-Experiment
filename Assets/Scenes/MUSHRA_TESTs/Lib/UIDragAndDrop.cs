@@ -18,14 +18,29 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
 //        Debug.Log(gameObject.name);
         string samT = "";
         switch(mushraSet.sampleType){
-            case MUSHRAConfig.SampleType.noise:
+            case SourceTestProc.SourceType.Noise:
                 samT = "noise";
                 break;
-            case MUSHRAConfig.SampleType.ecologic:
+            case SourceTestProc.SourceType.Ecological:
                 samT = "ecologic";
                 break;
-            case MUSHRAConfig.SampleType.voice:
+            case SourceTestProc.SourceType.Voice:
                 samT = "voice";
+                break;
+            case SourceTestProc.SourceType.Casa:
+                samT = "casa";
+                break;
+            case SourceTestProc.SourceType.Cosa:
+                samT = "cosa";
+                break;
+            case SourceTestProc.SourceType.Legname:
+                samT = "legname";
+                break;
+            case SourceTestProc.SourceType.Corda:
+                samT = "corda";
+                break;
+            default:
+                samT = "" + ((int)mushraSet.sampleType);
                 break;
         }
 
@@ -41,12 +56,12 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
 
         if(isReference){
             string[] parameters = {"-1","-1","Ref","none","none","none","none","none","none",samP,samT,"real"};
-            refCondition = new ExperimentalCondition(parameters);
+            refCondition = new ExperimentalCondition(parameters, mushraSet.saveFileName, -1, -1);
         }
 
         //canvas = GetComponentInParent<Canvas>();
         val = GetComponentInChildren<TextMeshProUGUI>();
-        val.text = gameObject.name;
+//        val.text = gameObject.name;
         gameObject.GetComponent<Button>().onClick.AddListener(PlayCondition);
     }
     // Start is called before the first frame update
@@ -54,6 +69,7 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
     public Vector2 currentPosition;
     public void OnDrag(PointerEventData data)
     {
+        hasBeenDragged = true;
         GridLayoutGroup[] grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
         //Debug.Log("----------------");
         grid = GameObject.FindObjectsOfType<GridLayoutGroup>();
@@ -72,7 +88,18 @@ public class UIDragAndDrop : MonoBehaviour, IDragHandler
         currentPosition = Input.mousePosition;
     }
 
+    bool hasBeenDragged = false;
+
     public void PlayCondition(){
+        if(hasBeenDragged){
+            hasBeenDragged = false;
+            //get confirmationpanel component
+            mushraSet.conditions[page, item].saveLog(gameObject.transform.position.x, 
+                    gameObject.transform.position.y,"");
+
+            Debug.Log("Dragged");
+            return;
+        }
         if(isReference){
             refCondition.setCondition();
             return;

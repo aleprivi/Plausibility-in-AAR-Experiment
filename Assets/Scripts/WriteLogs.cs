@@ -238,4 +238,26 @@ public class WriteLogs : MonoBehaviour
         writer.WriteLine(val);
         writer.Close();
     }
+
+    public static int LoadExperimentStage(){
+        string path = Application.persistentDataPath + "/" + userNum + "_stages.csv";
+        int StageNum = 0;
+        if (File.Exists(path))
+        {
+            StageNum = File.ReadAllLines(path).Length;
+            Debug.Log("StageNum: " + StageNum);
+        }
+
+        return StageNum;
+    }
+
+    public static void WriteStage(){
+        string path = Application.persistentDataPath + "/" + userNum + "_stages.csv";
+
+        StreamWriter writer = new StreamWriter(path, true);
+        string val = "1";
+
+        writer.WriteLine(val);
+        writer.Close();
+    } 
 }

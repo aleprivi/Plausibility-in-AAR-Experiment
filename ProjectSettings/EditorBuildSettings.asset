@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/00.ForumSTART.unity
+    guid: b9bf8f3fbf3dc41b6ba763d394d4c1c0
+  - enabled: 1
     path: Assets/Scenes/CORRECT/00.START.unity
     guid: 41ea2790143564b7b8f19b22c3f7c2ff
   - enabled: 1
@@ -21,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/CORRECT/0c.ISMAR Exp_SDT Pilot.unity
     guid: 2aeaac6e1154b4ea191da01fbdc0fe23
   - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.2a.Instructions.unity
+    guid: 232ad4bb23c7c4b3f8a59c88cf33f42f
+  - enabled: 1
     path: Assets/Scenes/CORRECT/1.ISMAR Exp_Training.unity
     guid: a9edfaa7837ad41be863ec9961ca0cfe
   - enabled: 1
@@ -33,17 +39,44 @@ EditorBuildSettings:
     path: Assets/Scenes/CORRECT/0e.RotateAroundTest.unity
     guid: 0d78991d4f80349d8bc44aa9a7a0fbd7
   - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.1.MUSHRA Slater 0 noise.unity
+    guid: 2d608f4bf7b384102ac460808a0b3f2f
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.2.MUSHRA Slater 0 speech.unity
+    guid: 009774f2431f1426694c6f3783d7715f
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.3.MUSHRA Slater 0 steps.unity
+    guid: df6087931689b4f749d45158252cff50
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.4.MUSHRA Slater -45 noise.unity
+    guid: 091291eeec52e401a9c4d66035317f48
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/3.1.5.MUSHRA Slater -45 speech.unity
+    guid: f5e050829dd7347528e69680d3629364
+  - enabled: 1
     path: Assets/Scenes/CORRECT/3.1.6.MUSHRA Slater -45 steps.unity
     guid: 3510eef0291f249f7b26c212433095c6
   - enabled: 1
-    path: Assets/Scenes/CORRECT/3.2.MUSHRA Forum.unity
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.2.MUSHRA Forum.unity
     guid: 52d5ce7ca2f2f4faf9bea6af37bad9c3
   - enabled: 1
-    path: Assets/Scenes/CORRECT/3.3.MUSHRA CHItaly.unity
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.3.MUSHRA CHItaly.unity
     guid: bde9301c6722c48b5b218bafb6b32991
   - enabled: 1
-    path: Assets/Scenes/CORRECT/EndScene.unity
+    path: Assets/Scenes/ForumAcousticumCHITALY/EndScene.unity
     guid: 36f845af564fa4eaf98015a2e89fae34
+  - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.2c.CHItaly Training.unity
+    guid: 4e5ec838e66e14aaf886ad92a4801f9d
+  - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.1a.Forum Training.unity
+    guid: d334b22f8ef98469999003df994104f6
+  - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/1.Instructions.unity
+    guid: f37d3643c0f6b40659efe0871d7d14d6
+  - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.2b.Instructions.unity
+    guid: 9c6af91fdd2cc40d8955b8bca3b0243f
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 963b8ef41555f43bd9f4e2053a23c462,
       type: 2}

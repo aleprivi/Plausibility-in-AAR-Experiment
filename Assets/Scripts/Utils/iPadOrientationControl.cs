@@ -18,9 +18,11 @@ public class iPadOrientationControl : MonoBehaviour
     {
         if (Application.isEditor)
         {
+            Debug.Log("Editor Mode");
             GetComponent<Image>().enabled = false;
         }
         this.GetComponent<Image>().CrossFadeAlpha(0, 0.01f, false);
+        GetComponent<Image>().enabled = false;
         currentTime = waitingTime;
     }
 
@@ -29,7 +31,7 @@ public class iPadOrientationControl : MonoBehaviour
 
     bool isFaded = false;
 
-    public float waitingTime = 3f;
+    public float waitingTime = 1f;
 
 
     float currentTime = 0;
@@ -39,13 +41,15 @@ public class iPadOrientationControl : MonoBehaviour
         }
         if (!isFaded && currentTime <= 0) {
             isFaded = true;
-            this.GetComponent<Image>().CrossFadeAlpha(1, 1f, false);
+            this.GetComponent<Image>().CrossFadeAlpha(1, 0.5f, false);
+            GetComponent<Image>().enabled = true;
         }
 
         if (isFaded && !toMuchRotation && !isBeheaded) {
             currentTime = waitingTime;
             isFaded = false;
-            this.GetComponent<Image>().CrossFadeAlpha(0, 1f, false);
+            this.GetComponent<Image>().CrossFadeAlpha(0, 0.5f, false);
+            GetComponent<Image>().enabled = false;
         }
     }
 

@@ -5,6 +5,21 @@ using UnityEngine.XR.ARFoundation;
 
 public class Calibrator : MonoBehaviour
 {
+
+    public void OnApplicationQuit(){
+        Debug.Log("Application ending after " + Time.time + " seconds");
+        Debug.Log("Calibration ended");
+    }
+
+    void OnApplicationPause(bool pauseStatus){
+        if(pauseStatus){
+            StartReal startReal = GameObject.FindObjectOfType<StartReal>();
+            if(startReal != null) startReal.SendParam(0);
+        }else{
+            Debug.Log("Application resumed");
+            Debug.Log("Calibration started");
+        }
+    }
 //Modificare la calibration in base all'altezza del soggetto. Oppure settare la stanza
 //tenendo il leggio a una misura fissa dal pavimento
 
@@ -20,6 +35,7 @@ public class Calibrator : MonoBehaviour
         #endif
     }
 
+    //🎶   
 
     public ARSessionOrigin arSessionOrigin;
     public virtual void startCalibration(){
@@ -40,7 +56,7 @@ public class Calibrator : MonoBehaviour
         }*/
 
 
-        Vector3 pos = new Vector3(digitalHead.transform.position.x, digitalHead.transform.position.y-1.7f, digitalHead.transform.position.z);
+        Vector3 pos = new Vector3(digitalHead.transform.position.x, digitalHead.transform.position.y-1.3f, digitalHead.transform.position.z);
         arSessionOrigin.MakeContentAppearAt(Room.transform, pos);
 
 //        ExperimentLogic.transform.position = calibratedPosition;

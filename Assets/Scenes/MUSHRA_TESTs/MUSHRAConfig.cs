@@ -13,12 +13,16 @@ public class MUSHRAConfig: MonoBehaviour
     public enum MUSHRAType{Classic, DragAndDrop, Elimination, SAQI};
     public MUSHRAType mushraType;
 
-    public enum SampleType{noise, ecologic, voice};
+    //public enum SampleType{noise, ecologic, voice, casa, cosa, corda, legname};
     public enum SamplePosition{head, feet};
 
-    public SampleType sampleType;
+    public SourceTestProc.SourceType sampleType;
     public SamplePosition samplePosition;
     public string[] SAQIParams;
+    public string[] SAQIDefMin;
+    public string[] SAQIDefMax;
+
+    public string nextSceneName;
 
     public void Awake(){
         //Set the correct environment
@@ -53,6 +57,23 @@ public class MUSHRAConfig: MonoBehaviour
         //Leggo il file name dal WriteLog
         saveFileName = WriteLogs.userNum;
 
+        TextAsset saqi_info = Resources.Load("SAQIdef") as TextAsset;
+        string[] saqi_lines = saqi_info.text.Split('\n');
+        SAQIParams = new string[saqi_lines.Length];
+        SAQIDefMin = new string[saqi_lines.Length];
+        SAQIDefMax = new string[saqi_lines.Length];
+
+        for(int i=0; i < saqi_lines.Length; i++){
+            string[] saqi_line = saqi_lines[i].Split(',');
+            for(int j=0; j < saqi_line.Length; j++){
+                SAQIParams[i] = saqi_line[0];
+                SAQIDefMin[i] = saqi_line[1];
+                SAQIDefMax[i] = saqi_line[2];
+            }
+        }
+
+        Debug.Log("Sample Type: " + sampleType); 
+
         if(mushraSet != null){
             mushraSet.conditionsFilename = conditionFilename;
             mushraSet.saveFileName = saveFileName;
@@ -63,6 +84,12 @@ public class MUSHRAConfig: MonoBehaviour
             mushraSet.SAQIparams = SAQIParams;
             mushraSet.sampleType = sampleType;
             mushraSet.samplePosition = samplePosition;
+            mushraSet.SAQIDefMin = SAQIDefMin;
+            mushraSet.SAQIDefMax = SAQIDefMax;
         }
+
+        //get confirmation pane
+        GameObject confirmationPane = GameObject.Find("ConfirmPanel");
+        confirmationPane.GetComponent<MUSHRAConfirmationPanel>().nextSceneName = nextSceneName;
     }
 }

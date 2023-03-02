@@ -17,10 +17,11 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
 
     public string[] SAQIconditions;
 
+    public string nextSceneName;
     public void ConfirmAndPrint(){
 
         //Save to file
-        string  tmp_saveFileName = saveFileName + "_" + System.DateTime.Now.ToString("yy_MM_dd__HH_mm_ss");
+        string  tmp_saveFileName = "Results_" + saveFileName + "_" + System.DateTime.Now.ToString("yy_MM_dd__HH_mm_ss");
         //string  tmp_saveFileName = saveFileName;
 
 
@@ -57,7 +58,8 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
         
         System.IO.File.WriteAllText(path, text);
         Debug.Log("File correctly saved to " + path);
-        SceneManager.LoadScene("EndScene");
+        WriteLogs.WriteStage();
+        SceneManager.LoadScene(nextSceneName);
 
     }
 
@@ -74,41 +76,42 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
         gameObject.transform.Find("Confirm").gameObject.SetActive(showConfirm);
     }
 
-    public void setSaveFileName(string saveFileName){
+    public void setSaveFileName(string saveFileName, MUSHRASet mushraSet){
         this.saveFileName = saveFileName;
-        //get all files names
-        /*DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/");
-        FileInfo[] info = dir.GetFiles(saveFileName + "*.csv");
-        Debug.Log("Found " + info.Length + " old files of the same user: using Data");
-        //get newest file in FileInfo array
-        
-        FileInfo f = dir.GetFiles(saveFileName + "*.csv").OrderByDescending(p => p.LastWriteTime).First();
-        Debug.Log("Using file " + f.Name);
-        
-        string fileN = Application.persistentDataPath + "/" + f.Name;
 
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/");
+        FileInfo[] info = dir.GetFiles(saveFileName + "_" + sceneName + "*.csv");        
+
+        if(info.Length <= 0){
+            return;
+            Debug.Log("Trovati " + info.Length + " file di questo utente");
+        }
+
+        string fileN = Application.persistentDataPath + "/" + saveFileName + "_" + sceneName + ".csv";
         string[] lines = System.IO.File.ReadAllLines(fileN);
 
-        MUSHRASet tmpSet = GameObject.FindObjectOfType<MUSHRASet>();
-        Debug.Log(tmpSet);
-        for(int i = 1; i < lines.Length; i++){
-            string[] items = lines[i].Split(',');
-            for(int x = 0; x < tmpSet.conditions.GetLength(0); x++){
-                for(int y = 0; y < tmpSet.conditions.GetLength(1); y++){
-                    if(tmpSet.conditions[x,y].name == items[0]){
-                        tmpSet.conditions[x,y].points = float.Parse(items[1]);
-                        break;
+        foreach(string line in lines){
+            string[] values = line.Split(',');
+            int page = int.Parse(values[0]);
+            //int condition = int.Parse(values[1]);
+            for(int i = 0; i < mushraSet.conditions.GetLength(1); i++){
+                if(mushraSet.conditions[page-1, i].name == values[2]){
+                    float points = float.Parse(values[5]);
+                    mushraSet.conditions[page-1, i].points = points;
+                    mushraSet.conditions[page-1, i].page = page;
+                    //mushraSet.conditions[page-1, i].condition = condition;
+                    //mushraSet.conditions[page-1, condition-1].name = values[2];
+                    //POSIZIONA X e Y
+                    mushraSet.conditions[page-1, i].x = float.Parse(values[3]);
+                    mushraSet.conditions[page-1, i].y = float.Parse(values[4]);
+                    if(mushraSet.mushraType == MUSHRAConfig.MUSHRAType.SAQI){
+                        mushraSet.conditions[page-1, i].SAQI[values[6]] = float.Parse(values[7]);
                     }
                 }
             }
-            Debug.Log("Found " + items[0] + " with " + items[1] + " points");
-        }*/
-        
-
-        /*string path = Application.persistentDataPath + "/" + saveFileName + ".csv";
-        if(System.IO.File.Exists(path)){
-            Debug.Log("File already exists!");
-        }*/
+        }
     }
 
     public MUSHRAConfig.MUSHRAType mushraType;

@@ -722,8 +722,8 @@ MonoBehaviour:
   sourceObject: {fileID: 1822478362}
   voice: {fileID: 8300000, guid: 88ef693ca2cc344c2a38bc03e35d06bc, type: 3}
   voiceAirpods: {fileID: 8300000, guid: effe487180afb454e89d8e84601eb908, type: 3}
-  noise: {fileID: 8300000, guid: 72cce8ede7f5c4029b7e199e13c2e3b5, type: 3}
-  noiseAirpods: {fileID: 8300000, guid: 376b42532e06a488484ce455262c5bc6, type: 3}
+  noise: {fileID: 8300000, guid: 2641ff772d0884370a3996b884286d05, type: 3}
+  noiseAirpods: {fileID: 8300000, guid: 19512a5a186654c7aa28cd84c5f40497, type: 3}
   ecological: {fileID: 8300000, guid: d74977f0eb35841fabf9d3fe1daad931, type: 3}
   ecologicalAirpods: {fileID: 8300000, guid: e5cfdc2d3837147df94f37a0eff7ce00, type: 3}
   voiceVolumes:
@@ -739,10 +739,6 @@ MonoBehaviour:
   - 9
   - 10
   - 11
-  - 12
-  - 13
-  - 14
-  - 15
   noiseVolumes:
   - 16
   - 17
@@ -756,10 +752,6 @@ MonoBehaviour:
   - 25
   - 26
   - 27
-  - 28
-  - 29
-  - 30
-  - 31
   feetVolumes:
   - 32
   - 33
@@ -773,15 +765,10 @@ MonoBehaviour:
   - 41
   - 42
   - 43
-  - 44
-  - 45
-  - 46
-  - 47
   corridorRoom: {fileID: 113516165}
   randoRoom: {fileID: 1561457528}
   envConfig: {fileID: 1379053054}
   headTracker: {fileID: 903227068}
-  headPositionUtilsScript: {fileID: 0}
 --- !u!1 &152264947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2058,8 +2045,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1323939741}
-  - {fileID: 219623604}
   - {fileID: 1775441534}
+  - {fileID: 219623604}
   - {fileID: 1009923869}
   - {fileID: 1683245110}
   - {fileID: 550725667}
@@ -5739,7 +5726,7 @@ PrefabInstance:
     - target: {fileID: 2722581053841682928, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2722581053841682929, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
@@ -5754,7 +5741,7 @@ PrefabInstance:
     - target: {fileID: 2722581053841682929, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2722581053841682929, guid: 7f4a4926ff1eb45398826c1e0004b0b8,
         type: 3}
@@ -10307,6 +10294,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3421844350359364342, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3421844350359364342, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -10361,6 +10353,31 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3421844351084886343, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243481361204161971, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243481361204161971, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243481361204161971, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243481361204161971, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243481361204161971, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -10433,7 +10450,7 @@ PrefabInstance:
     - target: {fileID: 5246003518155764178, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5246003518155764178, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
@@ -10538,7 +10555,7 @@ PrefabInstance:
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: conditionFilename
-      value: Slater4
+      value: Slater3
       objectReference: {fileID: 0}
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
@@ -10608,6 +10625,11 @@ PrefabInstance:
     - target: {fileID: 7327749811704292335, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7327749811704292335, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
+        type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7327749811704292335, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
@@ -10829,7 +10851,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5e37bc4365f334c689cbb507dfbd06aa, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 19065b95c2481414cb02a16e350ae578, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

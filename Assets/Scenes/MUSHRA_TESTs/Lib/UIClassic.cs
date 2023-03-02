@@ -18,13 +18,13 @@ public class UIClassic : MonoBehaviour
 
         string samT = "";
         switch(mushraSet.sampleType){
-            case MUSHRAConfig.SampleType.noise:
+            case SourceTestProc.SourceType.Noise:
                 samT = "noise";
                 break;
-            case MUSHRAConfig.SampleType.ecologic:
+            case SourceTestProc.SourceType.Ecological:
                 samT = "ecologic";
                 break;
-            case MUSHRAConfig.SampleType.voice:
+            case SourceTestProc.SourceType.Voice:
                 samT = "voice";
                 break;
         }
@@ -41,14 +41,14 @@ public class UIClassic : MonoBehaviour
 
         if(isReference){
             string[] parameters = {"-1","-1","Ref","none","none","none","none","none","none",samP,samT,"real"};
-            refCondition = new ExperimentalCondition(parameters);
+            refCondition = new ExperimentalCondition(parameters, mushraSet.saveFileName, -1, -1);
         }
         
         for(int i = 0; i < gameObject.transform.childCount; i++){
             Transform child = gameObject.transform.GetChild(i);
             if(child.name == "Play"){
                 child.GetComponent<Button>().onClick.AddListener(PlayCondition);
-                child.GetComponentInChildren<TextMeshProUGUI>().text = gameObject.name;
+                //child.GetComponentInChildren<TextMeshProUGUI>().text = gameObject.name;
             }
             if(child.name == "Value"){
                 child.GetComponent<Slider>().onValueChanged.AddListener(RemoveCondition);

@@ -534,6 +534,8 @@ public class SDNEnvConfig : MonoBehaviour
         }
         */
 
+
+//        Debug.Log("Switching to HRTF: " + id + " from " + cipic_subject + "");
         if(cipic_subject == id) return;
 
         foreach(HRTFStore hrtf in HRTFList){

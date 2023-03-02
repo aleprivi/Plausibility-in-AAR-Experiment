@@ -1,0 +1,4 @@
+page, condition,name, HRTF, Reverb, SampleVolume, HeadPhoneEQ,EarTrack, HeadTrack, SamplePos,SourceType, Real, name,
+1,1,A,kemar,calibrated,calibrated,equalized,ear,head,0,cosa,real,H,
+1,2,B,none,calibrated,calibrated,equalized,ear,head,0,corda,real,AA,
+1,3,C,personal,calibrated,calibrated,equalized,ear,head,0,legname,real,A,

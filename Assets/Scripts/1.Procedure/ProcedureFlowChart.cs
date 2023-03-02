@@ -28,6 +28,7 @@ public class ProcedureFlowChart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        calibrationReadyMessage = System.Text.RegularExpressions.Regex.Unescape(calibrationReadyMessage);
         procedureState = ProcedureStates.CalibrationReady;
         calibrator = gameObject.GetComponent<Calibrator>();
         calibrator.procedureFlowChart = this;
@@ -55,6 +56,7 @@ public class ProcedureFlowChart : MonoBehaviour
             Debug.Log("Procedure is READY!");
                 guiManager.showMessage(procedureReadyMessage, -1);
                 procedureState = ProcedureStates.Procedure;
+                nextStep();  //Se voglio attendere devo commentare questa riga
                 break;
             case ProcedureStates.Procedure:
             guiManager.showMessage(procedureMessage, 2);

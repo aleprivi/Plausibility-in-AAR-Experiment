@@ -1,0 +1,10 @@
+page, condition, name, HRTF, Reverb, SampleVolume, HeadPhoneEQ,EarTrack, HeadTrack, SamplePos,SourceType,Real
+1,1,A,personal,calibrated,calibrated,equalized,ear,head,0,noise,virtual
+1,2,B,personal,calibrated,calibrated,equalized,ear,head+height,-45,noise,virtual
+1,3,C,personal,calibrated,calibrated,equalized,ear,ipad,0,noise,virtual
+1,4,D,personal,calibrated,calibrated,equalized,ipadhead,head,0,noise,virtual
+1,5,E,personal,calibrated,calibrated,equalized,ipadhead,head+height,0,noise,virtual
+1,6,F,personal,calibrated,calibrated,equalized,ipadhead,ipad,0,noise,virtual
+1,7,G,personal,calibrated,calibrated,equalized,ipad,head,0,noise,virtual
+1,8,H,personal,calibrated,calibrated,equalized,ipad,head+height,0,noise,virtual
+1,9,I,personal,calibrated,calibrated,equalized,ipad,ipad,0,noise,virtual

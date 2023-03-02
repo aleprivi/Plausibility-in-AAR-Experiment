@@ -48,7 +48,7 @@ public class StartReal : MonoBehaviour
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
             yield return webRequest.SendWebRequest();
-            Debug.Log("Correctly sent: " + webRequest.downloadHandler.text);
+//            Debug.Log("Correctly sent: " + webRequest.downloadHandler.text);
         }
                 
     }
