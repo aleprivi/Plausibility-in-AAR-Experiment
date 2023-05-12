@@ -161,7 +161,7 @@ public class ExperimentalCondition
 
     public void saveLog(float x, float y, string SAQIcond){
         string sq = (SAQIcond == "")? "" : SAQI[SAQIcond].ToString();
-        string path = Application.persistentDataPath + "/" + saveFileName + "_" + SceneManager.GetActiveScene().name + ".csv";
+        string path = Application.persistentDataPath + "/Log_" + saveFileName + "_" + SceneManager.GetActiveScene().name + ".csv";
         string text = page + "," + 0 + "," + name + "," + x.ToString() + "," + 
         y.ToString() + "," + points.ToString() + "," + SAQIcond + "," + sq + "\n";
         System.IO.File.AppendAllText(path, text);

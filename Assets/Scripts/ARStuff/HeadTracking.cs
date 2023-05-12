@@ -15,25 +15,17 @@ public class HeadTracking : MonoBehaviour
     [SerializeField]
     [Tooltip("An object whose rotation will be set according to the tracked face. It MUST contain AudioListener")]
 
-    //public bool UseAirBudsPro = true;
-
-
 /*
 VARIABILI VARIE
 */
-
-
     //AR Stuff
     Transform DigitalTwinHead;  //La DigitalTwinHead
-    //ARSession m_Session;
     ARFaceManager m_FaceManager;    //Il Quello che riconosce le facce, 
                                     //viene riconosciuto automaticamente e 
                                     //si trova solitamente dentro la camera
     public ARCameraManager m_CameraManager; //La camera
     public iPadOrientationControl ipoc; //L'oggetto che oscura lo schermo
     public GUIManager guiManager;   //La gestione della GUI
-    //bool m_FaceTrackingSupported;
-    //bool m_FaceTrackingWithWorldCameraSupported;
 
     //Rotazioni Testa
     public enum EarTrackingType{Airpods, iPadHead, iPad, None};
@@ -56,46 +48,20 @@ VARIABILI VARIE
             HeadphoneMotion.OnHeadRotationQuaternion += HandleHeadRotationQuaternion;
             HeadphoneMotion.StartTracking();
             Debug.Log("Airpods correctly configured");
-            //isAirPodsAvailable = true;
         }else{
             Debug.Log("Error! AirPods not available");
         }
     }
+
     void Awake()
     {
             m_FaceManager = GetComponent<ARFaceManager>();
-            //m_Session = GetComponent<ARSession>();
     }
 
 //SEMPLIFICARE QUESTO METODO
     void OnEnable()
         {
             Application.onBeforeRender += OnBeforeRender;
-
-            // Detect face tracking with world-facing camera support
-            //var subsystem = m_Session ? m_Session.subsystem : null;
-            /*if (subsystem != null)
-            {
-                var configs = subsystem.GetConfigurationDescriptors(Allocator.Temp);
-                if (configs.IsCreated)
-                {
-                    using (configs)
-                    {
-                        foreach (var config in configs)
-                        {
-                            if (config.capabilities.All(Feature.FaceTracking))
-                            {
-                                m_FaceTrackingSupported = true;
-                            }
-
-                            if (config.capabilities.All(Feature.WorldFacingCamera | Feature.FaceTracking))
-                            {
-                                m_FaceTrackingWithWorldCameraSupported = true;
-                            }
-                        }
-                    }
-                }
-            }*/
         }
 
     void OnDisable()
@@ -118,7 +84,7 @@ LOGICHE
             }else{
                 DigitalTwinHead.rotation = rotation * Quaternion.Inverse(_calibratedOffset);
             }
-            Debug.Log("using Airpods");
+            //Debug.Log("using Airpods");
         }else if(earTrackingType == EarTrackingType.iPadHead){
             //Segnaposto, viene fatto dentro OnBeforeRender --> Necessito della testa
         //Tracking rotazione iPad
@@ -163,7 +129,7 @@ LOGICHE
 
 
         if(headTrackingType == HeadTrackingType.iPadAR){
-            DigitalTwinHead.transform.position = m_CameraManager.transform.position;
+            //DigitalTwinHead.transform.position = m_CameraManager.transform.position;
         }
 
         //HEAD TRACKING HeadAR posiziona la sola testa
@@ -178,9 +144,6 @@ LOGICHE
             if (face.trackingState == TrackingState.Tracking){
                 if (ipoc != null) ipoc.check_BeHeaded(false);
                 if (guiManager != null) guiManager.showCoords(false);
-
-                //COMPONGO STRINGA
-                //var camera = m_CameraManager.GetComponent<Camera>();
 
                 /*
                 * QUESTO COMANDO POSIZIONA CORRETTAMENTE L'OSSERVATORE

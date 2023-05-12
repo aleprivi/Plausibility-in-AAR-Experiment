@@ -673,13 +673,13 @@ MonoBehaviour:
   - {fileID: 240715161}
   - {fileID: 1477754886}
   - {fileID: 723547189}
-  - {fileID: 1822478362}
   - {fileID: 386100930}
   - {fileID: 1992294783}
   - {fileID: 999191138}
   - {fileID: 1969358980}
   - {fileID: 448750518}
   - {fileID: 889139099}
+  - {fileID: 1822478362}
   GUIElementsToHide:
   - {fileID: 550725666}
   - {fileID: 2109797439}
@@ -700,7 +700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   calibrationReadyMessage: "Sei pronto ora per l\u2019esperimento vero e proprio.
-    \\n Punta al fondo della stanza e premi START per avviare la calibrazione."
+    \\n Al termine di questa schermata avvisa lo sperimentatore. Punta al fondo della
+    stanza e premi START per avviare la calibrazione."
   calibrationMessage: 
   procedureReadyMessage: 
   procedureMessage: Tutto pronto. Buon divertimento ;)
@@ -5714,7 +5715,7 @@ MonoBehaviour:
   m_CameraManager: {fileID: 1060013188}
   ipoc: {fileID: 219623605}
   guiManager: {fileID: 122120887}
-  earTrackingType: 0
+  earTrackingType: 3
   headHeight: 50
   headTrackingType: 0
   audioError: {fileID: 0}
@@ -7820,7 +7821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CIPIC: 050
   UsePersonalizedSDN: 1
-  UsePersistentDataPath: 0
+  UsePersistentDataPath: 1
   UseNewestSubject: 0
   cipic_subject: 
   BufferSize: 512
@@ -7863,6 +7864,66 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2691892507125047668, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507125047669, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507219343741, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507219343742, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507570845688, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507570845689, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507611182324, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507611182325, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507676611970, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507676611971, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507866838152, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2691892507866838153, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2691892507954386125, guid: dc11ce7d9dba8401b8e464d5dc856b6f,
         type: 3}
       propertyPath: m_RootOrder
@@ -10724,7 +10785,7 @@ PrefabInstance:
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: nextSceneName
-      value: EndScene
+      value: 3.3a.Instructions
       objectReference: {fileID: 0}
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
@@ -10734,7 +10795,7 @@ PrefabInstance:
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: instructionMessage
-      value: "La posizione dello stimolo \xE8 uguale a quella di riferimento?"
+      value: "La posizione dello stimolo nello spazio \xE8 uguale a quella di riferimento?"
       objectReference: {fileID: 0}
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
@@ -10978,7 +11039,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1822478362}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1, z: -3}
+  m_LocalPosition: {x: 0, y: 1.8, z: -3}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []

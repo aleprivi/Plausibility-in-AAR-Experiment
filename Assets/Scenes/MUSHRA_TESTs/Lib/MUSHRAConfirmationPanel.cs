@@ -19,9 +19,11 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
 
     public string nextSceneName;
     public void ConfirmAndPrint(){
-
+        string sceneName = SceneManager.GetActiveScene().name;
+        sceneName = sceneName.Split('.').Last();
         //Save to file
-        string  tmp_saveFileName = "Results_" + saveFileName + "_" + System.DateTime.Now.ToString("yy_MM_dd__HH_mm_ss");
+        string  tmp_saveFileName = "Results_" + WriteLogs.userNum +"_" + sceneName + "_" + System.DateTime.Now.ToString("MM_dd__HH_mm_ss");
+        
         //string  tmp_saveFileName = saveFileName;
 
 
@@ -59,6 +61,8 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
         System.IO.File.WriteAllText(path, text);
         Debug.Log("File correctly saved to " + path);
         WriteLogs.WriteStage();
+        StartReal startReal = GameObject.FindObjectOfType<StartReal>();
+        if(startReal != null) startReal.SendParam(0);
         SceneManager.LoadScene(nextSceneName);
 
     }
@@ -77,19 +81,22 @@ public class MUSHRAConfirmationPanel : MonoBehaviour
     }
 
     public void setSaveFileName(string saveFileName, MUSHRASet mushraSet){
+        Debug.Log("SetSaveFileName");
+        //saveFileName = "Log_"+saveFileName;
         this.saveFileName = saveFileName;
-
+        //Debug.Log("FileN =" + fileN);
         string sceneName = SceneManager.GetActiveScene().name;
 
         DirectoryInfo dir = new DirectoryInfo(Application.persistentDataPath + "/");
-        FileInfo[] info = dir.GetFiles(saveFileName + "_" + sceneName + "*.csv");        
+        FileInfo[] info = dir.GetFiles("Log_" + saveFileName + "_" + sceneName + "*.csv");        
 
         if(info.Length <= 0){
             return;
             Debug.Log("Trovati " + info.Length + " file di questo utente");
         }
 
-        string fileN = Application.persistentDataPath + "/" + saveFileName + "_" + sceneName + ".csv";
+        string fileN = Application.persistentDataPath + "/Log_" + saveFileName + "_" + sceneName + ".csv";
+        Debug.Log("FileN =" + fileN);
         string[] lines = System.IO.File.ReadAllLines(fileN);
 
         foreach(string line in lines){

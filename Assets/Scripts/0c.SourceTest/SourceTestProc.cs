@@ -47,12 +47,12 @@ public class SourceTestProc : ProcDefinition {
         string[] feetup = lines[6].Split(',');
         feetVolumesUp = new float[feetup.Length-1];
         for(int i=1; i < 13; i++){
-            voiceVolumes[i-1] = float.Parse(voice[i]);
-            voiceVolumesUp[i-1] = float.Parse(voiceup[i]);
-            noiseVolumes[i-1] = float.Parse(noise[i]);
-            noiseVolumesUp[i-1] = float.Parse(noiseup[i]);
-            feetVolumes[i-1] = float.Parse(feet[i]);
-            feetVolumesUp[i-1] = float.Parse(feetup[i]);
+            voiceVolumes[i-1] = float.Parse(voice[i])*10;
+            voiceVolumesUp[i-1] = float.Parse(voiceup[i])*10;
+            noiseVolumes[i-1] = float.Parse(noise[i])*10;
+            noiseVolumesUp[i-1] = float.Parse(noiseup[i])*10;
+            feetVolumes[i-1] = float.Parse(feet[i])*10;
+            feetVolumesUp[i-1] = float.Parse(feetup[i])*10;
         }
     }
 
@@ -305,7 +305,7 @@ public class SourceTestProc : ProcDefinition {
     }*/
 
     public void setCondition(int HRTF, int reverbType, bool headphoneEQ, bool calibVolume, HeadTracking.EarTrackingType earTrack,HeadTracking.HeadTrackingType headTrack, SourceHeight SamplePos,SourceType sourceType,bool isVirtual){
-
+/*
         string s_log = "";
         switch(HRTF){
             case 0:
@@ -332,8 +332,8 @@ public class SourceTestProc : ProcDefinition {
         // EarTrack	 HeadTrack	 SamplePos	SourceType	 Real
         s_log += (calibVolume)? "Vol-calibrated,": "5db,";
         s_log += (headphoneEQ) ?"HeadPh-equalized,": "none,";
-
-        /*string s_log = "";
+*/
+        string s_log = "";
         s_log += "HRTF:";
         s_log += (HRTF==0)? "No - ": (HRTF+" - ");
         s_log += "reverb:" + reverbType + " - ";
@@ -383,7 +383,8 @@ public class SourceTestProc : ProcDefinition {
             case SourceType.Ecological:
                 s_log += "Ecological";
                 break;
-        }*/
+        }
+        Debug.Log(s_log);
         //s_log += " - isVirtual:" + isVirtual;
 
         //SWITCH HRTF
@@ -410,10 +411,12 @@ public class SourceTestProc : ProcDefinition {
                 sourceSDN.doLateReflections = false;
                 break;
             case 1:
+                sourceSDN.doLateReflections = true;
                 corridorRoom.SetActive(true);
                 randoRoom.SetActive(false);
                 break;
             case 2:
+                sourceSDN.doLateReflections = true;
                 corridorRoom.SetActive(false);
                 randoRoom.SetActive(true);
                 break;
@@ -454,7 +457,7 @@ public class SourceTestProc : ProcDefinition {
             break;
         }
         index += (HRTF > 0) ? 0 : 1;
-        
+        Debug.Log("Volume= " + index);
         //Debug.Log("Index selezionato: " + index);
         float v = 0.0f;
         switch (sourceType)
@@ -533,7 +536,7 @@ public class SourceTestProc : ProcDefinition {
                 y = 0.3f;
                 break;
             case SourceHeight.Sight:
-                y = 1.6f;
+                y = 1.7f;
                 break;
         }
         sourceObject.transform.position = new Vector3(sourceObject.transform.position.x, y, sourceObject.transform.position.z);

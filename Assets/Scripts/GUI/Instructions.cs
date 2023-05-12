@@ -18,7 +18,9 @@ public class Instructions : MonoBehaviour
     public string nextScene;
     
     void Start()
-    {
+    {   
+        //Write WriteLogs here
+        Debug.Log("CIPIC= " + WriteLogs.CIPIC);
         text.text = InstructionSet[currentInstruction];
         //create a rawimage
         go = new GameObject[InstructionSet.Length];

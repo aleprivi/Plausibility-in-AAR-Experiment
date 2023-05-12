@@ -30,6 +30,8 @@ public class StartReal : MonoBehaviour
 //        Debug.Log("Sending: " + tosend);
 
         string uri = "https://www.alessandroprivitera.it/CHITEST/StartMusic.php?type=" + tosend;
+        //string uri = "http://192.168.0.2/CHITEST/StartMusic.php?type=" + tosend;
+        
         //Debug.Log(uri);
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -44,6 +46,8 @@ public class StartReal : MonoBehaviour
     IEnumerator GetRequest(int type)
     {
         string uri = "https://www.alessandroprivitera.it/CHITEST/StartMusic.php?type=" + type;
+        //string uri = "http://192.168.0.2/CHITEST/StartMusic.php?type=" + type;
+        
         //Debug.Log(uri);
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {

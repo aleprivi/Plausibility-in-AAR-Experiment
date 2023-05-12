@@ -21,8 +21,14 @@ EditorBuildSettings:
     path: Assets/Scenes/CORRECT/0b.AccuracyTest.unity
     guid: 603e89abe784542f28917edd8c86e7d2
   - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.3a.Instructions.unity
+    guid: 80a24457b486c41c98e86bc223a1178c
+  - enabled: 1
     path: Assets/Scenes/CORRECT/0c.ISMAR Exp_SDT Pilot.unity
     guid: 2aeaac6e1154b4ea191da01fbdc0fe23
+  - enabled: 1
+    path: Assets/Scenes/CORRECT/0d.LoudnessCalibration.unity
+    guid: 1d6f764c54d2a487b93938914992e266
   - enabled: 1
     path: Assets/Scenes/ForumAcousticumCHITALY/3.2a.Instructions.unity
     guid: 232ad4bb23c7c4b3f8a59c88cf33f42f
@@ -32,9 +38,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CORRECT/2.ISMAR Exp_SlaterExperiment.unity
     guid: 65c52e55b5ddc473099ce9b553d67fbb
-  - enabled: 1
-    path: Assets/Scenes/CORRECT/0d.LoudnessCalibration.unity
-    guid: 1d6f764c54d2a487b93938914992e266
   - enabled: 1
     path: Assets/Scenes/CORRECT/0e.RotateAroundTest.unity
     guid: 0d78991d4f80349d8bc44aa9a7a0fbd7
@@ -65,6 +68,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ForumAcousticumCHITALY/EndScene.unity
     guid: 36f845af564fa4eaf98015a2e89fae34
+  - enabled: 1
+    path: Assets/Scenes/ForumAcousticumCHITALY/3.3b.MUSHRA CHItaly2.unity
+    guid: 2990566cd9a6742c59923e1e4d0d953f
   - enabled: 1
     path: Assets/Scenes/ForumAcousticumCHITALY/3.2c.CHItaly Training.unity
     guid: 4e5ec838e66e14aaf886ad92a4801f9d

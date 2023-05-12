@@ -1234,18 +1234,19 @@ MonoBehaviour:
   InstructionSet:
   - "L\u2019esperimento \xE8 diviso in <b>due parti</b>, in qualsiasi momento potrai
     fare una pausa e interromperlo su tua richiesta."
-  - "<b>PARTE 1</b> <br><br> Ascolterai ora una serie di Stimoli sonori, divisi in
+  - "<b>PARTE 1</b> <br><br> Ascolterai ora una serie di stimoli sonori, divisi in
     <b>4 pagine</b>, selezionabili tramite dei pulsanti in basso nell\u2019interfaccia.
-    <br> <br> Ti verr\xE0 posta una domanda, e dovrai valutare gli stimoli in una
-    scala da 0 a 100. Con il dito muovi i pulsanti il pulsante nella posizione che
-    pi\xF9 rispecchia la tua opinione: <br> -<b>destra</b>: molto <br> -<b>sinistra</b>:
-    poco"
+    <br> <br> Ti verr\xE0 posta la seguente domanda: \u201C<b>Quanto ti sembra somigliante
+    lo stimolo ascoltato rispetto a quello di riferimento?\u201D.</b><br> Ti chiediamo
+    di valutare gli stimoli in una scala da 0 a 100. Con il dito muovi i pulsanti
+    nella posizione che pi\xF9 rispecchia la tua opinione: <br> -<b>destra</b>: molto
+    somigliante <br> -<b>sinistra</b>: poco somigliante"
   - "La disposizione verticale del pulsante non \xE8 influente nella valutazione,
-    ma ti pu\xF2 essere utile per rendere pi\xF9 comoda la navigazione. <br><br>
-    Potrai in ogni momento confrontare gli stimoli con il riferimento reale riprodotto
-    dallo speaker nella stanza, premendo il <b>pulsante azzurro (Ref)</b> a destra.
-    Questo ti permetter\xE0 di modificare e migliorare le risposte in seguito, quando
-    vorrai. <br><br>  Per accedere agli stimoli della pagina successiva premi NEXT"
+    ma ti pu\xF2 essere utile per rendere pi\xF9 comoda la navigazione tra gli stimoli.
+    <br><br> Potrai in ogni momento confrontare gli stimoli con il riferimento, premendo
+    il <b>pulsante azzurro (Ref)</b> a destra. Questo ti permetter\xE0 di modificare
+    e migliorare le risposte in seguito, quando vorrai. <br><br>  Per accedere agli
+    stimoli della pagina successiva premi NEXT"
   texture: {fileID: 2800000, guid: 08a8c70e80a594cb9a3790a31c6aab64, type: 3}
   points: {fileID: 730608768}
   nextScene: 3.1a.Forum Training

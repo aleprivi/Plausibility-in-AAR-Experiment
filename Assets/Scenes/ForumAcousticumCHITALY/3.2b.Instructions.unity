@@ -1233,13 +1233,14 @@ MonoBehaviour:
   text: {fileID: 1043258361}
   InstructionSet:
   - "Nella seconda parte, pi\xF9 breve, ti verranno presentati dei nuovi Stimoli
-    sonori, questa volta in <b>una sola pagina</b>. <br><br> Dopo averli ascoltati
-    tutti dovrai eliminare lo\_stimolo che ti sembra meno rispondente alla domanda
-    riportata. <br><br> Ripeti l\u2019operazione fino ad averli eliminati tutti."
+    sonori, questa volta in <b>2 pagine</b>. <br><br> Dopo averli ascoltati tutti
+    dovrai eliminare lo\_stimolo che ti sembra meno rispondente alla domanda riportata.
+    <br><br> Ripeti l\u2019operazione fino ad averli eliminati tutti."
   - "Per eliminare uno stimolo dovrai <b>scorrere verso destra</b> lo slider presente
-    sull\u2019interfaccia sotto al bottone di selezione. <br><br> Potrai tenere appoggiato
-    il tablet al leggio oppure prenderlo in mano per muoverti liberamente nella stanza.
-    Ricordati, per\xF2, di <b>non girare il corpo</b> verso la porta di ingresso."
+    sull\u2019interfaccia sotto al bottone di selezione. <br><br> Per ciascuno stimolo
+    ti chiediamo di compiere due esplorazioni: appoggiare il tablet al leggio e muoverti
+    nella stanza,  prendere il tablet in mano e muoverti liberamente nella stanza. 
+    <br> <br> In questa fase  <b>potrai girare il corpo</b> verso la porta di ingresso."
   texture: {fileID: 2800000, guid: 08a8c70e80a594cb9a3790a31c6aab64, type: 3}
   points: {fileID: 730608768}
   nextScene: 3.2c.CHItaly Training

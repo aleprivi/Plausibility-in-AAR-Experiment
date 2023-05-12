@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 using UnityEngine.SceneManagement;
 public class UIElimination : MonoBehaviour{
     private TextMeshProUGUI val;
@@ -136,9 +137,13 @@ public class UIElimination : MonoBehaviour{
 
 
         if(allRated && mushraSet.currentPage >= mushraSet.conditions.GetLength(0)){
+            string sceneName = SceneManager.GetActiveScene().name;
+            sceneName = sceneName.Split('.').Last();
+            //Save to file
+            string  tmp_saveFileName = "Results_" + WriteLogs.userNum +"_" + sceneName + "_" + System.DateTime.Now.ToString("MM_dd__HH_mm_ss");
                 
-            string saveFileName = mushraSet.saveFileName;
-            string  tmp_saveFileName = saveFileName + "_" + System.DateTime.Now.ToString("yy_MM_dd__HH_mm_ss");
+            //string saveFileName = mushraSet.saveFileName;
+            //string  tmp_saveFileName = "Results_" + WriteLogs.userNum +"_"+ saveFileName + "_" + System.DateTime.Now.ToString("MM_dd__HH_mm_ss");
             //string  tmp_saveFileName = saveFileName;
 
 
@@ -158,6 +163,8 @@ public class UIElimination : MonoBehaviour{
             //get object of type MUSHRAConfig
             MUSHRAConfig mushraConfig = GameObject.FindObjectOfType<MUSHRAConfig>();
             WriteLogs.WriteStage();
+            StartReal startReal = GameObject.FindObjectOfType<StartReal>();
+            if(startReal != null) startReal.SendParam(0);
             SceneManager.LoadScene(mushraConfig.nextSceneName);
         }
     }

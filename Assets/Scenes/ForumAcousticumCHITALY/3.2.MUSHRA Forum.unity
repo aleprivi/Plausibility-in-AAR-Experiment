@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f63bfeaa87caa4e7b96c91a00b30dec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calibrationReadyMessage: "Sei pronto ora per l\u2019esperimento vero e proprio.
+  calibrationReadyMessage: "Sei pront* ora per l\u2019esperimento vero e proprio.
     \\n Punta al fondo della stanza e premi START per avviare la calibrazione."
   calibrationMessage: 
   procedureReadyMessage: 
@@ -7808,7 +7808,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CIPIC: 050
   UsePersonalizedSDN: 1
-  UsePersistentDataPath: 0
+  UsePersistentDataPath: 1
   UseNewestSubject: 0
   cipic_subject: 
   BufferSize: 512
@@ -11339,7 +11339,8 @@ PrefabInstance:
     - target: {fileID: 5246003518155764179, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}
       propertyPath: instructionMessage
-      value: "Lo stimolo \xE8 uguale a quello di riferimento?"
+      value: 'Quanto ti sembra somigliante lo stimolo ascoltato rispetto a quello
+        di riferimento? '
       objectReference: {fileID: 0}
     - target: {fileID: 5494018077368260162, guid: 69dad6d2283b847a8b32ef7acb66d5c5,
         type: 3}

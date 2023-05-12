@@ -19,14 +19,14 @@ public class InitConfig : MonoBehaviour
         if(WriteLogs.userNum != "noUser") {
             s = WriteLogs.userNum;
         }else{
-            Debug.Log("No user found");
+            //Debug.Log("No user found");
             s = WriteLogs.GetLastUser();
                 if(s == null){
                     s = WriteLogs.GetNewUser();
                 }
         }
         string c = WriteLogs.GetLastCIPIC();
-
+        Debug.Log("Using user: " + s + " CIPIC: " + c);
         if(Usernum_input != null) Usernum_input.text = s;
         if(Usernum_text != null) Usernum_text.text = s;
         if(CIPIC_input != null) CIPIC_input.text = c;
@@ -51,12 +51,14 @@ public class InitConfig : MonoBehaviour
 
     public void OnClicked(Button button)
     {
+        WriteLogs.Init(Usernum_input.text);
+
+
         if(CHITALY){
             //load a file with name usernum_input
             int sn = WriteLogs.LoadExperimentStage();
             switch(sn){
                 case 0:
-                    WriteLogs.Init(Usernum_input.text);
                     SceneManager.LoadScene(button.name);
                     break;
                 case 1:
@@ -67,6 +69,9 @@ public class InitConfig : MonoBehaviour
                     break;
                 case 3:
                     SceneManager.LoadScene("3.3.MUSHRA CHItaly");
+                    break;
+                case 4:
+                    SceneManager.LoadScene("3.3b.MUSHRA CHItaly2");
                     break;
             }
             return;

@@ -183,11 +183,12 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Benvenuto!\nDurante l\u2019esperimento la tua posizione verr\xE0 tracciata
     dal tablet e dagli auricolari, potrai muoverti liberamente all\u2019interno della
-    stanza in AVANTI e INDIETRO e girare la testa. Al contrario, cerca di NON GIRARE
-    IL CORPO verso la porta di ingresso.\n\nCerca di mantenere il tablet di fronte
-    a te, senza inclinarlo troppo. Se il dispositivo dovesse avere problemi nel tracciamento
-    lo schermo diventer\xE0 nero. Niente paura, baster\xE0 posizionare il tablet
-    nella posizione corretta e l\u2019interfaccia torner\xE0 ad essere utilizzabile."
+    stanza in <b>avanti</b> e <b>indietro</b> e girare la testa. Al contrario, cerca
+    di <b>non girare il corpo</b> verso la porta di ingresso.\n\nCerca di mantenere
+    il tablet di fronte a te, <b>senza inclinarlo troppo</b>. Se il dispositivo dovesse
+    avere problemi nel tracciamento lo schermo diventer\xE0 nero. Niente paura, baster\xE0
+    posizionare il tablet nella posizione corretta e l\u2019interfaccia torner\xE0
+    ad essere utilizzabile."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

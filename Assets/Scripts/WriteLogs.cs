@@ -20,6 +20,40 @@ public class WriteLogs : MonoBehaviour
     */
     public static int condition = 0;
 
+    //Genera un ID non presente e lo ritorna, lo salva anche in userNum
+    static string generateID(string prefix){
+        string user = "";
+        do{
+            user = prefix + Random.Range(1000, 5000);
+        }while(isUserExisting(user));
+        userNum = user;
+        return userNum;
+    }
+
+    //Controlla se l'ID è già presente, torna true o false
+    static bool isUserExisting(string id){
+        string path = Application.persistentDataPath + "/UserList.csv";
+        //Read the text from directly from the test.txt file
+        string[] availableUsers = {};
+        if (File.Exists(path))
+        {
+            availableUsers = File.ReadAllLines(path)[0].Split(',');
+        }
+        foreach (string el in availableUsers) {
+            if(el.Equals(id)) return true;
+        }
+
+        return false;
+    }
+
+    //genera un nuovo ID e lo torna
+    public static string GetNewUser()
+    {
+        return generateID("U");
+    }
+
+
+    //Torna l'ultimo CIPIC inserito
     public static string GetLastCIPIC(){
         //get CIPIC user, if exist
         //if use persistentdatapath get newest directory inside and print it
@@ -42,6 +76,8 @@ public class WriteLogs : MonoBehaviour
         CIPIC = last;
         return CIPIC;
     }
+
+    //Torna l'ultimo utente inserito
     public static string GetLastUser()
     {       
 
@@ -58,33 +94,15 @@ public class WriteLogs : MonoBehaviour
         return null;
     }
 
-    static string generateID(string prefix){
-        string path = Application.persistentDataPath + "/UserList.csv";
-        //Read the text from directly from the test.txt file
-        string[] availableUsers = {};
-        if (File.Exists(path))
-        {
-            availableUsers = File.ReadAllLines(path)[0].Split(',');
-        }
-        bool trovato = true;
-        string user = "";
-        while (trovato) {
-            user = prefix + Random.Range(1000, 5000);
-            trovato = false;
-            foreach (string el in availableUsers) {
-                if(el.Equals(user)) trovato = true;
-            }
-        }
-        userNum = user;
-        return userNum;
-    }
-
-    public static string GetNewUser()
-    {
-        return generateID("U");
-    }
-
+    //Inizializza inserendo manualmente un ID
     public static void Init(string user) {
+
+        if(!isUserExisting(user)){
+            Debug.Log("Nuovo Utente");
+        }else{
+            Debug.Log("Utente già esistente: carico i dati");
+        }
+
         userNum = user;
         Init();
     }
@@ -95,25 +113,27 @@ public class WriteLogs : MonoBehaviour
     }
 
     public static void Init() {
-        string path = Application.persistentDataPath + "/UserList.csv";
-        StreamWriter wr = new StreamWriter(path, true);
-        wr.Write(userNum + ",");
-        wr.Close();
 
+        if(!isUserExisting(userNum)){
+            string path = Application.persistentDataPath + "/UserList.csv";
+            StreamWriter wr = new StreamWriter(path, true);
+            wr.Write(userNum + ",");
+            wr.Close();
+        }
 
         //Salvo i vari file necessari al log
-        string Log_path = Application.persistentDataPath + "/" + filename + userNum + ".csv";
+        //string Log_path = Application.persistentDataPath + "/" + filename + userNum + ".csv";
 
-        string training = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_training.csv";
-        string slater = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slater.csv";
-        string slaterTable = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slaterTable.csv";
-        string sdt = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_sdt.csv";
+        //string training = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_training.csv";
+        //string slater = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slater.csv";
+        //string slaterTable = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_slaterTable.csv";
+        //string sdt = "/" + System.DateTime.Now.ToString("yyyy_MM_dd") + "_sdt.csv";
 
-        Debug.Log("Training: " + training);
+        //Debug.Log("Training: " + training);
 
-        path = Application.persistentDataPath + training;
-        Debug.Log("Path: " + path);
-        if (!File.Exists(path))
+        //path = Application.persistentDataPath + training;
+        //Debug.Log("Path: " + path);
+        /*if (!File.Exists(path))
         {
             StreamWriter writer = new StreamWriter(path, true);
             string val = "User,Time,HeadX,HeadY,HeadZ,iPadX,iPadY,iPadZ,targetreached";
@@ -152,14 +172,40 @@ public class WriteLogs : MonoBehaviour
             writer.WriteLine(val);
             writer.Close();
 //            Debug.Log("File now exists. No problem... happy testing ;)");
-        }
+        }*/
 
 
         steps = 0;
     }
 
 
+    public static void WriteStage(){
+        string path = Application.persistentDataPath + "/" + userNum + "_stages.csv";
 
+        StreamWriter writer = new StreamWriter(path, true);
+        string val = "1";
+
+        writer.WriteLine(val);
+        writer.Close();
+    } 
+
+
+
+
+
+
+
+
+
+
+    /***********************
+    ************************
+    ************************
+    *********SLATER*********
+    ************************
+    ************************
+    ************************
+    ************************/
 
 
     public static void WriteFloatArray(float[] f, string filename){
@@ -251,13 +297,4 @@ public class WriteLogs : MonoBehaviour
         return StageNum;
     }
 
-    public static void WriteStage(){
-        string path = Application.persistentDataPath + "/" + userNum + "_stages.csv";
-
-        StreamWriter writer = new StreamWriter(path, true);
-        string val = "1";
-
-        writer.WriteLine(val);
-        writer.Close();
-    } 
 }

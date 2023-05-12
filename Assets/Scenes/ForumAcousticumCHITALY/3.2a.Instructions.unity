@@ -1233,7 +1233,7 @@ MonoBehaviour:
   text: {fileID: 1043258361}
   InstructionSet:
   - Hai terminato la prima parte. <br><br> Ti consigliamo a questo punto di fare
-    una pausa. <br><br> Quando sei pronto indossa di nuovo gli auricolari e premi
+    una pausa. <br><br> Quando sei pront* indossa di nuovo gli auricolari e premi
     NEXT
   texture: {fileID: 2800000, guid: 08a8c70e80a594cb9a3790a31c6aab64, type: 3}
   points: {fileID: 730608768}

@@ -6,10 +6,10 @@ using UnityEngine.XR.ARFoundation;
 public class Calibrator : MonoBehaviour
 {
 
-    public void OnApplicationQuit(){
+    /*public void OnApplicationQuit(){
         Debug.Log("Application ending after " + Time.time + " seconds");
         Debug.Log("Calibration ended");
-    }
+    }*/
 
     void OnApplicationPause(bool pauseStatus){
         if(pauseStatus){
