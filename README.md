@@ -1,25 +1,34 @@
-# Plausibility in Audio Augmented Reality — Experiment
+# D&D-MUSHRA+ — Plausibility in Audio Augmented Reality
 
-Unity project used to run the listening experiments on the **plausibility of virtual sound sources in Audio Augmented Reality (AAR)** described in our paper:
+Code and experimental software accompanying the paper:
 
-> **TODO: Paper title**
+> ### Screening Multiple Interacting Factors with D&D-MUSHRA+: a Pilot Study on Plausibility in Augmented Reality involving Hear-Through Technology
 > TODO: Authors
 > *TODO: Journal / Conference*, TODO: Year. DOI: [TODO](https://doi.org/TODO)
 
-The app runs on an iPhone/iPad and renders binaural audio over Apple AirPods Pro. Participants stand in a real room next to a real loudspeaker and compare it with virtual renderings of the same source. They do this through an in-situ **drag-and-drop MUSHRA** interface on the tablet, in which each rendering condition can be played back and rated directly in the AR scene.
+This repository contains the Unity app used for the study:
+
+- **D&D-MUSHRA+** is a drag-and-drop extension of MUSHRA. With it, many rendering conditions can be compared side by side and rated in a single session. This makes it suited to **screening multiple interacting factors** quickly, before running full factorial tests.
+- **Plausibility in Augmented Reality.** Participants stand in a real room next to a real loudspeaker. They judge whether virtual renderings of the same source can be told apart from the real one.
+- **Hear-through technology.** Listeners wear Apple AirPods Pro in hear-through (transparency) mode. They hear the real loudspeaker through the earbuds, and the binaural virtual source is mixed on top of it.
+- **Pilot study.** The app runs on an iPhone/iPad, using ARKit tracking and AirPods head tracking. The whole test, including playback and rating, happens on the tablet, in the room.
 
 ## Features
 
-- **Drag-and-drop MUSHRA (and variants):** a MUSHRA-style multi-stimulus test for touch screens, in which participants rate conditions by dragging them along a scale. A classic slider-based MUSHRA, an elimination (ranking) procedure and SAQI attribute ratings are available in the same framework ([Assets/Scenes/MUSHRA_TESTs](Assets/Scenes/MUSHRA_TESTs)). See [Listening test GUI](#listening-test-gui-drag-and-drop-mushra).
-- **Condition switching at runtime:** each condition is a combination of rendering parameters (HRTF, reverb, level, headphone EQ, tracking, source position, stimulus, real/virtual). Selecting a condition re-configures the virtual source immediately, so listeners can switch between conditions while staying in the room.
+- **D&D-MUSHRA+:** a MUSHRA-style multi-stimulus test for touch screens. Participants rate each condition by dragging its token along a scale, and can play back any condition at any time. A classic slider-based MUSHRA, an elimination (ranking) procedure and SAQI attribute ratings are available in the same framework ([Assets/Scenes/MUSHRA_TESTs](Assets/Scenes/MUSHRA_TESTs)). See [Listening test GUI](#listening-test-gui-dd-mushra).
+- **Multiple interacting factors:** each condition is a combination of up to eight rendering factors: HRTF, reverberation, level, headphone EQ, orientation tracking, position tracking, source elevation and stimulus. Factors are combined freely in a CSV file, so a single test can cover many factor combinations at once.
+- **Condition switching at runtime:** selecting a condition re-configures the virtual source immediately, so listeners can switch between conditions, or back to the real reference, while staying in the room.
+- **Hear-through AR:** with AirPods Pro in transparency mode, the real environment stays audible. Virtual sources are equalized for the AirPods Pro ([Assets/Audio/AudioEarPodsPro_Eq](Assets/Audio/AudioEarPodsPro_Eq)), and their loudness is matched to the real loudspeaker in a calibration step.
 - **Room acoustics:** real-time Scattering Delay Network (SDN) reverberation with frequency-dependent wall materials and RT60 estimation ([Assets/SDNLib](Assets/SDNLib)).
 - **Binaural rendering:** HRTF filtering with HRTFs from the [CIPIC database](https://www.ece.ucdavis.edu/cipic/spatial-sound/hrtf-data/) (subjects 050, 137, 165), switchable at runtime ([Assets/Resources](Assets/Resources)).
 - **Tracking:** device pose from ARKit (AR Foundation) and listener head orientation from AirPods Pro via the HeadphoneMotion plugin.
 - **Stimuli:** noise, speech and footsteps, with versions equalized for AirPods Pro ([Assets/Audio](Assets/Audio)).
 
-## Listening test GUI: drag-and-drop MUSHRA
+## Listening test GUI: D&D-MUSHRA+
 
-![TODO: screenshot of the drag-and-drop MUSHRA interface](docs/dd-mushra.png)
+![TODO: screenshot of the D&D-MUSHRA+ interface](docs/dd-mushra.png)
+
+In standard MUSHRA, each condition has its own slider. D&D-MUSHRA+ replaces the sliders with **draggable tokens on a shared scale**. All conditions on a page are therefore visible on the same axis at once, and listeners rate them by placing them relative to each other. Each token is also its play button. Together with instant switching between conditions, this lets participants compare many conditions quickly in the field. That is the requirement for screening several interacting factors in one session.
 
 ### How stimuli are presented
 
@@ -32,7 +41,7 @@ The app runs on an iPhone/iPad and renders binaural audio over Apple AirPods Pro
 
 | Interface | `mushraType` | Rating procedure | Used in |
 | --- | --- | --- | --- |
-| **Drag and drop** | `DragAndDrop` | Each condition is a token that is dragged onto a horizontal scale. The horizontal position is the score: `score = (x − 50) · 100 / (screen width − 100)`, i.e. 0–100 with a 50 px margin. The vertical position is free, so tokens with similar scores do not overlap and remain easy to tap. Tapping a token plays it; dragging it rates it. | `3.2.MUSHRA Forum` (36 conditions, 4 pages × 9) |
+| **D&D-MUSHRA+** | `DragAndDrop` | Each condition is a token that is dragged onto a horizontal scale. The horizontal position is the score: `score = (x − 50) · 100 / (screen width − 100)`, i.e. 0–100 with a 50 px margin. The vertical position is free, so tokens with similar scores do not overlap and remain easy to tap. Tapping a token plays it; dragging it rates it. | `3.2.MUSHRA Forum` (36 conditions, 4 pages × 9) |
 | Elimination | `Elimination` | Listeners remove conditions one at a time, starting from the one least similar to the reference. The removal order gives the rank. | `3.3.MUSHRA CHItaly`, `3.3b.MUSHRA CHItaly2` (9 conditions) |
 | SAQI | `SAQI` | One slider per condition, with one page per attribute from the Spatial Audio Quality Inventory: *Presence*, *Difference*, *Externalisation*, *Distance* ([SAQIdef.csv](Assets/Resources/SAQIdef.csv)). The layout is mirrored at random on each page. | `3.1.x.MUSHRA Slater …` (A/B comparisons) |
 | Classic | `Classic` | Standard MUSHRA: a play button and a vertical slider (0–100) per condition. | — |
@@ -106,7 +115,7 @@ The scenes in [Assets/Scenes](Assets/Scenes) are numbered in the order they are 
 | `0d.LoudnessCalibration`, [Calibration Scenes](Assets/Scenes/Calibration%20Scenes) | Loudness matching between real and virtual sources |
 | `1.ISMAR Exp_Training`, `2.ISMAR Exp_SlaterExperiment` | Training and plausibility experiment |
 | `3.1.x.MUSHRA Slater …` | SAQI ratings (source at 0° and −45°; noise, speech, steps) |
-| [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) `3.1a`–`3.2` | Training and **drag-and-drop MUSHRA** (similarity to the real reference) |
+| [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) `3.1a`–`3.2` | Training and **D&D-MUSHRA+** (similarity to the real reference) |
 | [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) `3.2c`–`3.3b` | Training and elimination test (perceived position compared with the reference) |
 
 ## Collected data
@@ -135,7 +144,7 @@ If you use this code, please cite:
 
 ```bibtex
 @article{TODO,
-  title   = {TODO},
+  title   = {Screening Multiple Interacting Factors with {D\&D-MUSHRA+}: a Pilot Study on Plausibility in Augmented Reality involving Hear-Through Technology},
   author  = {TODO},
   journal = {TODO},
   year    = {TODO},
