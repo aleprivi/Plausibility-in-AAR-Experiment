@@ -6,15 +6,73 @@ Unity project used to run the listening experiments on the **plausibility of vir
 > TODO: Authors
 > *TODO: Journal / Conference*, TODO: Year. DOI: [TODO](https://doi.org/TODO)
 
-The app runs on an iPhone/iPad and renders binaural audio over Apple AirPods Pro. It combines visual tracking (ARKit), head tracking from the AirPods motion sensors, HRTF-based spatialization and a Scattering Delay Network (SDN) room-acoustics model. Participants rate virtual sources against real ones using MUSHRA-style and plausibility (Slater-style) test interfaces.
+The app runs on an iPhone/iPad and renders binaural audio over Apple AirPods Pro. Participants stand in a real room next to a real loudspeaker and compare it with virtual renderings of the same source. They do this through an in-situ **drag-and-drop MUSHRA** interface on the tablet, in which each rendering condition can be played back and rated directly in the AR scene.
 
 ## Features
 
+- **Drag-and-drop MUSHRA (and variants):** a MUSHRA-style multi-stimulus test for touch screens, in which participants rate conditions by dragging them along a scale. A classic slider-based MUSHRA, an elimination (ranking) procedure and SAQI attribute ratings are available in the same framework ([Assets/Scenes/MUSHRA_TESTs](Assets/Scenes/MUSHRA_TESTs)). See [Listening test GUI](#listening-test-gui-drag-and-drop-mushra).
+- **Condition switching at runtime:** each condition is a combination of rendering parameters (HRTF, reverb, level, headphone EQ, tracking, source position, stimulus, real/virtual). Selecting a condition re-configures the virtual source immediately, so listeners can switch between conditions while staying in the room.
 - **Room acoustics:** real-time Scattering Delay Network (SDN) reverberation with frequency-dependent wall materials and RT60 estimation ([Assets/SDNLib](Assets/SDNLib)).
 - **Binaural rendering:** HRTF filtering with HRTFs from the [CIPIC database](https://www.ece.ucdavis.edu/cipic/spatial-sound/hrtf-data/) (subjects 050, 137, 165), switchable at runtime ([Assets/Resources](Assets/Resources)).
 - **Tracking:** device pose from ARKit (AR Foundation) and listener head orientation from AirPods Pro via the HeadphoneMotion plugin.
-- **Test procedures:** localization accuracy test, loudness calibration, training, plausibility test and MUSHRA-style tests (classic, drag-and-drop, elimination and SAQI interfaces) ([Assets/Scenes/MUSHRA_TESTs](Assets/Scenes/MUSHRA_TESTs)).
 - **Stimuli:** noise, speech and footsteps, with versions equalized for AirPods Pro ([Assets/Audio](Assets/Audio)).
+
+## Listening test GUI: drag-and-drop MUSHRA
+
+![TODO: screenshot of the drag-and-drop MUSHRA interface](docs/dd-mushra.png)
+
+### How stimuli are presented
+
+- **One source, many renderings.** A single virtual source is anchored in the AR scene at the position of the real loudspeaker (at ear height, 0°, or at floor level, −45°). Each button in the GUI is a condition. Tapping it applies that condition's rendering parameters to the source and restarts the stimulus. Listeners can therefore switch between conditions instantly, as often as they like, and in any order.
+- **Real reference.** The *Ref* button (`Real = real`) mutes the virtual source, so the participant hears the physical loudspeaker. The tablet triggers the real playback over the network ([StartReal.cs](Assets/Scripts/0c.SourceTest/StartReal.cs)).
+- **Pages and randomization.** Conditions are grouped into pages (*Step n/N*). Within each page, the order of the conditions is shuffled for every participant ([MUSHRASet.cs](Assets/Scenes/MUSHRA_TESTs/Lib/MUSHRASet.cs)).
+- **Free head movement.** Rendering is updated continuously from the ARKit and AirPods tracking, so listeners can move and turn their head while comparing conditions.
+
+### How stimuli are rated
+
+| Interface | `mushraType` | Rating procedure | Used in |
+| --- | --- | --- | --- |
+| **Drag and drop** | `DragAndDrop` | Each condition is a token that is dragged onto a horizontal scale. The horizontal position is the score: `score = (x − 50) · 100 / (screen width − 100)`, i.e. 0–100 with a 50 px margin. The vertical position is free, so tokens with similar scores do not overlap and remain easy to tap. Tapping a token plays it; dragging it rates it. | `3.2.MUSHRA Forum` (36 conditions, 4 pages × 9) |
+| Elimination | `Elimination` | Listeners remove conditions one at a time, starting from the one least similar to the reference. The removal order gives the rank. | `3.3.MUSHRA CHItaly`, `3.3b.MUSHRA CHItaly2` (9 conditions) |
+| SAQI | `SAQI` | One slider per condition, with one page per attribute from the Spatial Audio Quality Inventory: *Presence*, *Difference*, *Externalisation*, *Distance* ([SAQIdef.csv](Assets/Resources/SAQIdef.csv)). The layout is mirrored at random on each page. | `3.1.x.MUSHRA Slater …` (A/B comparisons) |
+| Classic | `Classic` | Standard MUSHRA: a play button and a vertical slider (0–100) per condition. | — |
+
+All interfaces work the same way otherwise:
+- The participant cannot move on to the next page until every condition on the current page has been rated. Until then, an error panel is shown.
+- On the last page, a confirmation panel asks the participant to confirm before the scene moves on.
+- Every rating is appended immediately to `Log_<user>_<scene>.csv` (page, condition, x, y, score). If the app is restarted, the test resumes with the tokens in their previous positions.
+- After confirmation, the final scores are written to `Results_<user>_<scene>_<date>.csv`.
+
+### Defining a test
+
+A test is a CSV file in [Assets/Resources](Assets/Resources) with one row per condition. For example, from [Forum.csv](Assets/Resources/Forum.csv):
+
+```csv
+page,condition,name,HRTF,Reverb,SampleVolume,HeadPhoneEQ,EarTrack,HeadTrack,SamplePos,SourceType,Real
+1,1,A,personal,calibrated,calibrated,equalized,ear,head,0,noise,virtual
+1,2,B,none,calibrated,calibrated,none,ear,head,0,noise,virtual
+```
+
+| Column | Values | Meaning |
+| --- | --- | --- |
+| `page`, `condition`, `name` | integers, label | Page, slot on the page, and condition ID used in the logs |
+| `HRTF` | `personal`, `kemar`, `none` | HRTF set selected for the participant, CIPIC KEMAR (subject 165), or no HRTF |
+| `Reverb` | `calibrated`, `large`, `none` | SDN room matched to the real room, a larger room, or no reverberation |
+| `SampleVolume` | `calibrated`, `+5` | Loudness-matched level, or +5 dB |
+| `HeadPhoneEQ` | `equalized`, `none` | AirPods Pro equalization on or off |
+| `EarTrack` | `ear`, `ipadhead`, `ipad` | Orientation source: AirPods, tablet-estimated head, or tablet |
+| `HeadTrack` | `head`, `head+height`, `ipad` | Position source for the listener in the AR scene |
+| `SamplePos` | `0`, `-45` | Source elevation: ear height or floor level |
+| `SourceType` | `noise`, `voice`, `ecological`, … | Stimulus |
+| `Real` | `real`, `virtual` | Physical loudspeaker or virtual rendering |
+
+To create a new test, duplicate a MUSHRA scene. In its `MUSHRAConfig` component, set the following fields:
+- `conditionFilename` (the CSV file)
+- `mushraType`
+- `instructionMessage` (the question shown to the participant)
+- `nextSceneName`
+
+([MUSHRAConfig.cs](Assets/Scenes/MUSHRA_TESTs/MUSHRAConfig.cs))
 
 ## Requirements
 
@@ -47,14 +105,13 @@ The scenes in [Assets/Scenes](Assets/Scenes) are numbered in the order they are 
 | `0b.AccuracyTest`, `0e.RotateAroundTest` | Tracking and localization checks |
 | `0d.LoudnessCalibration`, [Calibration Scenes](Assets/Scenes/Calibration%20Scenes) | Loudness matching between real and virtual sources |
 | `1.ISMAR Exp_Training`, `2.ISMAR Exp_SlaterExperiment` | Training and plausibility experiment |
-| `3.1.x.MUSHRA Slater …` | MUSHRA tests (source at 0° and −45°; noise, speech, steps) |
-| [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) | Instructions, training and MUSHRA sessions of the later study |
-
-The conditions of each test are defined in the CSV files in [Assets/Resources](Assets/Resources) (e.g. `Slater1.csv`–`Slater6.csv`, `Forum.csv`, `CHItaly.csv`, `SAQIdef.csv`).
+| `3.1.x.MUSHRA Slater …` | SAQI ratings (source at 0° and −45°; noise, speech, steps) |
+| [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) `3.1a`–`3.2` | Training and **drag-and-drop MUSHRA** (similarity to the real reference) |
+| [ForumAcousticumCHITALY](Assets/Scenes/ForumAcousticumCHITALY) `3.2c`–`3.3b` | Training and elimination test (perceived position compared with the reference) |
 
 ## Collected data
 
-Responses are written as CSV files to the app's persistent data folder (`Application.persistentDataPath`) on the device. Participants are identified only by a random ID (`U####`, see [WriteLogs.cs](Assets/Scripts/WriteLogs.cs)). To retrieve the files, enable *File Sharing* in the Xcode project or download the app container from Xcode.
+Responses are written as CSV files to the app's persistent data folder (`Application.persistentDataPath`) on the device. See [How stimuli are rated](#how-stimuli-are-rated) for the file format. Participants are identified only by a random ID (`U####`, see [WriteLogs.cs](Assets/Scripts/WriteLogs.cs)). To retrieve the files, enable *File Sharing* in the Xcode project or download the app container from Xcode.
 
 > **Note:** some lab-specific scripts ([SendToPrivi.cs](Assets/Scripts/Utils/SendToPrivi.cs), [StartReal.cs](Assets/Scripts/0c.SourceTest/StartReal.cs)) send HTTP requests to a server used during our sessions to control the real loudspeaker and to monitor object positions. They are not needed to run the experiment elsewhere. Disable them, or point them to your own server.
 
